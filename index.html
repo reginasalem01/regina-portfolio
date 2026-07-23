@@ -1090,6 +1090,8 @@
     }
     .scroll-step:last-child { min-height: 45vh; }
     .scroll-step.active { opacity: 1; }
+    /* Inline image inside each scroll step — hidden on desktop, shown on mobile */
+    .step-img-mobile { display: none; }
     .step-num {
       font-family: 'DM Mono', monospace;
       font-size: 0.55rem;
@@ -2134,14 +2136,20 @@
 
       /* ── SCROLL STORY → single column ────────────────────── */
       .scroll-story { grid-template-columns: 1fr; }
-      .scroll-story__sticky {
-        position: static;
-        padding: 2rem 1.25rem 1rem;
+      /* Hide the sticky image panel — images are now inline in each step */
+      .scroll-story:not(.scroll-story--cin) .scroll-story__sticky { display: none; }
+      .scroll-story__steps { padding: 1.5rem 1.25rem 2.5rem; }
+      /* Make all steps fully visible and show their inline images */
+      .scroll-step { min-height: auto; opacity: 1; padding: 1.5rem 0; border-bottom: 1px solid var(--border); }
+      .scroll-step:last-child { min-height: auto; border-bottom: none; }
+      .step-img-mobile {
+        display: block;
+        width: 100%;
+        max-width: 260px;
+        margin: 0 auto 1.25rem;
+        border-radius: 12px;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.13);
       }
-      .scroll-story__steps { padding: 1rem 1.25rem 2.5rem; }
-      /* Make all steps fully visible — sticky-scroll won't work in 1-col */
-      .scroll-step { min-height: auto; opacity: 1; padding: 1.5rem 0; }
-      .scroll-step:last-child { min-height: auto; }
 
       /* Cinematic variant (CareGuard) */
       .scroll-story--cin { grid-template-columns: 1fr; }
@@ -2903,6 +2911,7 @@ function scrollStoryHtml(p) {
 
   const stepsHtml = p.screens.map((s, i) =>
     '<div class="scroll-step" data-slide="' + i + '">' +
+    '<img class="step-img-mobile" src="' + s.src + '" alt="' + s.label + '" loading="lazy">' +
     '<div class="step-num">' + String(i + 1).padStart(2, '0') + '</div>' +
     '<div class="story-lbl">' + s.label + '</div>' +
     '<p class="step-caption">' + s.caption + '</p>' +
