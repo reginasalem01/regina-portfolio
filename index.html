@@ -2065,6 +2065,165 @@
       border-bottom: 1px solid var(--border);
     }
 
+    /* ═══════════════════════════════════════════════════════════
+       MOBILE — max-width: 768px
+       All rules below affect phones/small tablets only.
+       Desktop layout is completely untouched.
+       ═══════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+
+      /* ── NAV ──────────────────────────────────────────────── */
+      #nav { padding: 1rem 1.25rem; }
+      .nav-links { gap: 1.25rem; }
+      .nav-links a { font-size: 0.6rem; }
+
+      /* ── HERO ─────────────────────────────────────────────── */
+      #hero { padding: 0 1.25rem 3rem; }
+      .hero-bottom { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+      .hero-meta { align-items: flex-start; }
+
+      /* ── BRIDGE ───────────────────────────────────────────── */
+      .bridge { padding: 2rem 1.25rem; }
+
+      /* ── WORK SECTION ─────────────────────────────────────── */
+      #work { padding: 3.5rem 1.25rem 4.5rem; }
+
+      /* ── SUPPORTING GROUP (3-up cards) → single column ────── */
+      .supporting-group { grid-template-columns: 1fr; }
+
+      /* ── ABOUT ────────────────────────────────────────────── */
+      #about {
+        padding: 3.5rem 1.25rem;
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+      .skills-row { grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+      /* ── FOOTER ───────────────────────────────────────────── */
+      footer { padding: 2rem 1.25rem; flex-direction: column; align-items: flex-start; }
+      .footer-right { flex-wrap: wrap; gap: 1rem; }
+
+      /* ── PROJECT PAGE — back button ───────────────────────── */
+      .back-btn { padding: 5rem 1.25rem 1rem; }
+
+      /* ── PROJECT HERO ─────────────────────────────────────── */
+      .proj-hero { padding: 7rem 1.25rem 2.5rem; }
+
+      /* ── PROJECT META BAR ─────────────────────────────────── */
+      .proj-meta { flex-direction: column; }
+      .meta-cell {
+        padding: 1rem 1.25rem !important;
+        margin-right: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .meta-cell:last-child { border-bottom: none; }
+
+      /* ── PROJECT STATS ────────────────────────────────────── */
+      .stat-cell { padding: 1.25rem 1rem; }
+
+      /* ── PROJECT BODY ─────────────────────────────────────── */
+      .proj-body { padding: 3rem 1.25rem 4rem; }
+      .proj-body--mid { padding: 2rem 1.25rem; }
+      .proj-body--outro { padding: 2rem 1.25rem 4rem; }
+      .proj-anchor { padding: 2.5rem 1.25rem; }
+      .proj-context-block { padding: 3rem 1.25rem 0; }
+      .proj-nav { padding: 2rem 1.25rem; }
+      .proj-nav-btn { font-size: 0.58rem; }
+      .pull-quote { padding-left: 1.25rem; margin: 2.5rem 0; }
+
+      /* ── SCROLL STORY → single column ────────────────────── */
+      .scroll-story { grid-template-columns: 1fr; }
+      .scroll-story__sticky {
+        position: static;
+        padding: 2rem 1.25rem 1rem;
+      }
+      .scroll-story__steps { padding: 1rem 1.25rem 2.5rem; }
+      /* Make all steps fully visible — sticky-scroll won't work in 1-col */
+      .scroll-step { min-height: auto; opacity: 1; padding: 1.5rem 0; }
+      .scroll-step:last-child { min-height: auto; }
+
+      /* Cinematic variant (CareGuard) */
+      .scroll-story--cin { grid-template-columns: 1fr; }
+      .scroll-story--cin .scroll-story__sticky { height: 48vw; min-height: 200px; }
+      .cin-panel { height: 48vw; min-height: 200px; }
+      .cin-step { min-height: auto; padding: 1.75rem 1.25rem; opacity: 1; }
+      .cin-step:last-child { min-height: auto; }
+
+      /* ── DOGGO TABLEAU — clamp min widths too large ───────── */
+      .t-img--restaurant { width: clamp(280px, 90vw, 500px); }
+      .t-img--owner      { width: clamp(260px, 86vw, 460px); }
+
+      /* ── DOGGO VIDEO SCRUB ────────────────────────────────── */
+      .doggo-video-frame { width: clamp(220px, 88vw, 400px); }
+      /* Hide floating annotations — no room on mobile */
+      .vd-anno { display: none; }
+
+      /* ── DOGGO CHALLENGES (2-col → 1-col) ────────────────── */
+      .doggo-challenges { padding: 2rem 1.25rem 3.5rem; }
+      .doggo-chal-item {
+        grid-template-columns: 1fr;
+        column-gap: 0;
+        row-gap: 0;
+      }
+      .doggo-chal-head    { grid-column: 1; grid-row: 1; }
+      .doggo-chal-friction { grid-column: 1; grid-row: 2; }
+      .doggo-chal-how-lbl { grid-column: 1; grid-row: 3; margin-top: 1.25rem; }
+      .doggo-chal-how     { grid-column: 1; grid-row: 4; }
+
+      /* ── DOGGO REFLECTION ─────────────────────────────────── */
+      .doggo-reflection { padding: 2.5rem 1.25rem 4.5rem; }
+
+      /* ── BWC TEAM GRID (2-col → 1-col) ───────────────────── */
+      .bwc-team { padding: 2.5rem 1.25rem; }
+      .bwc-team-grid { grid-template-columns: 1fr; }
+      .bwc-team-card:nth-child(even) { padding-left: 0; border-left: none; }
+
+      /* ── CAREGUARD VIDEO ──────────────────────────────────── */
+      .cg-video-wrap { padding: 2rem 1.25rem 0; }
+
+      /* ── PETPALS VIDEO ────────────────────────────────────── */
+      .pp-video-wrap { padding: 2rem 1.25rem 0; }
+
+      /* ── MIDI GLOVE VIDEO ─────────────────────────────────── */
+      .mg-video-wrap { padding: 2rem 1.25rem 0; }
+
+      /* ── CALL BLOCKS (general) ────────────────────────────── */
+      .calls-section { padding: 3.5rem 0 0; }
+      .calls-lbl { padding: 0 1.25rem; }
+      .call-block { padding: 4rem 1.25rem 5rem; }
+
+      /* CareGuard before/after → stack */
+      .cb-cg-twostate { flex-direction: column; align-items: center; }
+      .cb-cg-twostate .cb-cg-screen { width: clamp(200px, 62vw, 280px); opacity: 1 !important; }
+      .cb-cg-sep { display: none; }
+
+      /* 360° two-phones → stack */
+      .cb-fit-twophones { flex-direction: column; align-items: center; }
+      .cb-fit-twophones .cb-fit-phone { width: clamp(180px, 56vw, 240px); opacity: 1 !important; }
+      .cb-fit-sep { display: none; }
+
+      /* PetPals two-phones → stack */
+      .cb-pp-twophones { flex-direction: column; align-items: center; }
+      .cb-pp-twophones .cb-pp-phone { width: clamp(180px, 56vw, 240px); opacity: 1 !important; }
+      .cb-pp-sep { display: none; }
+
+      /* MIDI Glove V1→V2 pair → stack */
+      .cb-mg-pair { flex-direction: column; align-items: center; }
+      .cb-mg-pair .cb-mg-photo { width: clamp(220px, 72vw, 360px); opacity: 1 !important; }
+      .cb-mg-sep { display: none; }
+
+      /* Dashboard block — full width */
+      .cb-dash-outer { width: 100%; }
+
+      /* ── DEC GRID (decision cards) ────────────────────────── */
+      .dec-grid { grid-template-columns: 1fr; }
+
+      /* ── PROJECT COUNTER ──────────────────────────────────── */
+      #project-counter { right: 1.25rem; bottom: 1.5rem; }
+
+    }
+
     /* ─── REDUCED MOTION ─────────────────────────────────────── */
     @media (prefers-reduced-motion: reduce) {
       .dot-green { animation: none; opacity: 1; }
