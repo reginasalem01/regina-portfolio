@@ -1,0 +1,4107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regina Salem — Product &amp; Interaction Designer</title>
+  <meta name="description" content="Portfolio of Regina Salem — Product &amp; Interaction Designer. Systems thinking, product strategy, and code that ships.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+
+    /* ─── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ─── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --cream:  #F3EDE3;
+      --dark:   #1A1714;
+      --red:    #B5382A;
+      --muted:  #7A6E63;
+      --border: #D8CEC3;
+      --light:  #EAE3D8;
+      --white:  #FAF7F2;
+
+      /* Motion system */
+      --motion-fast:     180ms;
+      --motion-standard: 360ms;
+      --motion-story:    700ms;
+      --ease-standard:   cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-soft:       cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ─── BASE ───────────────────────────────────────────────── */
+    body {
+      background: var(--cream);
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.65;
+      overflow-x: hidden;
+      text-wrap: pretty;
+    }
+    h1, h2, h3, h4, .call-headline, .proj-insight-line, .pull-quote {
+      text-wrap: balance;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    video { display: block; width: 100%; }
+
+    /* ─── FOCUS ──────────────────────────────────────────────── */
+    :focus-visible {
+      outline: 2px solid var(--red);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /* ─── CURSOR — hover devices only ───────────────────────── */
+    #cursor { display: none; }
+    @media (hover: hover) and (pointer: fine) {
+      body, button, a { cursor: none; }
+      #cursor { display: block; }
+    }
+
+    /* ─── GRAIN ──────────────────────────────────────────────── */
+    #grain {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.038;
+      image-rendering: pixelated;
+    }
+
+    /* ─── CURSOR ─────────────────────────────────────────────── */
+    #cursor {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--red);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s, width 0.18s ease, height 0.18s ease, background 0.18s ease, border-radius 0.18s ease;
+      mix-blend-mode: multiply;
+    }
+    #cursor.big {
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: 1.5px solid var(--red);
+      mix-blend-mode: normal;
+    }
+    #cursor.text-mode {
+      width: 3px;
+      height: 28px;
+      border-radius: 2px;
+      background: var(--red);
+    }
+
+    /* ─── NAV ────────────────────────────────────────────────── */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 1.6rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.3s ease, border-color 0.3s ease, padding 0.3s ease;
+      border-bottom: 1px solid transparent;
+    }
+    #nav.scrolled {
+      background: rgba(243, 237, 227, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom-color: var(--border);
+      padding-top: 1.1rem;
+      padding-bottom: 1.1rem;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      color: var(--dark);
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--dark); }
+
+    /* ─── HOME VIEW ───────────────────────────────────────────── */
+    #home-view { display: block; }
+    #home-view.gone { display: none; }
+
+    /* ─── HERO ───────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      padding: 0 3rem 4.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(4.5rem, 13vw, 12rem);
+      line-height: 0.88;
+      letter-spacing: -0.03em;
+      color: var(--dark);
+    }
+    .hero-name em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--muted);
+    }
+    .hero-bottom {
+      margin-top: 2.5rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .hero-role {
+      max-width: 380px;
+    }
+    .hero-role-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .hero-statement {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* ── Cycling word — inline with the sentence ─────────── */
+    .word-cycle {
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+      vertical-align: bottom;   /* sit on the text baseline */
+      height: 1.55rem;          /* matches the 1rem line */
+      width: 8em;               /* wide enough for "understood." */
+    }
+    .word-cycle .word {
+      position: absolute;
+      bottom: 0; left: 0;       /* anchor to baseline, not top */
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--dark);
+      white-space: nowrap;
+      transform: translateY(110%);
+      opacity: 0;
+      transition:
+        transform var(--motion-story) var(--ease-standard),
+        opacity   var(--motion-story) var(--ease-standard);
+      will-change: transform, opacity;
+    }
+    .word-cycle .word.active  { transform: translateY(0);    opacity: 1; }
+    .word-cycle .word.leaving { transform: translateY(-110%); opacity: 0; }
+    .hero-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.75rem;
+    }
+    .hero-available {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .dot-green {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #52B788;
+      animation: blink 2.4s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .hero-building {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .hero-building:hover { color: var(--dark); }
+    .hero-building-name { color: var(--dark); }
+    .hero-scroll {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .hero-scroll-line {
+      width: 36px; height: 1px;
+      background: var(--border);
+      display: inline-block;
+    }
+
+    /* ─── BRIDGE ─────────────────────────────────────────────── */
+    .bridge {
+      padding: 2.5rem 3rem 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .bridge-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.1rem, 2vw, 1.45rem);
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 540px;
+      text-wrap: balance;
+    }
+
+    /* ─── WORK SECTION ───────────────────────────────────────── */
+    #work {
+      padding: 5rem 3rem 6rem;
+    }
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── PROJECT LIST ───────────────────────────────────────── */
+    .project-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3.5rem;
+    }
+
+    .project-item {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .project-card {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      max-height: clamp(340px, 62vh, 600px);
+      overflow: hidden;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Centered mockup image */
+    .card-mockup {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 90%;
+      width: auto;
+      max-width: 78%;
+      object-fit: contain;
+      object-position: bottom center;
+      filter: drop-shadow(0 24px 64px rgba(0,0,0,0.28));
+      transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94),
+                  filter 0.55s ease;
+      pointer-events: none;
+    }
+    .project-card:hover .card-mockup {
+      transform: translateX(-50%) scale(1.04) translateY(-6px);
+      filter: drop-shadow(0 32px 80px rgba(0,0,0,0.35));
+    }
+
+    /* Corner labels */
+    .card-corner {
+      position: absolute;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.18em;
+      z-index: 2;
+    }
+    .card-corner.tl {
+      top: 1.5rem; left: 1.75rem;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.5);
+    }
+    .card-corner.tr {
+      top: 1.2rem; right: 1.6rem;
+      font-size: 1.5rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1;
+      z-index: 4;
+      transition: color 0.35s ease,
+                  font-size 0.4s cubic-bezier(0.34, 1.4, 0.64, 1),
+                  transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+    }
+    .project-card:hover .card-corner.tr {
+      color: rgba(255,255,255,1);
+      font-size: 4.5rem;
+      transform: translate(2px, -2px);
+    }
+
+    /* Big decorative number — removed */
+    .card-num-big { display: none; }
+
+    /* Hover reveal — slides up via clip-path */
+    .card-hover {
+      position: absolute;
+      inset: 0;
+      background: rgba(12,9,8,0.84);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      clip-path: inset(100% 0 0 0);
+      transition: clip-path 0.55s cubic-bezier(0.76, 0, 0.24, 1);
+      text-align: center;
+      padding: 2rem;
+      z-index: 3;
+    }
+    .project-card:hover .card-hover {
+      clip-path: inset(0% 0 0 0);
+    }
+
+    /* Insight sentence — replaces title/sub in hover overlay */
+    .card-hover-insight {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 1.8vw, 1.4rem);
+      color: var(--cream);
+      max-width: 400px;
+      line-height: 1.5;
+      text-align: center;
+      text-wrap: balance;
+      transform: translateY(20px);
+      transition: transform var(--motion-standard) var(--ease-soft) 0.1s;
+    }
+    .project-card:hover .card-hover-insight { transform: translateY(0); }
+
+    .card-hover-cta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream);
+      border-bottom: 1px solid rgba(243,237,227,0.35);
+      padding-bottom: 0.2rem;
+      margin-top: 0.5rem;
+      transform: translateY(20px);
+      transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94) 0.25s,
+                  border-color 0.2s;
+    }
+    .project-card:hover .card-hover-cta { transform: translateY(0); }
+    .card-hover-cta:hover { border-color: var(--cream); }
+
+    /* ── Primary card — slightly taller ─────────────────────── */
+    .project-item--primary .project-card {
+      aspect-ratio: 16 / 8;
+      max-height: clamp(380px, 68vh, 660px);
+    }
+
+    /* ── Supporting 3-up grid ────────────────────────────────── */
+    .supporting-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    /* ── Below-card always-visible info ─────────────────────── */
+    .card-below {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+      padding: 0 0.2rem;
+    }
+    .card-below-main { flex: 1; min-width: 0; }
+    .card-status {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.57rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.3rem;
+    }
+    .card-title-below {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--dark);
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+    }
+    .card-desc {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 480px;
+      text-wrap: pretty;
+    }
+    .card-cta {
+      flex-shrink: 0;
+      align-self: flex-start;
+      margin-top: 0.2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.15rem;
+      display: inline-block;
+      white-space: nowrap;
+      transition: color var(--motion-fast) ease,
+                  border-color var(--motion-fast) ease;
+    }
+    .card-cta:hover { color: var(--dark); border-color: var(--dark); }
+
+    /* ─── ABOUT ──────────────────────────────────────────────── */
+    #about {
+      padding: 6rem 3rem;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .about-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(2.5rem, 5vw, 4.25rem);
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+    }
+    .about-heading em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--muted);
+    }
+    .about-body { display: flex; flex-direction: column; gap: 1.5rem; }
+    .about-text {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: #4D4540;
+    }
+    .skills-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .skill-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .skill-list {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: var(--dark);
+      line-height: 1.75;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      padding: 2.5rem 3rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+    }
+    .footer-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .footer-right {
+      display: flex;
+      gap: 2.25rem;
+      align-items: center;
+    }
+    .footer-right a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .footer-right a:hover { color: var(--dark); }
+
+    /* ─── READING PROGRESS BAR ──────────────────────────────── */
+    #proj-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--proj-color, var(--red));
+      z-index: 1001;
+      transition: width 0.08s linear;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #proj-progress.active { opacity: 1; }
+
+    /* ─── PROJECT VIEW ───────────────────────────────────────── */
+    #project-view {
+      display: none;
+      min-height: 100vh;
+    }
+    #project-view.open { display: block; }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 5.5rem 3rem 1.25rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: none;
+      transition: color 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+    .back-btn:hover { color: var(--dark); }
+    .back-btn::before { content: '←'; font-size: 0.85rem; }
+
+    /* ── Full-bleed hero ────────────────────────────────────── */
+    .proj-hero {
+      position: relative;
+      min-height: 62vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 8rem 3rem 4rem;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .proj-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top,
+        var(--cream) 0%,
+        rgba(243,237,227,0.82) 38%,
+        rgba(243,237,227,0.3) 70%,
+        transparent 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .proj-hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      opacity: 0.22;
+      filter: grayscale(15%);
+    }
+    .proj-hero-inner { position: relative; z-index: 2; }
+
+    .proj-chapter {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .proj-chapter-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--proj-color, var(--red));
+      flex-shrink: 0;
+    }
+    .proj-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(3rem, 7vw, 7rem);
+      line-height: 0.92;
+      letter-spacing: -0.025em;
+      color: var(--dark);
+    }
+    .proj-tagline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(0.95rem, 1.8vw, 1.3rem);
+      color: var(--muted);
+      margin-top: 1.35rem;
+      max-width: 480px;
+      line-height: 1.5;
+    }
+
+    /* ── Meta bar ───────────────────────────────────────────── */
+    .proj-meta {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .meta-cell {
+      padding: 1.35rem 2.5rem 1.35rem 0;
+      margin-right: 2.5rem;
+      border-right: 1px solid var(--border);
+      padding-right: 2.5rem;
+    }
+    .meta-cell:first-child { padding-left: 3rem; }
+    .meta-cell:last-child { border-right: none; margin-right: 0; }
+    .meta-lbl {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.56rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+    .meta-val {
+      font-size: 0.86rem;
+      font-weight: 400;
+      color: var(--dark);
+      line-height: 1.45;
+    }
+    .meta-val.work-pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .work-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.54rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.55rem;
+      border-radius: 2px;
+      line-height: 1.6;
+    }
+
+    /* ── Stats row ──────────────────────────────────────────── */
+    .proj-stats {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .stat-cell {
+      flex: 1;
+      min-width: 100px;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .stat-cell:last-child { border-right: none; }
+    .stat-n {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 1.85rem;
+      color: var(--proj-color, var(--dark));
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.54rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Body ───────────────────────────────────────────────── */
+    .proj-body {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 4.5rem 3rem 6rem;
+    }
+    .proj-intro-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 1.9vw, 1.3rem);
+      font-style: italic;
+      line-height: 1.65;
+      color: var(--dark);
+      margin-bottom: 3.5rem;
+      padding-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .story-block { margin-bottom: 4rem; }
+    .story-lbl {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1rem;
+    }
+    .story-p {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: #4A4440;
+    }
+    .pull-quote {
+      border-left: 3px solid var(--proj-color, var(--red));
+      padding: 0.75rem 0 0.75rem 2rem;
+      margin: 3.5rem 0;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+      line-height: 1.5;
+      color: var(--dark);
+    }
+    /* ── Decision cards ────────────────────────────────────── */
+    .dec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      margin-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+    }
+    .dec-card {
+      background: var(--cream);
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s ease;
+    }
+    .dec-num {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 2rem;
+      color: var(--border);
+      line-height: 1;
+    }
+    .dec-head {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 0.93rem;
+      color: var(--dark);
+      line-height: 1.4;
+    }
+    .dec-body {
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    /* ── Challenge cards ───────────────────────────────────── */
+    .chal-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .chal-card {
+      padding: 1.5rem 1.75rem;
+      border-left: 3px solid var(--muted);
+      background: var(--light);
+    }
+    .chal-card-head {
+      font-weight: 500;
+      font-size: 0.93rem;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+    .chal-card-body {
+      font-size: 0.9rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: #4A4440;
+    }
+
+    .proj-video {
+      width: 100%;
+      border: 1px solid var(--border);
+      margin: 2.5rem 0;
+      background: var(--dark);
+    }
+    .proto-hero-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.15rem;
+      transition: color 0.2s, border-color 0.2s;
+      cursor: none;
+    }
+    .proto-hero-link:hover { color: var(--dark); border-color: var(--dark); }
+
+    .proj-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2.5rem 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .proj-nav-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: color 0.2s;
+    }
+    .proj-nav-btn:hover { color: var(--dark); }
+    .proj-nav-btn.right { flex-direction: row-reverse; }
+
+    /* ─── PROJECT COUNTER ────────────────────────────────────── */
+    #project-counter {
+      position: fixed;
+      bottom: 2.25rem;
+      right: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 500;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    #project-counter.visible { opacity: 1; }
+    .counter-current {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 1.25rem;
+      line-height: 1;
+      color: var(--dark);
+      transition: opacity 0.25s ease;
+      min-width: 2ch;
+    }
+    .counter-sep {
+      width: 28px;
+      height: 1px;
+      background: var(--border);
+    }
+    .counter-total {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: var(--muted);
+    }
+
+    /* ─── DECISION CARD HOVER ─────────────────────────────────── */
+    .dec-card:hover {
+      background: var(--white);
+    }
+
+    /* ─── SCROLL REVEALS ──────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .reveal.shown { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.12s; }
+    .reveal-delay-2 { transition-delay: 0.22s; }
+    .reveal-delay-3 { transition-delay: 0.32s; }
+
+    /* ─── ORPHAN + WIDOW PREVENTION ─────────────────────────── */
+    .story-p,
+    .dec-body,
+    .chal-card-body,
+    .about-text {
+      text-wrap: pretty;
+    }
+    .proj-title,
+    .proj-tagline,
+    .proj-intro-text,
+    .dec-head,
+    .about-heading,
+    .pull-quote,
+    .hero-role,
+    .card-title-below {
+      text-wrap: balance;
+    }
+
+    /* Project items clip-path entrance */
+    .project-item {
+      opacity: 0;
+      transform: translateY(48px);
+      transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .project-item.shown { opacity: 1; transform: translateY(0); }
+    .project-item:nth-child(2) { transition-delay: 0.08s; }
+    .project-item:nth-child(3) { transition-delay: 0.16s; }
+    .project-item:nth-child(4) { transition-delay: 0.08s; }
+    .project-item:nth-child(5) { transition-delay: 0.16s; }
+    .project-item:nth-child(6) { transition-delay: 0.24s; }
+
+    /* ─── PROJECT VISUAL ANCHOR ────────────────────────────────── */
+    .proj-anchor {
+      padding: 4rem 3rem 4.5rem;
+    }
+    .proj-anchor .story-lbl { margin-bottom: 1.25rem; }
+    .proj-diagram {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    /* ── Scroll storytelling ─────────────────────────────────── */
+    .scroll-story {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      border-bottom: 1px solid var(--border);
+    }
+    .scroll-story__sticky {
+      position: sticky;
+      top: 5rem;
+      padding: 3rem 1.5rem 3rem 3rem;
+    }
+    .scroll-story__sticky-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .scroll-device {
+      position: relative;
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .scroll-device--landscape {
+      aspect-ratio: 16 / 9;
+      background: var(--light);
+      border: 1px solid var(--border);
+    }
+    .scroll-device--portrait {
+      aspect-ratio: 9 / 14;
+      max-width: 380px;
+      background: #101010;
+      border: 1px solid #1e1e1e;
+    }
+    .scroll-screen {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 0.5s var(--ease-soft);
+      pointer-events: none;
+    }
+    .scroll-device--landscape .scroll-screen {
+      padding: 1.25rem 2rem;
+      object-position: center top;
+    }
+    .scroll-device--portrait .scroll-screen {
+      padding: 0.5rem;
+      object-position: center center;
+    }
+    .scroll-screen.active { opacity: 1; }
+    .scroll-story__steps {
+      padding: 3rem 3rem 3rem 2rem;
+    }
+    .scroll-step {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.75rem;
+      opacity: 0.2;
+      transition: opacity 0.4s var(--ease-soft);
+    }
+    .scroll-step:last-child { min-height: 45vh; }
+    .scroll-step.active { opacity: 1; }
+    .step-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .step-caption {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 34ch;
+    }
+    /* Counter variant (decisions / challenges) */
+    .scroll-counter-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .scroll-count-big {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(5rem, 9vw, 7.5rem);
+      font-weight: 700;
+      line-height: 0.85;
+      color: var(--dark);
+      transition: opacity 0.25s var(--ease-soft);
+    }
+    .scroll-count-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    /* proj-body segment variants */
+    .proj-body--mid  { padding: 2.5rem 3rem; }
+    .proj-body--outro { padding: 2rem 3rem 6rem; }
+
+    /* ─── DOGGO TABLEAU (scattered canvas) ───────────────────── */
+    .doggo-tableau {
+      position: relative;
+      min-height: 300vh;
+      border-bottom: 1px solid var(--border);
+    }
+    .doggo-canvas {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--cream);
+    }
+    /* Tiny orientation label — top-left, doesn't compete */
+    .tableau-lbl {
+      position: absolute;
+      top: 2rem;
+      left: 2.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      z-index: 20;
+      pointer-events: none;
+    }
+    /* Each image centered, fades in/out as you scroll */
+    .t-img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      opacity: 0;
+      z-index: 2;
+      pointer-events: none;
+      transition: opacity 0.8s var(--ease-soft), transform 0.8s var(--ease-soft);
+    }
+    .t-img img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 70px rgba(0,0,0,0.12), 0 4px 18px rgba(0,0,0,0.07);
+    }
+    .t-img.active { opacity: 1; }
+    /* Customer — portrait phone, centered, leans left */
+    .t-img--customer {
+      width: clamp(220px, 26vw, 340px);
+      transform: translate(-50%, -50%) rotate(-2deg) translateY(4px);
+    }
+    .t-img--customer.active {
+      transform: translate(-50%, -50%) rotate(-2deg) translateY(0);
+    }
+    /* Restaurant panel — wide, centered */
+    .t-img--restaurant {
+      width: clamp(500px, 72vw, 960px);
+      transform: translate(-50%, -52%) rotate(1deg) translateY(12px);
+    }
+    .t-img--restaurant.active {
+      transform: translate(-50%, -52%) rotate(1deg) translateY(0);
+    }
+    /* Owner dashboard — wide, centered */
+    .t-img--owner {
+      width: clamp(460px, 66vw, 880px);
+      transform: translate(-50%, -50%) rotate(-1deg) translateY(-12px);
+    }
+    .t-img--owner.active {
+      transform: translate(-50%, -50%) rotate(-1deg) translateY(0);
+    }
+    /* Single annotation zone — bottom-left, updated per scene */
+    .tableau-anno {
+      position: absolute;
+      bottom: 2.8rem;
+      left: 2.8rem;
+      z-index: 20;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .anno-moment {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .anno-caption {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(0.9rem, 1.15vw, 1.1rem);
+      font-style: italic;
+      color: var(--dark);
+      opacity: 0.72;
+      max-width: 32ch;
+      line-height: 1.5;
+    }
+    /* Invisible scroll triggers stacked behind */
+    .tableau-triggers {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .tableau-trigger { height: calc(300vh / 3); }
+
+    /* ─── DOGGO BODY ─────────────────────────────────────────── */
+    /* Remove section dividers throughout Doggo case study */
+    .doggo-tableau       { border-bottom: none; }
+    .doggo-dec-story     { border-bottom: none !important; }
+    .doggo-challenges,
+    .doggo-reflection    { border: none; }
+
+    /* Decisions: sticky screenshot + scrolling text */
+    .doggo-dec-story .scroll-story__sticky {
+      top: 3rem;
+      padding: 3rem 1.5rem 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .doggo-dec-device {
+      position: relative;
+      height: 72vh;
+      background: transparent !important;
+      border: none !important;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .doggo-dec-story .scroll-screen {
+      object-fit: cover;
+      object-position: center top;
+      padding: 0 !important;
+      border-radius: 14px;
+      box-shadow: 0 20px 64px rgba(0,0,0,0.11), 0 4px 18px rgba(0,0,0,0.06);
+    }
+    .doggo-dec-head {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 1.55vw, 1.2rem);
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.38;
+      max-width: 32ch;
+    }
+
+    /* ─── VIDEO SCRUB SECTION ───────────────────────────────── */
+    .doggo-video-story {
+      position: relative;
+      min-height: 625vh;
+    }
+    .doggo-video-canvas {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .doggo-video-section-lbl {
+      position: absolute;
+      top: 2rem;
+      left: 2.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      z-index: 20;
+    }
+    .doggo-video-frame {
+      position: relative;
+      width: clamp(300px, 52vw, 740px);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 28px 88px rgba(0,0,0,0.13), 0 6px 24px rgba(0,0,0,0.07);
+      z-index: 5;
+    }
+    .doggo-scrub-video {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    /* Floating annotations */
+    .vd-anno {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.75s var(--ease-soft), transform 0.75s var(--ease-soft);
+      z-index: 10;
+    }
+    .vd-anno.active { opacity: 1; }
+    /* 2 on left, 3 on right — spread vertically */
+    .vd-anno--1 { left: 1.5%; top: 24%;    transform: translateX(-12px); }
+    .vd-anno--2 { left: 1.5%; bottom: 24%; transform: translateX(-12px); }
+    .vd-anno--3 { right: 1.5%; top: 9%;    transform: translateX(12px); }
+    .vd-anno--4 { right: 1.5%; top: 44%;   transform: translateX(12px); }
+    .vd-anno--5 { right: 1.5%; bottom: 9%; transform: translateX(12px); }
+    .vd-anno--1.active, .vd-anno--2.active { transform: translateX(0); }
+    .vd-anno--3.active, .vd-anno--4.active,
+    .vd-anno--5.active { transform: translateX(0); }
+    .vd-anno-body      { max-width: 220px; flex-shrink: 0; }
+    .vd-anno-body--r   { text-align: right; }
+    .vd-anno-head {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.32;
+      margin-bottom: 0.25rem;
+    }
+    .vd-anno-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .vd-arrow { flex-shrink: 0; }
+    .doggo-video-triggers {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .dvt { height: calc(625vh / 5); }
+
+    /* Where it got hard */
+    .doggo-challenges {
+      padding: 3rem 3rem 5rem;
+    }
+    .doggo-chal-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      column-gap: 5rem;
+      padding: 3rem 0;
+      border-top: 1px solid var(--border);
+    }
+    /* Left column: problem */
+    .doggo-chal-head {
+      grid-column: 1;
+      grid-row: 1;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 1.4vw, 1.15rem);
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.38;
+      margin-bottom: 0.75rem;
+    }
+    .doggo-chal-friction {
+      grid-column: 1;
+      grid-row: 2;
+      font-size: 0.92rem;
+      line-height: 1.82;
+      color: var(--muted);
+    }
+    /* Right column: resolution */
+    .doggo-chal-how-lbl {
+      grid-column: 2;
+      grid-row: 1;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.75rem;
+      align-self: start;
+      padding-top: 0.15rem;
+    }
+    .doggo-chal-how {
+      grid-column: 2;
+      grid-row: 2;
+      font-size: 0.92rem;
+      line-height: 1.82;
+      color: var(--dark);
+    }
+
+    /* Still building */
+    .doggo-reflection {
+      padding: 4rem 3rem 7rem;
+    }
+    .doggo-live {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .doggo-live-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1rem;
+    }
+    .doggo-live-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .doggo-live-link {
+      display: flex;
+      align-items: baseline;
+      gap: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+    }
+    .doggo-live-url {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--dark);
+      transition: color 0.2s ease;
+    }
+    .doggo-live-link:hover .doggo-live-url { color: var(--red); }
+    .doggo-live-note {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      color: var(--muted);
+      opacity: 0.65;
+    }
+
+    /* ─── OPENING CONTEXT BLOCK ─────────────────────────────── */
+    .proj-context-block {
+      padding: 4rem 3rem 0;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .proj-insight-line {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.3rem, 2vw, 1.7rem);
+      font-weight: 700;
+      font-style: italic;
+      color: var(--dark);
+      line-height: 1.3;
+      margin-bottom: 1.25rem;
+    }
+    .proj-context-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.85;
+      color: var(--muted);
+    }
+
+    /* ─── SCREENSHOT PLACEHOLDERS ────────────────────────────── */
+    .img-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      background: var(--light);
+      border: 1.5px dashed var(--border);
+      border-radius: 18px;
+    }
+    .img-placeholder-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .img-placeholder-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+      opacity: 0.7;
+    }
+
+    /* ─── CALLS I MADE — editorial poster sequence ──────────── */
+    .calls-section { padding: 5rem 0 0; }
+    .calls-lbl {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--red);
+      padding: 0 3rem; margin-bottom: 2rem;
+    }
+
+    /* Every block: centered column, one idea per viewport */
+    .call-block {
+      padding: 6rem 3rem 7rem;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center;
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.9s var(--ease-soft), transform 0.9s var(--ease-soft);
+    }
+    .call-block.call-revealed { opacity: 1; transform: translateY(0); }
+
+    /* Text wrapper — sits below every visual */
+    .call-text-wrap { margin-top: 2.5rem; max-width: 600px; width: 100%; }
+    .call-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 2.2vw, 2rem);
+      font-weight: 700; color: var(--dark);
+      line-height: 1.28; margin-bottom: 1rem;
+    }
+    .call-body {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem; line-height: 1.82; color: var(--muted);
+    }
+
+    /* ── 1: LOYALTY — centered portrait, scales in on reveal ── */
+    .call-block--loyalty { transform: scale(0.93); }
+    .call-block--loyalty.call-revealed { transform: scale(1); }
+    .cb-loy-wrap {
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 32px 90px rgba(0,0,0,0.14);
+      width: clamp(220px, 26vw, 340px);
+    }
+    .cb-loy-img { display: block; width: 100%; height: auto; }
+
+    /* ── 2: FAMILIARITY — image left, text right, slides in from left ── */
+    .call-block--familiarity {
+      flex-direction: row;
+      align-items: center;
+      text-align: left;
+      gap: 4rem;
+      padding: 5rem 5rem 6rem;
+      transform: translateX(-30px);
+    }
+    .call-block--familiarity.call-revealed { transform: translateX(0); }
+    .call-block--familiarity .call-text-wrap { margin-top: 0; max-width: 380px; flex: 1; }
+    .cb-fam-visual {
+      position: relative;
+      width: clamp(400px, 50vw, 640px);
+      flex-shrink: 0;
+      border-radius: 14px; overflow: hidden;
+      box-shadow: 0 20px 56px rgba(0,0,0,0.10);
+    }
+    .cb-fam-img { display: block; width: 100%; height: auto; }
+    /* Single ring on ACEPTAR — the big clear action button */
+    .cb-fam-ring {
+      position: absolute;
+      top: 29%; left: 1%; width: 32%; height: 8%;
+      border: 2px solid var(--red); border-radius: 6px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.55s var(--ease-soft) 0.65s;
+    }
+    .cb-fam-ann {
+      position: absolute;
+      top: 38%; left: 1.5%;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.57rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--red); white-space: nowrap; opacity: 0; pointer-events: none;
+      transition: opacity 0.5s var(--ease-soft) 1.05s;
+    }
+    .call-block--familiarity.call-revealed .cb-fam-ring { opacity: 1; }
+    .call-block--familiarity.call-revealed .cb-fam-ann  { opacity: 1; }
+
+    /* ── 3: DASHBOARD — near full-bleed, slides in from right ── */
+    .call-block--dashboard { transform: translateX(30px); }
+    .call-block--dashboard.call-revealed { transform: translateX(0); }
+    .cb-dash-outer {
+      width: clamp(720px, 94vw, 1160px);
+      border-radius: 14px; overflow: hidden;
+      box-shadow: 0 24px 72px rgba(0,0,0,0.12);
+    }
+    .cb-dash-img { display: block; width: 100%; height: auto; }
+
+    /* ── 4: PWA — quiet diagram (this is the benchmark) ── */
+    .cb-pwa-flow {
+      display: flex; align-items: center; justify-content: center;
+      gap: 3rem; margin-bottom: 1.5rem;
+    }
+    .cb-pwa-qr { width: 88px; height: 88px; flex-shrink: 0; opacity: 0.88; }
+    .cb-pwa-arrow {
+      font-family: 'DM Mono', monospace;
+      color: var(--muted); font-size: 1.6rem; opacity: 0.4;
+    }
+    .cb-pwa-phone {
+      width: clamp(100px, 11vw, 155px); border-radius: 14px; overflow: hidden;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.15);
+    }
+    .cb-pwa-phone img { display: block; width: 100%; height: auto; }
+    .cb-pwa-caption {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); opacity: 0.6;
+    }
+
+    /* ── 5: REWARD — centered, emotional close, gentle appear ── */
+    .call-block--reward {
+      padding-bottom: 9rem;
+      transform: translateY(12px);
+    }
+    .call-block--reward.call-revealed { transform: translateY(0); }
+    .cb-rew-visual {
+      width: clamp(260px, 28vw, 360px);
+      flex-shrink: 0;
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 32px 90px rgba(0,0,0,0.13);
+      aspect-ratio: 3 / 4;
+    }
+    .cb-rew-img {
+      display: block; width: 100%; height: 100%;
+      object-fit: cover; object-position: 50% 6%;
+    }
+
+    /* ── Mobile: stack Block 2 split back to column ── */
+    @media (max-width: 768px) {
+      .call-block--familiarity {
+        flex-direction: column;
+        text-align: center;
+        padding: 4rem 2rem 5rem;
+        gap: 2rem;
+      }
+      .call-block--familiarity .call-text-wrap { max-width: 100%; }
+      .cb-fam-visual { width: 100%; }
+    }
+
+    /* ─── BWC EDITORIAL BLOCKS ──────────────────────────────── */
+
+    /* ── BWC 1: Auth — centered portrait phone, scale-in ── */
+    .call-block--bwc-auth { transform: scale(0.93); }
+    .call-block--bwc-auth.call-revealed { transform: scale(1); }
+    .cb-bwc-phone {
+      border-radius: 22px; overflow: hidden;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.16);
+      width: clamp(200px, 22vw, 290px);
+    }
+    .cb-bwc-phone img { display: block; width: 100%; height: auto; }
+
+    /* ── BWC 2: Filter — two phones side by side, slides from left ── */
+    .call-block--bwc-filter { transform: translateX(-30px); }
+    .call-block--bwc-filter.call-revealed { transform: translateX(0); }
+    .cb-bwc-twophones {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .cb-bwc-twophones .cb-bwc-phone { width: clamp(150px, 16vw, 220px); }
+    .cb-bwc-twophones .cb-bwc-phone:first-child { opacity: 0.52; }
+    .cb-bwc-sep {
+      font-family: 'DM Mono', monospace;
+      color: var(--muted); font-size: 1.1rem; opacity: 0.35; flex-shrink: 0;
+      align-self: center; padding-bottom: 1rem;
+    }
+
+    /* ── BWC 3: Thumb-zone — centered, gentle appear ── */
+    .call-block--bwc-thumb {
+      padding-bottom: 6rem;
+      transform: translateY(12px);
+    }
+    .call-block--bwc-thumb.call-revealed { transform: translateY(0); }
+    .call-block--bwc-thumb .cb-bwc-phone { width: clamp(220px, 24vw, 320px); }
+
+    /* ── BWC: Emergency bridge — between calls and challenges ── */
+    .bwc-emergency-bridge {
+      padding: 3rem 3rem 5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .bwc-emerg-phone {
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 28px 88px rgba(0,0,0,0.18);
+      width: clamp(180px, 20vw, 260px);
+    }
+    .bwc-emerg-phone img { display: block; width: 100%; height: auto; }
+    .bwc-emerg-caption {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); opacity: 0.6; margin-top: 1.5rem;
+    }
+
+    /* ── BWC: Prototype link (in reflection) ── */
+    .bwc-proto {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .bwc-proto-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 1rem;
+    }
+    .bwc-proto-link {
+      display: inline-flex; align-items: baseline; gap: 1.25rem;
+      text-decoration: none; color: inherit;
+    }
+    .bwc-proto-url {
+      font-family: 'DM Mono', monospace; font-size: 0.82rem;
+      color: var(--dark); transition: color 0.2s ease;
+    }
+    .bwc-proto-link:hover .bwc-proto-url { color: var(--red); }
+    .bwc-proto-note {
+      font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+      color: var(--muted); opacity: 0.65;
+    }
+
+    /* ── Mobile: stack two-phone back to single ── */
+    @media (max-width: 640px) {
+      .cb-bwc-twophones { flex-direction: column; align-items: center; }
+      .cb-bwc-twophones .cb-bwc-phone { width: clamp(200px, 55vw, 260px); }
+      .cb-bwc-twophones .cb-bwc-phone:first-child { opacity: 1; }
+      .cb-bwc-sep { display: none; }
+    }
+
+    /* ── BWC: Team grid ── */
+    .bwc-team {
+      padding: 4rem 3rem 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .bwc-team .story-lbl { margin-bottom: 1.75rem; }
+    .bwc-team-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .bwc-team-card {
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .bwc-team-card:nth-child(odd) { padding-right: 3rem; }
+    .bwc-team-card:nth-child(even) {
+      padding-left: 3rem;
+      border-left: 1px solid var(--border);
+    }
+    .bwc-team-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 0.45rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .bwc-team-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      background: rgba(181, 56, 42, 0.08);
+      padding: 0.15em 0.5em;
+      border-radius: 3px;
+    }
+    .bwc-team-work {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ─── CAREGUARD CALLS ───────────────────────────────────── */
+    .cb-cg-screen {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 72px rgba(0,0,0,0.13);
+      width: clamp(260px, 44vw, 560px);
+    }
+    .cb-cg-screen img { display: block; width: 100%; height: auto; }
+
+    /* Block 1 — unified form: fade up */
+    .call-block--cg-unify { transform: translateY(24px); }
+    .call-block--cg-unify.call-revealed { transform: translateY(0); }
+
+    /* Block 2 — before/after status: slide from right */
+    .call-block--cg-status { transform: translateX(30px); }
+    .call-block--cg-status.call-revealed { transform: translateX(0); }
+    .cb-cg-twostate {
+      display: flex; gap: 1.5rem; align-items: flex-start; justify-content: center;
+    }
+    .cb-cg-twostate .cb-cg-screen { width: clamp(180px, 22vw, 280px); }
+    .cb-cg-twostate .cb-cg-screen:first-child { opacity: 0.42; }
+    .cb-cg-sep {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem; color: var(--muted); opacity: 0.35;
+      flex-shrink: 0; align-self: center;
+    }
+
+    /* Block 3 — research pivot: gentle appear */
+    .call-block--cg-pivot { transform: translateY(16px); padding-bottom: 6rem; }
+    .call-block--cg-pivot.call-revealed { transform: translateY(0); }
+    .call-block--cg-pivot .cb-cg-screen { width: clamp(260px, 44vw, 540px); }
+
+    /* CareGuard video at top of body */
+    .cg-video-wrap { padding: 3rem 3rem 0; }
+    .cg-video-clip {
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      aspect-ratio: 15.5 / 9.7;
+    }
+    .cg-video-clip video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: auto;
+    }
+
+    /* CareGuard prototype link */
+    .cg-proto { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .cg-proto-label {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: #3A6358; margin-bottom: 1rem;
+    }
+    .cg-proto-link { display: inline-flex; align-items: baseline; gap: 1.25rem; text-decoration: none; color: inherit; }
+    .cg-proto-url { font-family: 'DM Mono', monospace; font-size: 0.82rem; color: var(--dark); transition: color 0.2s ease; }
+    .cg-proto-link:hover .cg-proto-url { color: #3A6358; }
+    .cg-proto-note { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--muted); opacity: 0.65; }
+
+    /* ─── 360° FITTING CALLS ────────────────────────────────── */
+    .cb-fit-phone {
+      border-radius: 22px; overflow: hidden;
+      box-shadow: 0 28px 80px rgba(92,75,130,0.18);
+      width: clamp(190px, 20vw, 260px);
+    }
+    .cb-fit-phone img { display: block; width: 100%; height: auto; }
+
+    /* Block 1 — trust/fit indicators: tilt + slide from left */
+    .call-block--fit-trust { transform: rotate(-1.5deg) translateX(-18px); }
+    .call-block--fit-trust.call-revealed { transform: rotate(0deg) translateX(0); }
+
+    /* Block 2 — avatar-first: scale in */
+    .call-block--fit-avatar { transform: scale(0.92); }
+    .call-block--fit-avatar.call-revealed { transform: scale(1); }
+    .cb-fit-twophones {
+      display: flex; gap: 1.5rem; align-items: flex-end; justify-content: center;
+    }
+    .cb-fit-twophones .cb-fit-phone { width: clamp(150px, 16vw, 210px); }
+    .cb-fit-twophones .cb-fit-phone:first-child { opacity: 0.5; }
+    .cb-fit-sep {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem; color: var(--muted); opacity: 0.35;
+      flex-shrink: 0; align-self: center; padding-bottom: 1rem;
+    }
+
+    /* Block 3 — brand logos: fade up */
+    .call-block--fit-brand { transform: translateY(20px); padding-bottom: 6rem; }
+    .call-block--fit-brand.call-revealed { transform: translateY(0); }
+    .call-block--fit-brand .cb-fit-phone { width: clamp(200px, 22vw, 280px); }
+
+    /* 360° prototype link — purple accent */
+    .fit-proto { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .fit-proto-label {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: #5C4B82; margin-bottom: 1rem;
+    }
+    .fit-proto-link { display: inline-flex; align-items: baseline; gap: 1.25rem; text-decoration: none; color: inherit; }
+    .fit-proto-url { font-family: 'DM Mono', monospace; font-size: 0.82rem; color: var(--dark); transition: color 0.2s ease; }
+    .fit-proto-link:hover .fit-proto-url { color: #5C4B82; }
+    .fit-proto-note { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--muted); opacity: 0.65; }
+
+    /* ─── PETPALS CALLS ──────────────────────────────────────── */
+    .cb-pp-phone {
+      border-radius: 22px; overflow: hidden;
+      box-shadow: 0 28px 80px rgba(69,107,74,0.16);
+      width: clamp(190px, 20vw, 260px);
+    }
+    .cb-pp-phone img { display: block; width: 100%; height: auto; }
+
+    /* Block 1 — personas: tilt + slide from right */
+    .call-block--pp-personas { transform: rotate(1deg) translateX(20px); }
+    .call-block--pp-personas.call-revealed { transform: rotate(0deg) translateX(0); }
+
+    /* Block 2 — onboarding first: two phones, slide from left */
+    .call-block--pp-onboard { transform: translateX(-28px); }
+    .call-block--pp-onboard.call-revealed { transform: translateX(0); }
+    .cb-pp-twophones {
+      display: flex; gap: 1.5rem; align-items: flex-end; justify-content: center;
+    }
+    .cb-pp-twophones .cb-pp-phone { width: clamp(150px, 16vw, 210px); }
+    .cb-pp-twophones .cb-pp-phone:first-child { opacity: 0.5; }
+    .cb-pp-sep {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem; color: var(--muted); opacity: 0.35;
+      flex-shrink: 0; align-self: center; padding-bottom: 1rem;
+    }
+
+    /* Block 3 — trust signals: scale in */
+    .call-block--pp-trust { transform: scale(0.93); }
+    .call-block--pp-trust.call-revealed { transform: scale(1); }
+
+    /* Block 4 — usability iteration: fade up, last block */
+    .call-block--pp-iterate { transform: translateY(20px); padding-bottom: 6rem; }
+    .call-block--pp-iterate.call-revealed { transform: translateY(0); }
+    .call-block--pp-iterate .cb-pp-phone { width: clamp(200px, 22vw, 270px); }
+
+    /* PetPals video */
+    .pp-video-wrap { padding: 3rem 3rem 0; }
+    .pp-video-clip {
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 24px 72px rgba(0,0,0,0.18);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .pp-video-clip video {
+      display: block;
+      width: 185%;
+      margin-left: -42.5%;
+      margin-bottom: -8px;
+    }
+
+    /* PetPals prototype link — green accent */
+    .pp-proto { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .pp-proto-label {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: #456B4A; margin-bottom: 1rem;
+    }
+    .pp-proto-link { display: inline-flex; align-items: baseline; gap: 1.25rem; text-decoration: none; color: inherit; }
+    .pp-proto-url { font-family: 'DM Mono', monospace; font-size: 0.82rem; color: var(--dark); transition: color 0.2s ease; }
+    .pp-proto-link:hover .pp-proto-url { color: #456B4A; }
+    .pp-proto-note { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--muted); opacity: 0.65; }
+
+    /* ─── MIDI GLOVE CALLS ───────────────────────────────────── */
+    .cb-mg-photo {
+      border-radius: 8px; overflow: hidden;
+      box-shadow: 0 20px 64px rgba(0,0,0,0.22);
+      width: clamp(280px, 46vw, 560px);
+    }
+    .cb-mg-photo img { display: block; width: 100%; height: auto; }
+
+    /* Block 1 — gesture model: slide from left */
+    .call-block--mg-gesture { transform: translateX(-20px); }
+    .call-block--mg-gesture.call-revealed { transform: translateX(0); }
+
+    /* Block 2 — noise filtering: scale in */
+    .call-block--mg-noise { transform: scale(0.95); }
+    .call-block--mg-noise.call-revealed { transform: scale(1); }
+
+    /* Block 3 — V1 → V2: side-by-side, rise up */
+    .call-block--mg-v2 { transform: translateY(16px); padding-bottom: 6rem; }
+    .call-block--mg-v2.call-revealed { transform: translateY(0); }
+    .cb-mg-pair {
+      display: flex; gap: 2rem; align-items: flex-end; justify-content: center;
+    }
+    .cb-mg-pair .cb-mg-photo { width: clamp(200px, 22vw, 300px); }
+    .cb-mg-pair .cb-mg-photo:first-child { opacity: 0.48; }
+    .cb-mg-sep {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem; color: var(--muted); opacity: 0.35;
+      flex-shrink: 0; align-self: center;
+    }
+
+    /* MIDI Glove video */
+    .mg-video-wrap { padding: 3rem 3rem 0; }
+    .mg-video-wrap video {
+      width: 100%; border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2); display: block;
+    }
+
+    /* ─── CINEMATIC SCROLL STORY ─────────────────────────────── */
+    .scroll-story--cin {
+      grid-template-columns: 55% 45%;
+    }
+    .scroll-story--cin .scroll-story__sticky {
+      padding: 0;
+      top: 0;
+      height: 100vh;
+    }
+    .cin-panel {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: #0a0a0a;
+      overflow: hidden;
+    }
+    .cin-panel-label {
+      position: absolute;
+      top: 2rem;
+      left: 2.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      z-index: 2;
+    }
+    .scroll-story--cin .scroll-screen {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      padding: 3rem 4rem;
+      border-radius: 0;
+      opacity: 0;
+      transition: opacity 0.55s var(--ease-soft);
+      pointer-events: none;
+    }
+    .scroll-story--cin .scroll-screen.active { opacity: 1; }
+    .scroll-story--cin .scroll-story__steps { padding: 0; }
+    .cin-step {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1rem;
+      padding: 4rem 3.5rem;
+      opacity: 0.15;
+      transition: opacity 0.4s var(--ease-soft);
+      border-bottom: 1px solid var(--border);
+    }
+    .cin-step:last-child { min-height: 55vh; border-bottom: none; }
+    .cin-step.active { opacity: 1; }
+    .cin-moment {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .cin-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.3rem, 2.3vw, 1.85rem);
+      font-weight: 700;
+      line-height: 1.18;
+      color: var(--dark);
+    }
+    .cin-caption {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 40ch;
+    }
+    .proj-video-wrap {
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── REDUCED MOTION ─────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .dot-green { animation: none; opacity: 1; }
+      .reveal, .project-item {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .word-cycle .word { transition: none; }
+      #proj-progress { transition: none; }
+      .card-hover,
+      .card-mockup,
+      .card-corner.tr { transition: none; }
+      .scroll-screen,
+      .scroll-step,
+      .cin-step,
+      .scroll-count-big { transition: none; }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ─── READING PROGRESS ──────────────────────────────────── -->
+<div id="proj-progress"></div>
+
+<!-- ─── GRAIN ─────────────────────────────────────────────── -->
+<canvas id="grain"></canvas>
+
+<!-- ─── PROJECT COUNTER ───────────────────────────────────── -->
+<div id="project-counter">
+  <div class="counter-current" id="counter-num">01</div>
+  <div class="counter-sep"></div>
+  <div class="counter-total">06</div>
+</div>
+
+<!-- ─── CURSOR ────────────────────────────────────────────── -->
+<div id="cursor"></div>
+
+<!-- ─── NAV ───────────────────────────────────────────────── -->
+<nav id="nav">
+  <div class="nav-logo" id="navLogo">RS</div>
+  <div class="nav-links">
+    <a href="#work" id="navWork">Work</a>
+    <a href="#about" id="navAbout">About</a>
+    <a href="./Regina_Salem_Resume.pdf" target="_blank">Résumé ↗</a>
+    <a href="mailto:reginasalem01@gmail.com">Contact</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- HOME VIEW                                                  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="home-view">
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-eyebrow">Portfolio — 2026</div>
+    <h1 class="hero-name">
+      Regina<br><em>Salem</em>
+    </h1>
+    <div class="hero-bottom">
+      <div class="hero-role">
+        <div class="hero-role-label">Product &amp; Interaction Designer</div>
+        <p class="hero-statement">I design systems that make people feel <span class="word-cycle" aria-live="polite" aria-atomic="true"><span class="word active">confident.</span><span class="word">understood.</span><span class="word">guided.</span><span class="word">in&nbsp;control.</span></span></p>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-available">
+          <span class="dot-green"></span>
+          Open to opportunities
+        </div>
+        <a class="hero-building" href="#doggo">
+          Building: <span class="hero-building-name">Doggo →</span>
+        </a>
+        <div class="hero-scroll">
+          <span class="hero-scroll-line"></span>
+          Scroll to explore
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="section-label">Selected Work</div>
+    <div class="project-grid" id="projectGrid"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div>
+      <h2 class="about-heading reveal">
+        I design.<br>
+        I build.<br>
+        <em>And I actually ship&nbsp;it.</em>
+      </h2>
+    </div>
+    <div class="about-body reveal reveal-delay-1">
+      <p class="about-text">
+        I'm a product designer who takes projects all the way through. The work here spans mobile apps, enterprise UX, AR experiences, and hardware — because I got curious, and curiosity tends to compound.
+      </p>
+      <p class="about-text">
+        My work doesn't stop at the mockup. I've shipped a full-stack restaurant platform, built a Bluetooth MIDI glove from scratch, and taken six projects from research to working prototype — using AI to move fast and code to stay honest about what's actually buildable.
+      </p>
+      <p class="about-text">
+        Right now I'm finishing Doggo — real client, real deadline. Open to what's next.
+      </p>
+      <div class="skills-row">
+        <div>
+          <div class="skill-label">Design</div>
+          <div class="skill-list">Figma<br>Prototyping<br>User Research<br>HCD Methodology<br>Information Architecture</div>
+        </div>
+        <div>
+          <div class="skill-label">Development</div>
+          <div class="skill-list">Next.js · React<br>TypeScript<br>Supabase · SQL<br>Tailwind CSS<br>CircuitPython</div>
+        </div>
+        <div>
+          <div class="skill-label">Tools</div>
+          <div class="skill-list">Vercel<br>VS Code<br>GitHub<br>BLE / MIDI</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-name">Regina Salem</div>
+    <div class="footer-right">
+      <a href="mailto:reginasalem01@gmail.com">reginasalem01@gmail.com</a>
+      <a href="https://linkedin.com/in/regina-salem-3a4641226" target="_blank">LinkedIn</a>
+      <a href="https://github.com/reginasalem01" target="_blank">GitHub</a>
+    </div>
+  </footer>
+
+</div><!-- /home-view -->
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PROJECT VIEW                                               -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="project-view">
+  <button class="back-btn" id="backBtn">Back to Work</button>
+  <div id="project-content"></div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SCRIPT                                                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script>
+
+/* ── PROJECT DATA ───────────────────────────────────────────── */
+const PROJECTS = [
+  {
+    id: 'doggo',
+    num: '01',
+    title: 'Doggo',
+    tagline: 'Three experiences. One brand.<br>A hot dog restaurant gone digital.',
+    badge: 'Full-Stack App',
+    role: 'Solo — Design + Development',
+    stack: 'Next.js 15 · TypeScript · Supabase · Tailwind · Vercel',
+    year: '2026',
+    image: './pics/01_doggo.png',
+    video: './pics/doggo_demo_highlight.mp4',
+    proto: null,
+    color: '#D4A534',
+    desc: 'Helping a local hot dog restaurant digitize delivery, pickup, reservations, and loyalty — end to end.',
+    tags: 'Real Client · PWA · Full Stack · Being built now',
+    stats: [
+      { n: '3', label: 'interfaces' },
+      { n: '1', label: 'real client' },
+      { n: 'PWA', label: 'works on any device' },
+    ],
+    work: ['UX Design', 'Full-Stack Dev', 'Real Client'],
+    tier: 'primary',
+    status: 'Real client · In development',
+    insight: 'Three interfaces. One restaurant.<br>The loyalty card is the product.',
+    problem: 'My client — a local hot dog restaurant — had no digital presence beyond Instagram. No way to reward returning customers. No delivery or pickup ordering, no reservation system, no visibility into sales or inventory. Everything was manual, and the customer experience reflected that.',
+    solution: 'Doggo is a platform with three completely different interfaces designed for three completely different people: a mobile app for customers to order delivery or pickup, make reservations, and earn loyalty points, a panel for restaurant staff to manage the order queue, and an owner dashboard to track the whole operation. Same brand, three separate worlds.',
+    decisions: [
+      '<strong>Design loyalty before ordering.</strong> In Ecuador, the punch card already worked. The insight was making one that couldn\'t get lost. Ordering and delivery are both there — but I put the points dashboard first. The customer who keeps coming back is worth more than the one who orders&nbsp;once.',
+      '<strong>Design for familiarity.</strong> Restaurant staff are fast, reactive, usually working with one hand. The system couldn\'t require training. I built around patterns they already had — color-coded statuses, one card, one button. Familiarity isn\'t a UX trend. Here, it\'s a&nbsp;constraint.',
+      '<strong>Three questions. Thirty seconds.</strong> A restaurant owner at 8am doesn\'t want to analyze data. They want to know if yesterday worked. I built around three questions — Did today work? What sold? Who came back? — and removed everything that couldn\'t answer one of&nbsp;them.',
+      '<strong>Remove the download decision.</strong> People already knew how to scan. That behavior was already there — I just redirected it. Instead of sending users to an App Store, a QR opens Doggo immediately. Install in two taps. The friction was optional. I made it&nbsp;disappear.',
+      '<strong>Make coming back effortless.</strong> A new customer is a one-time win. A returning customer is the whole business model. I designed every interaction after the first order to pull people back — not through notifications, but through progress. Your points are waiting. Your reward is&nbsp;close.',
+    ],
+    challenges: [
+      '<strong>My client knew what the restaurant felt like — not what the app should do.</strong> They couldn\'t describe features, but they could describe moments: a regular walking in and being recognized, an order landing at the right table. Without a product spec, I had to build the brief&nbsp;myself.',
+      '<strong>Designing three interfaces at the same time without losing focus.</strong> Each portal serves a completely different user on a completely different device. The risk was building a mediocre version of all three instead of a sharp version of any one.',
+      '<strong>Making a PWA feel like a real app.</strong> Customers are used to the App Store. A QR code that installs without a download is unfamiliar territory — and first impressions in food-service are everything.',
+    ],
+    chalHow: [
+      'I ran working sessions mapping every moment of a customer visit — walk in, scan, order, wait, eat, leave. That sequence became the architecture. The spec wrote itself from the journey.',
+      'I decided early what each person should never have to see. That negative constraint — the "not your job" list — was more useful than any feature request. It kept each interface scoped to one person\'s actual job without compromise.',
+      'I designed the install flow like an onboarding sequence, not a system prompt. The animation, the copy, the first screen you see — every detail was engineered to make the unfamiliar feel inevitable.',
+    ],
+    decImages: [
+      './pics/doggo_customer.png',
+      './pics/doggo_customer.png',
+      './pics/doggo_restaurant.png',
+      './pics/doggo_owner.png',
+    ],
+    context: 'Doggo is a local hot dog restaurant. No digital presence of their own — no way to reward returning customers, no delivery or reservation system, no visibility into sales. Everything was manual. That\'s how a lot of startups begin. But they were ready to grow.',
+    reflection: 'Designing for a real client meant every decision had a face behind it. When I redesigned the loyalty card flow, I was thinking about the regular customer who comes in every Tuesday. When I structured the owner panel, I was thinking about someone who needs to update a menu price at 8am before the rush starts. Real constraints from a real person made the design sharper than any brief could.',
+    reflectionExtra: 'This was a learning curve. First PWA I ever built — figured it out as I went. First client who asked for something this layered across three completely different users. I\'m excited to launch it and see real results.',
+    screenTitle: 'One order, three moments',
+    tableauHeading: 'Scan once.<br>Three interfaces update.',
+    tableau: [
+      {
+        moment: 'The customer · 11:43 AM',
+        caption: 'A stamp is a win, not a database update.',
+        src: './pics/doggo_customer.png',
+        label: 'Customer App',
+        key: 'customer',
+      },
+      {
+        moment: 'The kitchen · Same moment',
+        caption: 'The order board updates before the ticket does.',
+        src: './pics/doggo_restaurant.png',
+        label: 'Restaurant Panel',
+        key: 'restaurant',
+      },
+      {
+        moment: 'The owner · End of day',
+        caption: 'Revenue, loyalty, peaks — one view.',
+        src: './pics/doggo_owner.png',
+        label: 'Owner Dashboard',
+        key: 'owner',
+      },
+    ],
+  },
+  {
+    id: 'bwc',
+    num: '02',
+    title: 'Body-Worn Camera',
+    tagline: 'Evidence management for law enforcement. Security first, always.',
+    badge: 'UX · Physical Product',
+    role: 'Team — Media Filters + FaceID/PIN Auth',
+    stack: 'Figma · UX Research · Interaction Design',
+    year: '2026',
+    image: './pics/02_bwc.png',
+    video: null,
+    proto: 'https://www.figma.com/proto/yuESeIhnqvLgIZZ3ldqX9M/Body-Worn-Camera?node-id=879-2338',
+    color: '#22252E',
+    desc: 'Designing clarity for high-pressure environments where every second matters.',
+    tags: 'Enterprise UX · System Design · Academic',
+    stats: [
+      { n: '2', label: 'auth factors' },
+      { n: '1 hand', label: 'thumb-zone first' },
+      { n: '3×', label: 'research rounds' },
+    ],
+    work: ['UX Research', 'Interaction Design', 'Prototyping'],
+    tier: 'secondary',
+    status: 'Academic · Figma prototype',
+    insight: 'An officer in the field shouldn\'t have to think about their evidence app.',
+    problem: 'Law enforcement officers need to access and review sensitive video evidence in the field. But existing systems require a desktop back at the station. The challenge: design a mobile interface that\'s fast enough for real-world use and secure enough for legal evidence.',
+    solution: 'A physical body-worn camera system paired with a secure mobile evidence management app. Two authentication factors. Advanced media filtering. Everything an officer needs in the field, reachable with one hand.',
+    decisions: [
+      '<strong>The PIN has to be as fast as FaceID — not a fallback.</strong> FaceID fails: low light, mask on, gloves. I owned the PIN flow — the number pad, the error states, the device lock after too many attempts. The design principle was that the officer shouldn\'t feel like they chose the worse option. Two keys, same door. And when testing showed that requiring re-authentication every time someone opened a media file was making officers skip reviewing footage entirely, authentication moved to device access. Once in, the session stays&nbsp;open.',
+      '<strong>Officers don\'t search by file name. They search by what they remember.</strong> Nobody looks for "file_20260223_130344.mp4." They say "the call around 11" or "Tuesday\'s shift." I designed the media section around three tabs — video, photo, audio — for immediate type filtering. Then inside each file: time recorded, GPS coordinates, officer badge ID, incident tags. The metadata I added wasn\'t about documentation. It was about giving officers the vocabulary they already use to find footage&nbsp;faster.',
+      '<strong>The device holds 24 hours. The officer shouldn\'t be counting.</strong> The storage bar turns red at 90% — visible at the bottom of every media screen. When it\'s time to clear space, the flow enforces one rule: you can only delete footage already uploaded to the cloud. The officer doesn\'t manage the safety check. The system&nbsp;does.',
+    ],
+    challenges: [
+      '<strong>Authentication kept interrupting the work it was supposed to protect.</strong> Early designs required re-authentication every time an officer opened a media file. In testing, the friction was enough that officers skipped reviewing footage altogether — the opposite of what the system was&nbsp;for.',
+      '<strong>Officers couldn\'t describe how they organized footage mentally until they couldn\'t find what they needed.</strong> Nobody could name their mental model in advance. "The call around 11." "The incident from Tuesday." The vocabulary was time and place — not file names or&nbsp;types.',
+    ],
+    chalHow: [
+      'Authentication now happens once at device access. Inside the session, evidence is accessible without re-prompting. The security doesn\'t disappear — it just moves to where it&nbsp;matters.',
+      'I built the filter taxonomy around field vocabulary: three tabs for type filtering, metadata that surfaces time recorded, GPS location, and officer ID. The fields that match how officers already describe what&nbsp;happened.',
+    ],
+    context: 'Team of four — each designer owned a section of the device. I owned the PIN authentication flow, the full media section (video, photo, and audio filtering with individual file views and metadata), and storage management. The camera captures evidence. The companion app determines whether an officer can actually use&nbsp;it.',
+    reflection: 'Designing for someone who might be using this in the dark, with one hand, while actually on the job — that changes everything. You stop adding things. You start cutting things. High stakes taught me that clarity isn\'t a style choice. It\'s the whole job.',
+    screenTitle: 'The companion app',
+    screens: [
+      {
+        src: './pics/bwc_home.png',
+        label: 'Home',
+        caption: 'Six capture modes, one tap away. Thumb-zone first — every critical action reachable without shifting your grip.',
+      },
+      {
+        src: './pics/bwc_media.png',
+        label: 'Media — All files',
+        caption: 'All footage, photos, and audio in one unified list. File type, sync status, and event tags visible at a glance.',
+      },
+      {
+        src: './pics/bwc_audio.png',
+        label: 'Media — Audio',
+        caption: 'Filter by type to find the right file in seconds. The 90% storage bar turns red — the officer sees it before it becomes a field problem.',
+      },
+      {
+        src: './pics/bwc_video.png',
+        label: 'Video detail',
+        caption: 'Tag footage to an incident category at the moment of capture. One linked record — no separate paperwork to file back at the station.',
+      },
+      {
+        src: './pics/bwc_incidents.png',
+        label: 'Incidents',
+        caption: 'Every incident, chronologically. Media count and sync status on each card — nothing requires drilling in just to check the status.',
+      },
+      {
+        src: './pics/bwc_photo.png',
+        label: 'Photo capture',
+        caption: 'One-tap capture with live preview. No mode switching. No confirmation screen. Tap and it\'s saved.',
+      },
+      {
+        src: './pics/bwc_emergency.png',
+        label: 'Emergency alert',
+        caption: 'A double-press triggers emergency recording. The full-screen orange state is unmistakable — live and locked until manually dismissed.',
+      },
+      {
+        src: './pics/bwc_captured.png',
+        label: 'Capture confirmed',
+        caption: 'Instant feedback after every action. The green toast updates storage in real time — no second-guessing whether it saved.',
+      },
+    ],
+  },
+  {
+    id: 'careguard',
+    num: '03',
+    title: 'Care Guard',
+    tagline: 'OSHA compliance for the people who need it most.',
+    badge: 'UX · HCD Research',
+    role: 'Lead UX Designer — Research, IA, Prototyping',
+    stack: 'Figma · HCD Methodology · User Research',
+    year: '2026',
+    image: './pics/03_incident.png',
+    video: './pics/careguard_demo.mp4',
+    proto: 'https://www.figma.com/design/zthy0FhY14Zt7hfAFTuvWu/Reporting-System---HCD?node-id=472-1507',
+    color: '#3A6358',
+    desc: 'Healthcare workers are most at risk of injury — and most burdened by the paperwork that follows. We fixed the paperwork.',
+    tags: 'HCD Research · Healthcare · UX · Academic',
+    stats: [
+      { n: '3→1', label: 'forms, one flow' },
+      { n: '0', label: 'data re-entry' },
+      { n: '3×', label: 'interview rounds' },
+    ],
+    work: ['HCD Research', 'Information Architecture', 'Prototyping'],
+    tier: 'secondary',
+    status: 'Academic · Figma prototype',
+    insight: 'One input. Three OSHA forms. Zero re-entry.',
+    context: 'Lead UX Designer — sole research lead on a Human-Centered Design project. Three interview rounds, two prototype pivots, and a compliance system that generates OSHA Form 300, 301, and Workers’ Comp from a single entry flow. Healthcare workers are the most at-risk workforce. They have enough paperwork.',
+    problem: 'Workplace injury reporting is broken. OSHA Form 300. Form 301. Workers\' Comp. Each form requires different data, different recipients, different deadlines. Healthcare workers file paper forms at the end of 12-hour shifts, and things fall through the cracks. The people most at risk of injury have the least support when they get hurt.',
+    solution: 'A digital incident reporting system that walks supervisors through compliance step by step — auto-generating OSHA 300, 301, and Workers\' Comp from a single input flow, routing them to the right people, and surfacing pending reports on a live status dashboard.',
+    decisions: [
+      '<strong>Enter once, generate three.</strong> The user enters information once. The system populates all three required forms simultaneously. No re-entry. No gaps. No "did I fill that one out?"',
+      '<strong>Supervisors shouldn\'t have to know OSHA\'s criteria by heart.</strong> The incident form employees submit captures everything the system needs — injury type, severity, days away, medical treatment required. The system classifies recordability automatically. The dashboard surfaces the count. The supervisor sees: three recordables this month. No manual lookup. No guessing.',
+      '<strong>HCD research changed the entire information architecture.</strong> The insight that mattered most — "I never know if my report went through" — came from our third interview round, after we thought we knew what to build. Staying in discovery longer saved us from building the wrong product.',
+    ],
+    challenges: [
+      '<strong>We had to throw out a prototype we were proud of.</strong> After round three of interviews, it was clear we\'d built the wrong thing — streamlined form-filling, for a problem users didn\'t have. Rebuilding around the status dashboard felt like going backward. It took until the final version for that call to feel like the right one.',
+      '<strong>Three different forms, one input flow.</strong> OSHA 300, 301, and Workers\' Comp each require different data in different formats for different recipients. Making one flow that captures everything — without feeling like three separate forms — required mapping every field across all three documents and finding where they overlapped.',
+    ],
+    chalHow: [
+      'Rebuilt the IA around the status dashboard. Form-fill became a sub-flow, not the hero. We stopped defending the first solution and rebuilt around what users actually needed to know.',
+      'I mapped every required field across all three OSHA documents, identified the overlaps, and built a unified question taxonomy. The system asks what a supervisor already knows — time, location, what happened — and routes those answers to where each form needs them.',
+    ],
+    reflection: 'Human-Centered Design is easy to say and hard to do. The most important insight came from the third interview, after we thought we were done with research. The willingness to stay in discovery mode — even when it felt slow — is what changed everything.',
+  },
+  {
+    id: '360fitting',
+    num: '04',
+    title: '360° Fitting',
+    tagline: 'Try before you buy. Virtually.',
+    badge: 'UX · AR · Mobile',
+    role: 'Co-designer — End-to-End UX',
+    stack: 'Figma · UX Research · AR Concept',
+    year: '2023',
+    image: './pics/04_360fitting.png',
+    video: null,
+    proto: 'https://www.figma.com/proto/dz0oNrpb2J3LfhONg4c4b3/360--Fitting?node-id=108-235',
+    color: '#5C4B82',
+    desc: 'An AR fitting room that closes the gap between online shopping and physical reality.',
+    tags: 'AR · Mobile · UX · Academic',
+    stats: [
+      { n: '↓30%', label: 'return rate — the goal' },
+      { n: '2', label: 'person team' },
+      { n: '1', label: 'avatar, any brand' },
+    ],
+    work: ['User Research', 'UX Design', 'AR Concept'],
+    imgs: [
+      './pics/fit_profile.png',
+      './pics/fit_tryon.png',
+      './pics/fit_cart.png',
+      './pics/fit_brands.png',
+    ],
+    tier: 'supporting',
+    status: 'Academic · Figma prototype',
+    insight: 'The AR is the easy part. Trust is the design problem.',
+    context: 'Two-person team — co-designed end-to-end. Thirty percent of online clothing orders are returned because the fit is wrong. Size guides don\'t account for body shape, fabric drape, or brand inconsistency. The AR was never the hard part. Getting people to trust it was.',
+    problem: 'Online shoppers return up to 30% of clothing because the fit is wrong. Size guides don\'t account for body shape, fabric behavior, or brand inconsistency. The existing solution is a worse version of the problem.',
+    solution: 'A mobile AR app where users build a personalized avatar with their body measurements, then virtually try on clothes from partner brands — Zara, Urban Outfitters, Forever 21 — watching fabric move and fit react in real time before purchasing.',
+    decisions: [
+      '<strong>Not S, M, or L. Your actual measurements.</strong> Virtual try-on only builds trust if users believe it knows their body. That starts before any clothes appear — with a profile: height, weight, bust, waist, hips, torso, leg length. Every item they try on is fitted to those numbers, not to a brand\'s guess at what "medium" means.',
+      '<strong>One cart. Three different stores.</strong> Most online shoppers split their session across tabs. We built a cart that spans all of them — pick a jacket from Zara, trousers from Urban Outfitters, shoes from Forever 21, try everything on the same avatar, and check out once.',
+      '<strong>Brand availability has to come first.</strong> Coverage anxiety — "what if my store isn\'t here?" — was the top concern in usability testing. Partner logos are the first thing users see in onboarding, before they go looking for their favorite brand.',
+    ],
+    challenges: [
+      '<strong>Users didn\'t doubt the AR — they doubted themselves.</strong> Testing revealed the hesitation wasn\'t "will this technology work?" but "what if I measured wrong?" or "what if this brand sizes differently?" The design challenge shifted from explaining the technology to reassuring users their input was correct.',
+      '<strong>Sizing inconsistency across brands.</strong> A Medium at Zara is not a Medium at Urban Outfitters. We couldn\'t pretend this wasn\'t true — users already knew it. So we designed around it: the FAQ and visual fit indicators exist specifically to acknowledge the gap and give users confidence anyway.',
+    ],
+    chalHow: [
+      'Moved away from explaining how the AR works and toward reassuring users their measurements were right. Added measurement confirmation screens and made the fit FAQ accessible from every try-on view.',
+      'Built brand-specific fit calibration into the avatar system. Each partner\'s size chart maps to the avatar\'s geometry. The FAQ explains this explicitly — not to hide the inconsistency, but so users understand why a Medium here might not be a Medium there.',
+    ],
+    reflection: 'The most important lesson: the technical innovation (AR fitting) mattered less than the user emotion (trust). We spent more design effort on trust signals than on the AR experience itself. The technology only works if people believe it.',
+  },
+  {
+    id: 'petpals',
+    num: '05',
+    title: 'Pet Pals',
+    tagline: 'Tinder for pets. Designed end-to-end.',
+    badge: 'UX · Mobile',
+    role: 'Wireframing + Prototyping · Team of 4',
+    stack: 'Figma · User Research · Usability Testing',
+    year: '2024',
+    image: './pics/05_petpals.png',
+    video: './pics/petpals_demo.mp4',
+    proto: 'https://www.figma.com/proto/GhRDhgRUU2WmGf1hyxzzmy/PetPals-Wireframe?node-id=113-2295',
+    color: '#456B4A',
+    desc: 'A swipe-based app that turns "my dog needs friends" into an actual meetup plan.',
+    tags: 'UX · Wireframing · Prototyping · Academic',
+    stats: [
+      { n: '3', label: 'personas' },
+      { n: '2', label: 'usability rounds' },
+      { n: '4', label: 'person team' },
+    ],
+    work: ['Wireframing', 'Usability Testing', 'Team of 4'],
+    imgs: [
+      './pics/pp_card.png',
+      './pics/pp_match.png',
+      './pics/pp_chat.png',
+      './pics/pp_trust.png',
+      './pics/pp_events.png',
+    ],
+    tier: 'supporting',
+    status: 'Academic · Figma prototype',
+    insight: 'Trust isn\'t a feature. It\'s a sequence.',
+    context: 'Team of four — wireframing to prototype, end-to-end. Two rounds of usability testing, three personas, one insight that only testing confirmed: safety anxiety shows up before the first swipe, not after the first bad match. Trust has to be visible from screen one.',
+    problem: 'Pet owners have no structured way to find safe, compatible playmates for their pets. Facebook groups and dog parks work — but they\'re unfiltered, lack safety signals, and have no way to coordinate a meetup without a phone number exchange.',
+    solution: 'A swipe-based matching app. See a pet card, tap the green or red paw, get matched when the other side taps green too, message, and turn it into a real meetup using the built-in events tab.',
+    decisions: [
+      '<strong>The card has to do all the work.</strong> Name, breed, owner, location, star rating, temperament, vaccination status — all visible before you tap a paw. If the card doesn\'t give you enough to decide, you won\'t decide.',
+      '<strong>Both paws green. Then the conversation opens.</strong> Messaging is only unlocked by a mutual match. No cold messages from strangers. No awkward rejections. If both pets get a green paw, you talk.',
+      '<strong>Trust in the card, not in a settings screen.</strong> Vaccination status, neutering status, and temperament sliders are visible on the main profile view — before any swipe is made. Safety signals can\'t live two taps deep.',
+      '<strong>The match is the beginning. The meetup is the point.</strong> Pets need to play in person, not just match online. The events tab shows local meetups nearby — dog play days, bunny jump events — and lets you share them directly to a match.',
+    ],
+    challenges: [
+      '<strong>Users matched with pets and immediately asked "wait, can I undo that?"</strong> There was no undo. One usability test session made it clear this wasn\'t a minor gap — it was a trust issue. If matching feels permanent and accidental, people stop engaging. Swipe gestures and an undo state were added before the final prototype shipped.',
+      '<strong>Safety features made the app feel slow. Engagement features made it feel unsafe.</strong> Parents needed ID verification and ratings to feel comfortable. Students wanted fast swiping and instant chat. Every time we optimized for one, the other suffered. Finding the balance required two full design iterations and a lot of uncomfortable prioritization conversations.',
+    ],
+    chalHow: [
+      'Added swipe gesture and undo state before the final prototype shipped. Next test session, no one hesitated.',
+      'Kept ID verification and Paws Up ratings in the main profile view — visible on the first swipe, not buried in settings. The sequence matters: show trust before you ask for it.',
+    ],
+    reflection: 'First time doing a full usability evaluation and actually iterating from what I found. Watching someone hit a problem, fixing it, then watching the next person sail right past it — that clicked something for me. Fix it. Test it. See it disappear. That\'s what this is.',
+  },
+  {
+    id: 'midiglove',
+    num: '06',
+    title: 'MIDI Glove',
+    tagline: 'Your hand IS the instrument.',
+    badge: 'Physical Computing',
+    role: 'Solo — Concept, Hardware, Code',
+    stack: 'CircuitPython · Adafruit Feather · BLE MIDI · IMU',
+    year: '2026',
+    image: './pics/06_midiglove.png',
+    video: './pics/midiglove_demo.mp4',
+    proto: null,
+    color: '#1A1614',
+    desc: 'A wearable MIDI controller built from a glove, a microcontroller, and conductive tape. No cables. No desk. Just a hand.',
+    tags: 'Physical Computing · Hardware · Solo',
+    stats: [
+      { n: '4', label: 'gestures mapped' },
+      { n: 'V1→V2', label: 'full iteration' },
+      { n: '0', label: 'cables' },
+    ],
+    work: ['Hardware Design', 'CircuitPython', 'BLE MIDI'],
+    imgs: [
+      './pics/mg_glove.png',
+      './pics/mg_sensor.png',
+      './pics/mg_v1.png',
+      './pics/mg_v2.png',
+    ],
+    tier: 'supporting',
+    status: 'Personal build · CircuitPython',
+    insight: 'The glove disappears. Only the music is left.',
+    context: 'I play piano. When I\'m away from one, I still hear music in my head — melodies to work out, chords to test, rhythms that show up at the wrong time. I wanted to do something about that. The MIDI Glove started as a question: what if the instrument traveled with you? Solo build, concept to code. A glove, conductive tape, and an Adafruit Feather nRF52840 worn on the wrist. Touch a finger to your thumb to play a note. Rotate your wrist to bend pitch. Flick your hand to hit a snare. All sent wirelessly via BLE MIDI to GarageBand. No piano. No cables. Just a hand.',
+    problem: 'I\'ve been playing piano long enough to know that the impulse to make music doesn\'t wait for you to be near an instrument. It shows up on a commute, in a waiting room, mid-thought. Every musician knows the feeling — you hear something in your head and have no way to get it out. I wanted to build the thing that closes that gap.',
+    solution: 'A wearable MIDI controller: a glove with conductive tape on the fingertips, an Adafruit Feather nRF52840 and LSM6DS33 IMU on the wrist. Three gesture types — touch, rotate, flick — map to three musical outputs: notes, pitch bend, and percussion. All transmitted wirelessly via BLE MIDI. Built in CircuitPython, iterated from a proof-of-concept kitchen glove to a fully expressive wireless instrument.',
+    decisions: [
+      '<strong>The gesture model came before the electronics.</strong> I started by asking: what does a hand naturally do? Finger-to-thumb contact — the same motion as checking a texture — triggers notes via digital pin and pull-up resistor (8 pins mapped to C4→C5). Wrist rotation — the doorknob gesture — controls pitch bend through the gyroscope Z-axis. A sharp hand flick fires a drum hit via accelerometer spike on MIDI ch 10. Each gesture already existed. I just gave it a sound.',
+      '<strong>The hardest problem wasn\'t capturing motion — it was ignoring everything else.</strong> Early versions triggered false notes constantly. Just moving my hand normally would fire a chord. I built three layered rules: an 80°/s gyro threshold so pitch bend only fires on deliberate rotation (with a deadzone of 50 to filter micro-tremors); a 15 m/s² shake minimum and 0.3s drum cooldown so only intentional flicks hit the snare; and state-change detection on touch inputs that fires exactly once per contact — never while held. Each rule alone barely helped. Together they eliminated ghost notes entirely.',
+      '<strong>V1 proved the concept. V2 made it an instrument.</strong> Version one was a kitchen glove with conductive tape on four fingertips. Touch finger to thumb, play a note. That was it — and it worked. But it was just a clunky keyboard attached to a hand. Version two added the Adafruit Feather nRF52840, the LSM6DS33 IMU for motion sensing, BLE MIDI for wireless output, pitch bend from wrist rotation, and drum triggering from the accelerometer. The idea didn\'t change. What changed was that it finally felt like something worth playing.',
+    ],
+    challenges: [
+      '<strong>The glove couldn\'t tell the difference between playing and existing.</strong> A hand is never perfectly still — and early versions treated every movement as input. False notes fired constantly. The fix wasn\'t hardware; it was building a smarter decision model in software. I layered three rules on top of each other: contact duration, gyro sensitivity threshold, and transition-only state detection. The breakthrough was realizing that each rule alone reduced noise but didn\'t eliminate it — it was the combination that worked.',
+      '<strong>BLE latency was making the glove feel like a broken instrument.</strong> I play piano. I know what immediate key-to-sound response feels like. The first wireless version had enough delay to completely throw off timing — the sound was arriving after the gesture, not with it. I fixed it by switching from a polling loop to interrupt-driven input and batching MIDI sends only when state actually changed. Getting latency low enough that gesture and sound felt simultaneous was what turned a prototype into something I actually wanted to play.',
+    ],
+    chalHow: [
+      'Built three layered filtering rules in CircuitPython: 80°/s gyro sensitivity threshold, 15 m/s² shake minimum with 0.3s drum cooldown, and state-change detection that fires once on contact — never while held. No single rule solved it. The combination did.',
+      'Switched from a polling loop to interrupt-driven input. MIDI packets send only when state actually changes — not on every loop tick. Latency dropped to the point where gesture and sound felt simultaneous. That\'s when it stopped being a prototype.',
+    ],
+    reflection: 'I built this because I play piano and I wanted music to be portable. What I didn\'t expect was how much building a physical instrument would teach me about design. Every hardware constraint had a musical consequence — the 0.3s drum cooldown shapes the rhythmic feel; the pitch deadzone is the difference between expressive bends and random wobble. The constraint and the design decision are the same thing. I didn\'t realize that until I built something you could actually hear.',
+  },
+];
+
+/* ── GRAIN ──────────────────────────────────────────────────── */
+(function initGrain() {
+  const c = document.getElementById('grain');
+  const ctx = c.getContext('2d');
+  c.width = 320; c.height = 320;
+  const id = ctx.createImageData(320, 320);
+  for (let i = 0; i < id.data.length; i += 4) {
+    const v = Math.random() * 255;
+    id.data[i] = v; id.data[i+1] = v; id.data[i+2] = v; id.data[i+3] = 255;
+  }
+  ctx.putImageData(id, 0, 0);
+  c.style.backgroundImage = `url(${c.toDataURL()})`;
+  c.style.backgroundSize = '320px 320px';
+  c.style.position = 'fixed';
+  c.style.inset = '0';
+  c.style.width = '100vw';
+  c.style.height = '100vh';
+  c.style.opacity = '0.038';
+  c.style.pointerEvents = 'none';
+  c.style.zIndex = '9998';
+  c.style.imageRendering = 'pixelated';
+})();
+
+/* ── CURSOR ─────────────────────────────────────────────────── */
+const $cursor = document.getElementById('cursor');
+const _hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+let cx = -100, cy = -100;
+
+if (_hasHover) {
+  document.addEventListener('mousemove', e => {
+    cx = e.clientX; cy = e.clientY;
+    $cursor.style.left = cx + 'px';
+    $cursor.style.top  = cy + 'px';
+  });
+}
+
+function addHover(el) {
+  if (!_hasHover) return;
+  el.addEventListener('mouseenter', () => $cursor.classList.add('big'));
+  el.addEventListener('mouseleave', () => $cursor.classList.remove('big'));
+}
+document.querySelectorAll('a, button, .nav-logo').forEach(addHover);
+
+/* ── WORD CYCLE ──────────────────────────────────────────────── */
+function initWordCycle() {
+  const container = document.querySelector('.word-cycle');
+  if (!container) return;
+  const words = [...container.querySelectorAll('.word')];
+  if (!words.length) return;
+
+  // Reduced-motion: show first word, no cycling
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    words[0].classList.add('active');
+    container.setAttribute('aria-live', 'off');
+    return;
+  }
+
+  let current = 0;
+  let cycles  = 0;
+  const TOTAL = words.length; // one full loop, ends back on word[0]
+  words[0].classList.add('active');
+
+  let cycleTimer;
+
+  function scheduleNext() {
+    cycleTimer = setTimeout(step, 3000);
+  }
+
+  function step() {
+    if (document.hidden) return; // paused — resumed via visibilitychange
+    cycles++;
+    const prev = current;
+    current = (current + 1) % words.length;
+
+    words[prev].classList.add('leaving');
+    words[prev].classList.remove('active');
+    words[current].classList.add('active');
+
+    setTimeout(() => {
+      words[prev].classList.remove('leaving');
+      if (cycles < TOTAL) {
+        scheduleNext();
+      } else {
+        container.setAttribute('aria-live', 'off'); // done — silence screen reader
+      }
+    }, 720);
+  }
+
+  scheduleNext();
+
+  // Pause when tab is hidden, resume when visible (only if not done)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearTimeout(cycleTimer);
+    } else if (cycles < TOTAL) {
+      scheduleNext();
+    }
+  });
+}
+
+/* ── PROJECT LIST ────────────────────────────────────────────── */
+function buildGrid() {
+  const container = document.getElementById('projectGrid');
+  container.className = 'project-list';
+
+  function cardHtml(p) {
+    return `
+      <div class="project-item project-item--${p.tier}">
+        <a class="project-card" href="#${p.id}" data-id="${p.id}"
+           style="background:${p.color}"
+           aria-label="View ${p.title} case study">
+          <img class="card-mockup" src="${p.image}" alt="${p.title} — ${p.desc}" loading="lazy">
+          <div class="card-num-big">${p.num}</div>
+          <div class="card-corner tr">↗</div>
+          <div class="card-hover">
+            <p class="card-hover-insight">${p.insight}</p>
+            <span class="card-hover-cta">View case study</span>
+          </div>
+        </a>
+        <div class="card-below">
+          <div class="card-below-main">
+            <div class="card-status">${p.status}</div>
+            <div class="card-title-below">${p.title}</div>
+            <p class="card-desc">${p.desc}</p>
+          </div>
+          <a class="card-cta" href="#${p.id}" data-id="${p.id}">View case study →</a>
+        </div>
+      </div>`;
+  }
+
+  const primary    = PROJECTS.filter(p => p.tier === 'primary');
+  const secondary  = PROJECTS.filter(p => p.tier === 'secondary');
+  const supporting = PROJECTS.filter(p => p.tier === 'supporting');
+
+  container.innerHTML =
+    primary.map(cardHtml).join('') +
+    secondary.map(cardHtml).join('') +
+    `<div class="supporting-group">${supporting.map(cardHtml).join('')}</div>`;
+
+  // Wire up project-card clicks (prevent default href, open via JS)
+  container.querySelectorAll('.project-card[data-id]').forEach(card => {
+    addHover(card);
+    card.addEventListener('click', e => {
+      e.preventDefault();
+      openProject(card.dataset.id);
+    });
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openProject(card.dataset.id);
+      }
+    });
+  });
+
+  // CTA links also open project
+  container.querySelectorAll('.card-cta[data-id]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      openProject(link.dataset.id);
+    });
+  });
+}
+
+/* ── SCROLL STORY HTML ──────────────────────────────────────── */
+function scrollStoryHtml(p) {
+  if (!p.screens || !p.screens.length) return '';
+  const variant = p.id === 'bwc' ? 'portrait' : 'landscape';
+
+  const screensHtml = p.screens.map((s, i) =>
+    '<img class="scroll-screen' + (i === 0 ? ' active' : '') + '" src="' + s.src + '" alt="' + s.label + '" loading="lazy">'
+  ).join('\n            ');
+
+  const stepsHtml = p.screens.map((s, i) =>
+    '<div class="scroll-step" data-slide="' + i + '">' +
+    '<div class="step-num">' + String(i + 1).padStart(2, '0') + '</div>' +
+    '<div class="story-lbl">' + s.label + '</div>' +
+    '<p class="step-caption">' + s.caption + '</p>' +
+    '</div>'
+  ).join('\n        ');
+
+  return '\n    <div class="scroll-story" data-project="' + p.id + '">' +
+    '\n      <div class="scroll-story__sticky">' +
+    '\n        <div class="scroll-story__sticky-inner">' +
+    '\n          <div class="story-lbl">' + p.screenTitle + '</div>' +
+    '\n          <div class="scroll-device scroll-device--' + variant + '">' +
+    '\n            ' + screensHtml +
+    '\n          </div>' +
+    '\n        </div>' +
+    '\n      </div>' +
+    '\n      <div class="scroll-story__steps">' +
+    '\n        ' + stepsHtml +
+    '\n      </div>' +
+    '\n    </div>';
+}
+
+/* ── COUNTER SCROLL STORY HTML ──────────────────────────────── */
+function counterScrollStory(projectId, sectionId, sectionTitle, items) {
+  if (!items || !items.length) return '';
+
+  const stepsHtml = items.map((item, i) =>
+    '<div class="scroll-step" data-slide="' + i + '">' +
+    '<div class="story-lbl">' + item.head + '</div>' +
+    '<p class="step-caption">' + item.body + '</p>' +
+    '</div>'
+  ).join('\n        ');
+
+  return '\n    <div class="scroll-story scroll-story--counter"' +
+    ' data-project="' + projectId + '" data-section="' + sectionId + '">' +
+    '\n      <div class="scroll-story__sticky">' +
+    '\n        <div class="scroll-counter-panel">' +
+    '\n          <div class="story-lbl">' + sectionTitle + '</div>' +
+    '\n          <div class="scroll-count-big">01</div>' +
+    '\n          <div class="scroll-count-meta">of ' + String(items.length).padStart(2, '0') + '</div>' +
+    '\n        </div>' +
+    '\n      </div>' +
+    '\n      <div class="scroll-story__steps">' +
+    '\n        ' + stepsHtml +
+    '\n      </div>' +
+    '\n    </div>';
+}
+
+/* ── PROJECT PAGE ────────────────────────────────────────────── */
+function doggoTableauHtml(p) {
+  if (!p.tableau || !p.tableau.length) return '';
+  const first = p.tableau[0];
+  const imgsHtml = p.tableau.map(function(img, i) {
+    return '<div class="t-img t-img--' + img.key + (i === 0 ? ' active' : '') +
+      '" data-step="' + i +
+      '" data-moment="' + img.moment +
+      '" data-caption="' + img.caption + '">' +
+      '<img src="' + img.src + '" alt="' + img.label + '" loading="lazy">' +
+    '</div>';
+  }).join('\n');
+  const triggersHtml = p.tableau.map(function(_, i) {
+    return '<div class="tableau-trigger" data-step="' + i + '"></div>';
+  }).join('\n');
+  return '<div class="doggo-tableau">' +
+    '<div class="doggo-canvas">' +
+      '<div class="tableau-lbl">' + (p.screenTitle || '') + '</div>' +
+      imgsHtml +
+      '<div class="tableau-anno">' +
+        '<span class="anno-moment">' + first.moment + '</span>' +
+        '<span class="anno-caption">' + first.caption + '</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="tableau-triggers">' + triggersHtml + '</div>' +
+  '</div>';
+}
+
+function initDoggoTableau(el) {
+  const triggers   = el.querySelectorAll('.tableau-trigger');
+  const imgs       = el.querySelectorAll('.t-img');
+  const annoMoment = el.querySelector('.anno-moment');
+  const annoCaption= el.querySelector('.anno-caption');
+  if (!triggers.length || !imgs.length) return;
+
+  function goTo(idx) {
+    imgs.forEach(function(img) { img.classList.remove('active'); });
+    var active = imgs[idx];
+    if (!active) return;
+    active.classList.add('active');
+    if (annoMoment)  annoMoment.textContent  = active.dataset.moment  || '';
+    if (annoCaption) annoCaption.textContent = active.dataset.caption || '';
+  }
+  goTo(0);
+
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) goTo(parseInt(entry.target.dataset.step));
+    });
+  }, { rootMargin: '-30% 0px -30% 0px', threshold: 0 });
+  triggers.forEach(function(t) { obs.observe(t); });
+}
+
+function initDoggoVideoStory(el) {
+  var video    = el.querySelector('.doggo-scrub-video');
+  var annos    = el.querySelectorAll('.vd-anno');
+  var triggers = el.querySelectorAll('.dvt');
+  if (!triggers.length) return;
+
+  // Switch annotations as scroll triggers intersect
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (!entry.isIntersecting) return;
+      var step = parseInt(entry.target.dataset.step);
+      annos.forEach(function(a, i) {
+        a.classList.toggle('active', i === step);
+      });
+    });
+  }, { rootMargin: '-30% 0px -30% 0px', threshold: 0 });
+  triggers.forEach(function(t) { obs.observe(t); });
+
+  // Scrub video with scroll position
+  if (!video || !video.getAttribute('src')) return;
+  function scrub() {
+    var rect      = el.getBoundingClientRect();
+    var scrollable = el.offsetHeight - window.innerHeight;
+    if (scrollable <= 0) return;
+    var scrolled  = Math.max(0, -rect.top);
+    var progress  = Math.min(1, scrolled / scrollable);
+    if (video.readyState >= 1 && video.duration) {
+      video.currentTime = progress * video.duration;
+    }
+  }
+  window.addEventListener('scroll', scrub, { passive: true });
+  video.addEventListener('loadedmetadata', scrub);
+}
+
+function initCallsSection(el) {
+  var blocks = el.querySelectorAll('.call-block');
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('call-revealed');
+      obs.unobserve(entry.target);
+    });
+  }, { threshold: 0.22 });
+  blocks.forEach(function(b) { obs.observe(b); });
+}
+
+function cinematicScrollStory(p) {
+  if (!p.cinematic || !p.cinematic.length) return '';
+  const screensHtml = p.cinematic.map(function(s, i) {
+    return '<img class="scroll-screen' + (i === 0 ? ' active' : '') + '" src="' + s.src + '" alt="' + s.label + '" loading="lazy">';
+  }).join('\n    ');
+  const stepsHtml = p.cinematic.map(function(s, i) {
+    return '<div class="scroll-step cin-step" data-slide="' + i + '">' +
+      '<div class="cin-moment">' + s.moment + '</div>' +
+      '<div class="cin-heading">' + s.heading.replace(/\n/g, '<br>') + '</div>' +
+      '<p class="cin-caption">' + s.caption + '</p>' +
+      '</div>';
+  }).join('\n    ');
+  return '<div class="scroll-story scroll-story--cin" data-project="' + p.id + '">' +
+    '<div class="scroll-story__sticky">' +
+    '<div class="cin-panel">' +
+    '<div class="cin-panel-label">' + (p.screenTitle || '') + '</div>' +
+    screensHtml +
+    '</div>' +
+    '</div>' +
+    '<div class="scroll-story__steps">' +
+    stepsHtml +
+    '</div>' +
+    '</div>';
+}
+
+function doggoBodyHtml(p) {
+  function ps(html) {
+    var m = html.match(/^<strong>(.*?)<\/strong>\s*(.*)/s);
+    return m ? { head: m[1], body: m[2] } : { head: '', body: html };
+  }
+  var decs  = (p.decisions  || []).map(ps);
+  var chals = (p.challenges || []).map(ps);
+  var how   = p.chalHow || [];
+
+  // QR code SVG (stylized, for PWA section)
+  var qrSvg =
+    '<svg width="88" height="88" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">' +
+    '<rect x="3" y="3" width="26" height="26" fill="none" stroke="#1A1714" stroke-width="2.5" rx="3"/>' +
+    '<rect x="10" y="10" width="12" height="12" fill="#1A1714" rx="1"/>' +
+    '<rect x="59" y="3" width="26" height="26" fill="none" stroke="#1A1714" stroke-width="2.5" rx="3"/>' +
+    '<rect x="66" y="10" width="12" height="12" fill="#1A1714" rx="1"/>' +
+    '<rect x="3" y="59" width="26" height="26" fill="none" stroke="#1A1714" stroke-width="2.5" rx="3"/>' +
+    '<rect x="10" y="66" width="12" height="12" fill="#1A1714" rx="1"/>' +
+    '<rect x="33" y="3" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="41" y="3" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="49" y="3" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="33" y="11" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="49" y="11" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="41" y="19" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="33" y="27" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="49" y="27" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="3" y="33" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="11" y="33" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="27" y="33" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="33" y="33" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="41" y="41" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="49" y="33" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="59" y="33" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="75" y="33" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="3" y="41" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="19" y="41" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="33" y="41" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="59" y="41" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="67" y="41" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="3" y="49" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="11" y="49" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="27" y="49" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="33" y="49" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="49" y="49" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="59" y="49" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="75" y="57" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="33" y="59" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="49" y="59" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="59" y="59" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="67" y="59" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="75" y="59" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="33" y="67" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="41" y="75" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="49" y="67" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="59" y="75" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="67" y="67" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '<rect x="75" y="75" width="6" height="6" fill="#1A1714" rx="1"/>' +
+    '</svg>';
+
+  // The calls I made — five editorial poster moments
+  var decisionsHtml =
+    '<div class="calls-section">' +
+      '<div class="calls-lbl">Calls I made, and why</div>' +
+
+      // 1 — LOYALTY: centered phone, slow zoom on reveal
+      '<div class="call-block call-block--loyalty">' +
+        '<div class="cb-loy-wrap">' +
+          '<img class="cb-loy-img" src="./pics/doggo_points.png" alt="Customer loyalty points screen" loading="lazy">' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">People came back for the stamp, not the&nbsp;menu.</h3>' +
+          '<p class="call-body">' + decs[0].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // 2 — FAMILIARITY: contained landscape panel, annotation ring on reveal
+      '<div class="call-block call-block--familiarity">' +
+        '<div class="cb-fam-visual">' +
+          '<img class="cb-fam-img" src="./pics/doggo_panel_live.png" alt="Restaurant order panel" loading="lazy">' +
+          '<div class="cb-fam-ring"></div>' +
+          '<div class="cb-fam-ann">One glance. One status.</div>' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">' + decs[1].head + '</h3>' +
+          '<p class="call-body">' + decs[1].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // 3 — DASHBOARD: contained, clean, no effects — headline does the work
+      '<div class="call-block call-block--dashboard">' +
+        '<div class="cb-dash-outer">' +
+          '<img class="cb-dash-img" src="./pics/doggo_owner.png" alt="Owner dashboard" loading="lazy">' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">' + decs[2].head + '</h3>' +
+          '<p class="call-body">' + decs[2].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // 4 — PWA: quiet diagram — the benchmark section
+      '<div class="call-block call-block--pwa">' +
+        '<div class="cb-pwa-flow">' +
+          qrSvg +
+          '<div class="cb-pwa-arrow">→</div>' +
+          '<div class="cb-pwa-phone">' +
+            '<img src="./pics/doggo_install.png" alt="PWA install prompt" loading="lazy">' +
+          '</div>' +
+        '</div>' +
+        '<p class="cb-pwa-caption">Scan · Open · Installed</p>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">' + decs[3].head + '</h3>' +
+          '<p class="call-body">' + decs[3].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // 5 — REWARD: landscape crop of loyalty card — emotional close
+      '<div class="call-block call-block--reward">' +
+        '<div class="cb-rew-visual">' +
+          '<img class="cb-rew-img" src="./pics/doggo_rewards.png" alt="Rewards catalog" loading="lazy">' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">Reward before transaction.</h3>' +
+          '<p class="call-body">' + decs[4].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+    '</div>';
+
+  // Challenges with resolutions
+  var chalItemsHtml = chals.map(function(item, i) {
+    return '<div class="doggo-chal-item">' +
+      '<div class="doggo-chal-head">' + item.head + '</div>' +
+      '<p class="doggo-chal-friction">' + item.body + '</p>' +
+      (how[i]
+        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+          '<p class="doggo-chal-how">' + how[i] + '</p>'
+        : '') +
+    '</div>';
+  }).join('');
+
+  var chalHtml =
+    '<div class="doggo-challenges">' +
+      '<div class="doggo-chal-inner">' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        chalItemsHtml +
+      '</div>' +
+    '</div>';
+
+  // Reflection
+  var reflHtml =
+    '<div class="doggo-reflection">' +
+      '<div class="story-lbl">Still building</div>' +
+      '<p class="story-p">' + p.reflection + '</p>' +
+      (p.reflectionExtra ? '<p class="story-p" style="margin-top:1.25rem;">' + p.reflectionExtra + '</p>' : '') +
+      '<p class="story-p" style="margin-top:1.25rem;">A few things are still on the client\'s end — the restaurant is mid-photoshoot so the menu runs on placeholder images for now, and payment credentials from Datafast haven\'t come through yet. Once those land, orders go live. The site is already public — it\'s just not announced&nbsp;yet.</p>' +
+      '<div class="doggo-live">' +
+        '<div class="doggo-live-label">Live at</div>' +
+        '<div class="doggo-live-links">' +
+          '<a class="doggo-live-link" href="https://doggo.com.ec" target="_blank" rel="noopener">' +
+            '<span class="doggo-live-url">doggo.com.ec</span>' +
+            '<span class="doggo-live-note">Customer app · public</span>' +
+          '</a>' +
+          '<a class="doggo-live-link" href="https://doggo.com.ec/owner" target="_blank" rel="noopener">' +
+            '<span class="doggo-live-url">doggo.com.ec/owner</span>' +
+            '<span class="doggo-live-note">Owner dashboard · password protected</span>' +
+          '</a>' +
+          '<a class="doggo-live-link" href="https://doggo.com.ec/admin" target="_blank" rel="noopener">' +
+            '<span class="doggo-live-url">doggo.com.ec/admin</span>' +
+            '<span class="doggo-live-note">Restaurant panel · password protected</span>' +
+          '</a>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  return decisionsHtml + chalHtml + reflHtml;
+}
+
+function bwcBodyHtml(p) {
+  function ps(html) {
+    var m = html.match(/^<strong>(.*?)<\/strong>\s*(.*)/s);
+    return m ? { head: m[1], body: m[2] } : { head: '', body: html };
+  }
+  var decs  = (p.decisions  || []).map(ps);
+  var chals = (p.challenges || []).map(ps);
+  var how   = p.chalHow || [];
+
+  // Team grid — four designers, each owned a section
+  var teamHtml =
+    '<div class="bwc-team">' +
+      '<div class="story-lbl">The team</div>' +
+      '<div class="bwc-team-grid">' +
+        '<div class="bwc-team-card">' +
+          '<div class="bwc-team-name">Jamie Gonzalez</div>' +
+          '<div class="bwc-team-work">Power on/off &middot; FaceID authentication &middot; system status &middot; alerts &middot; radio</div>' +
+        '</div>' +
+        '<div class="bwc-team-card">' +
+          '<div class="bwc-team-name">Cecile Darwiche</div>' +
+          '<div class="bwc-team-work">Home screen &middot; video &amp; audio recording &middot; emergency alerts &middot; push-to-talk &middot; reports</div>' +
+        '</div>' +
+        '<div class="bwc-team-card">' +
+          '<div class="bwc-team-name">Regina Salem <span class="bwc-team-tag">me</span></div>' +
+          '<div class="bwc-team-work">PIN authentication &middot; media section &middot; storage management &middot; text&nbsp;notes</div>' +
+        '</div>' +
+        '<div class="bwc-team-card">' +
+          '<div class="bwc-team-name">Gabriela Plaza</div>' +
+          '<div class="bwc-team-work">Media tagging &middot; settings &middot; covert mode &middot; design system &middot; visual&nbsp;hierarchy</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  // Calls I made — three editorial poster moments, all Regina's work
+  var decisionsHtml =
+    '<div class="calls-section">' +
+      '<div class="calls-lbl">Calls I made, and why</div>' +
+
+      // 1 — PIN AUTH: centered portrait phone, scales in on reveal
+      '<div class="call-block call-block--bwc-auth">' +
+        '<div class="cb-bwc-phone">' +
+          '<img src="./pics/bwc_pin.png" alt="PIN entry screen — number pad authentication" loading="lazy">' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">The PIN has to be as fast as FaceID — not a&nbsp;fallback.</h3>' +
+          '<p class="call-body">' + decs[0].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // 2 — FILTER + METADATA: all files → individual video detail, slides from left
+      '<div class="call-block call-block--bwc-filter">' +
+        '<div class="cb-bwc-twophones">' +
+          '<div class="cb-bwc-phone">' +
+            '<img src="./pics/bwc_media.png" alt="Media — all files" loading="lazy">' +
+          '</div>' +
+          '<span class="cb-bwc-sep">→</span>' +
+          '<div class="cb-bwc-phone">' +
+            '<img src="./pics/bwc_video.png" alt="Video detail — metadata view" loading="lazy">' +
+          '</div>' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">Filter by type. Find what you actually&nbsp;remember.</h3>' +
+          '<p class="call-body">' + decs[1].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // 3 — STORAGE: bwc_audio.png (90% red bar), gentle appear
+      '<div class="call-block call-block--bwc-thumb">' +
+        '<div class="cb-bwc-phone">' +
+          '<img src="./pics/bwc_audio.png" alt="Media — audio filtered, storage 90% full warning" loading="lazy">' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">The device holds 24 hours. The officer shouldn\'t be&nbsp;counting.</h3>' +
+          '<p class="call-body">' + decs[2].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+    '</div>';
+
+  var emergencyHtml = '';
+
+  // The hard parts — two-column problem / resolution
+  var chalItemsHtml = chals.map(function(item, i) {
+    return '<div class="doggo-chal-item">' +
+      '<div class="doggo-chal-head">' + item.head + '</div>' +
+      '<p class="doggo-chal-friction">' + item.body + '</p>' +
+      (how[i]
+        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+          '<p class="doggo-chal-how">' + how[i] + '</p>'
+        : '') +
+    '</div>';
+  }).join('');
+
+  var chalHtml =
+    '<div class="doggo-challenges">' +
+      '<div class="doggo-chal-inner">' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        chalItemsHtml +
+      '</div>' +
+    '</div>';
+
+  // Looking back
+  var reflHtml =
+    '<div class="doggo-reflection">' +
+      '<div class="story-lbl">Looking back</div>' +
+      '<p class="story-p">' + p.reflection + '</p>' +
+      (p.proto
+        ? '<div class="bwc-proto">' +
+            '<div class="bwc-proto-label">View prototype</div>' +
+            '<a class="bwc-proto-link" href="' + p.proto + '" target="_blank" rel="noopener">' +
+              '<span class="bwc-proto-url">↗ &nbsp;Figma prototype</span>' +
+              '<span class="bwc-proto-note">Body-worn camera companion app</span>' +
+            '</a>' +
+          '</div>'
+        : '') +
+    '</div>';
+
+  return teamHtml + decisionsHtml + chalHtml + reflHtml;
+}
+
+/* ── CAREGUARD BODY ──────────────────────────────────────────── */
+function careguardBodyHtml(p) {
+  function ps(html) {
+    var m = html.match(/^<strong>(.*?)<\/strong>\s*(.*)/s);
+    return m ? { head: m[1], body: m[2] } : { head: '', body: html };
+  }
+  var decs  = (p.decisions  || []).map(ps);
+  var chals = (p.challenges || []).map(ps);
+  var how   = p.chalHow || [];
+
+  // Video demo — leads the body section
+  var videoHtml = p.video
+    ? '<div class="cg-video-wrap">' +
+        '<div class="cg-video-clip">' +
+          '<video controls playsinline preload="metadata" muted>' +
+            '<source src="' + p.video + '" type="video/mp4">' +
+          '</video>' +
+        '</div>' +
+      '</div>'
+    : '';
+
+  // Three editorial blocks — all placeholders until screenshots arrive
+  var decisionsHtml =
+    '<div class="calls-section">' +
+      '<div class="calls-lbl">Calls I made, and why</div>' +
+
+      // Block 1 — form unification: fade up
+      '<div class="call-block call-block--cg-unify">' +
+        '<div class="cb-cg-screen">' +
+          '<img src="./pics/cg_form.png" alt="Incident report — unified input form" loading="lazy">' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">Enter once. Three OSHA forms auto-generate.</h3>' +
+          '<p class="call-body">' + decs[0].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // Block 2 — status dashboard: the hero feature
+      '<div class="call-block call-block--cg-status">' +
+        '<div class="cb-cg-screen">' +
+          '<img src="./pics/cg_dashboard.png" alt="Dashboard — OSHA recordables, open cases, pending actions" loading="lazy">' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">Supervisors don\'t need to know OSHA\'s criteria. The system&nbsp;does.</h3>' +
+          '<p class="call-body">' + decs[1].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // Block 3 — incidents with filtering
+      '<div class="call-block call-block--cg-pivot">' +
+        '<div class="cb-cg-screen">' +
+          '<img src="./pics/cg_incidents.png" alt="Incidents table — filter by type and status" loading="lazy">' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">Categorize at intake. Find anything&nbsp;instantly.</h3>' +
+          '<p class="call-body">' + decs[2].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+    '</div>';
+
+  var chalItemsHtml = chals.map(function(item, i) {
+    return '<div class="doggo-chal-item">' +
+      '<div class="doggo-chal-head">' + item.head + '</div>' +
+      '<p class="doggo-chal-friction">' + item.body + '</p>' +
+      (how[i]
+        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+          '<p class="doggo-chal-how">' + how[i] + '</p>'
+        : '') +
+    '</div>';
+  }).join('');
+
+  var chalHtml =
+    '<div class="doggo-challenges">' +
+      '<div class="doggo-chal-inner">' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        chalItemsHtml +
+      '</div>' +
+    '</div>';
+
+  var reflHtml =
+    '<div class="doggo-reflection">' +
+      '<div class="story-lbl">Looking back</div>' +
+      '<p class="story-p">' + p.reflection + '</p>' +
+      (p.proto
+        ? '<div class="cg-proto">' +
+            '<div class="cg-proto-label">View prototype</div>' +
+            '<a class="cg-proto-link" href="' + p.proto + '" target="_blank" rel="noopener">' +
+              '<span class="cg-proto-url">↗ &nbsp;Figma prototype</span>' +
+              '<span class="cg-proto-note">OSHA incident reporting system</span>' +
+            '</a>' +
+          '</div>'
+        : '') +
+    '</div>';
+
+  return videoHtml + decisionsHtml + chalHtml + reflHtml;
+}
+
+/* ── 360° FITTING BODY ───────────────────────────────────────── */
+function fittingBodyHtml(p) {
+  function ps(html) {
+    var m = html.match(/^<strong>(.*?)<\/strong>\s*(.*)/s);
+    return m ? { head: m[1], body: m[2] } : { head: '', body: html };
+  }
+  var decs  = (p.decisions  || []).map(ps);
+  var chals = (p.challenges || []).map(ps);
+  var how   = p.chalHow || [];
+
+  var decisionsHtml =
+    '<div class="calls-section">' +
+      '<div class="calls-lbl">Calls I made, and why</div>' +
+
+      // Block 1 — measurements profile, trust foundation: tilt + slide from left
+      '<div class="call-block call-block--fit-trust">' +
+        '<div class="cb-fit-phone">' +
+          (p.imgs[0]
+            ? '<img src="' + p.imgs[0] + '" style="width:100%;display:block;" alt="Measurements profile">'
+            : '<div class="img-placeholder" style="width:100%;aspect-ratio:9/16;">' +
+                '<div class="img-placeholder-num">Placeholder 1</div>' +
+                '<div class="img-placeholder-desc">Profile / measurements screen — height, weight, bust, waist, hips, torso, leg length</div>' +
+              '</div>') +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">Not S, M, or L.<br>Measurements that actually&nbsp;fit.</h3>' +
+          '<p class="call-body">' + decs[0].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // Block 2 — cross-store cart, the core differentiator: two phones (try-on → cart), scale in
+      '<div class="call-block call-block--fit-avatar">' +
+        '<div class="cb-fit-twophones">' +
+          '<div class="cb-fit-phone">' +
+            (p.imgs[1]
+              ? '<img src="' + p.imgs[1] + '" style="width:100%;display:block;" alt="Avatar try-on">'
+              : '<div class="img-placeholder" style="width:100%;aspect-ratio:9/16;"><div class="img-placeholder-num">Placeholder 2</div><div class="img-placeholder-desc">Avatar try-on view</div></div>') +
+          '</div>' +
+          '<span class="cb-fit-sep">→</span>' +
+          '<div class="cb-fit-phone">' +
+            (p.imgs[2]
+              ? '<img src="' + p.imgs[2] + '" style="width:100%;display:block;" alt="Cross-store cart">'
+              : '<div class="img-placeholder" style="width:100%;aspect-ratio:9/16;"><div class="img-placeholder-num">Placeholder 3</div><div class="img-placeholder-desc">Cross-store cart</div></div>') +
+          '</div>' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">Try it on the avatar. Add to cart. From three different&nbsp;stores.</h3>' +
+          '<p class="call-body">' + decs[1].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // Block 3 — brand availability, coverage anxiety: fade up
+      '<div class="call-block call-block--fit-brand">' +
+        '<div class="cb-fit-phone">' +
+          (p.imgs[3]
+            ? '<img src="' + p.imgs[3] + '" style="width:100%;display:block;" alt="Brand browse">'
+            : '<div class="img-placeholder" style="width:100%;aspect-ratio:9/16;"><div class="img-placeholder-num">Placeholder 4</div><div class="img-placeholder-desc">Store browse screen</div></div>') +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">If your store isn\'t there, the app doesn\'t&nbsp;exist.</h3>' +
+          '<p class="call-body">' + decs[2].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+    '</div>';
+
+  var chalItemsHtml = chals.map(function(item, i) {
+    return '<div class="doggo-chal-item">' +
+      '<div class="doggo-chal-head">' + item.head + '</div>' +
+      '<p class="doggo-chal-friction">' + item.body + '</p>' +
+      (how[i]
+        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+          '<p class="doggo-chal-how">' + how[i] + '</p>'
+        : '') +
+    '</div>';
+  }).join('');
+
+  var chalHtml =
+    '<div class="doggo-challenges">' +
+      '<div class="doggo-chal-inner">' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        chalItemsHtml +
+      '</div>' +
+    '</div>';
+
+  var reflHtml =
+    '<div class="doggo-reflection">' +
+      '<div class="story-lbl">Looking back</div>' +
+      '<p class="story-p">' + p.reflection + '</p>' +
+      (p.proto
+        ? '<div class="fit-proto">' +
+            '<div class="fit-proto-label">View prototype</div>' +
+            '<a class="fit-proto-link" href="' + p.proto + '" target="_blank" rel="noopener">' +
+              '<span class="fit-proto-url">↗ &nbsp;Figma prototype</span>' +
+              '<span class="fit-proto-note">360° AR fitting room</span>' +
+            '</a>' +
+          '</div>'
+        : '') +
+    '</div>';
+
+  return decisionsHtml + chalHtml + reflHtml;
+}
+
+/* ── PETPALS BODY ────────────────────────────────────────────── */
+function petpalsBodyHtml(p) {
+  function ps(html) {
+    var m = html.match(/^<strong>(.*?)<\/strong>\s*(.*)/s);
+    return m ? { head: m[1], body: m[2] } : { head: '', body: html };
+  }
+  var decs  = (p.decisions  || []).map(ps);
+  var chals = (p.challenges || []).map(ps);
+  var how   = p.chalHow || [];
+
+  var videoHtml = p.video
+    ? '<div class="pp-video-wrap">' +
+        '<div class="pp-video-clip">' +
+          '<video controls playsinline preload="metadata" muted>' +
+            '<source src="' + p.video + '" type="video/mp4">' +
+          '</video>' +
+        '</div>' +
+      '</div>'
+    : '';
+
+  var decisionsHtml =
+    '<div class="calls-section">' +
+      '<div class="calls-lbl">Calls I made, and why</div>' +
+
+      // Block 1 — the swipe card: tilt + slide from right
+      '<div class="call-block call-block--pp-personas">' +
+        '<div class="cb-pp-phone">' +
+          (p.imgs[0]
+            ? '<img src="' + p.imgs[0] + '" style="width:100%;display:block;" alt="Pet swipe card">'
+            : '<div class="img-placeholder" style="width:100%;aspect-ratio:9/16;"><div class="img-placeholder-num">Placeholder 1</div><div class="img-placeholder-desc">HOME — Flopsy swipe card (breed, owner, location, paw buttons)</div></div>') +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">One card. Everything you need to&nbsp;decide.</h3>' +
+          '<p class="call-body">' + decs[0].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // Block 2 — match → chat: two phones, slide from left
+      '<div class="call-block call-block--pp-onboard">' +
+        '<div class="cb-pp-twophones">' +
+          '<div class="cb-pp-phone">' +
+            (p.imgs[1]
+              ? '<img src="' + p.imgs[1] + '" style="width:100%;display:block;" alt="Match screen">'
+              : '<div class="img-placeholder" style="width:100%;aspect-ratio:9/16;"><div class="img-placeholder-num">Placeholder 2</div><div class="img-placeholder-desc">MATCH — "It\'s a Pet Match!" screen (Flopsy + Bun)</div></div>') +
+          '</div>' +
+          '<span class="cb-pp-sep">→</span>' +
+          '<div class="cb-pp-phone">' +
+            (p.imgs[2]
+              ? '<img src="' + p.imgs[2] + '" style="width:100%;display:block;" alt="Chat conversation">'
+              : '<div class="img-placeholder" style="width:100%;aspect-ratio:9/16;"><div class="img-placeholder-num">Placeholder 3</div><div class="img-placeholder-desc">CHATBOX — conversation after matching</div></div>') +
+          '</div>' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">Both paws green. Then the conversation&nbsp;opens.</h3>' +
+          '<p class="call-body">' + decs[1].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // Block 3 — trust in the card: scale in
+      '<div class="call-block call-block--pp-trust">' +
+        '<div class="cb-pp-phone">' +
+          (p.imgs[3]
+            ? '<img src="' + p.imgs[3] + '" style="width:100%;display:block;" alt="Profile with trust signals">'
+            : '<div class="img-placeholder" style="width:100%;aspect-ratio:9/16;"><div class="img-placeholder-num">Placeholder 4</div><div class="img-placeholder-desc">PROFILE — vaccination ✓ neutering ✓ temperament sliders visible</div></div>') +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">Trust in the card. Not two taps&nbsp;deep.</h3>' +
+          '<p class="call-body">' + decs[2].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // Block 4 — events → meetup: fade up
+      '<div class="call-block call-block--pp-iterate">' +
+        '<div class="cb-pp-phone">' +
+          (p.imgs[4]
+            ? '<img src="' + p.imgs[4] + '" style="width:100%;display:block;" alt="Events screen">'
+            : '<div class="img-placeholder" style="width:100%;aspect-ratio:9/16;"><div class="img-placeholder-num">Placeholder 5</div><div class="img-placeholder-desc">EVENTS — local pet meetups nearby (Dog Play Day, Bunny Jump Day)</div></div>') +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">The match is the beginning. The meetup is the&nbsp;point.</h3>' +
+          '<p class="call-body">' + decs[3].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+    '</div>';
+
+  var chalItemsHtml = chals.map(function(item, i) {
+    return '<div class="doggo-chal-item">' +
+      '<div class="doggo-chal-head">' + item.head + '</div>' +
+      '<p class="doggo-chal-friction">' + item.body + '</p>' +
+      (how[i]
+        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+          '<p class="doggo-chal-how">' + how[i] + '</p>'
+        : '') +
+    '</div>';
+  }).join('');
+
+  var chalHtml =
+    '<div class="doggo-challenges">' +
+      '<div class="doggo-chal-inner">' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        chalItemsHtml +
+      '</div>' +
+    '</div>';
+
+  var reflHtml =
+    '<div class="doggo-reflection">' +
+      '<div class="story-lbl">Looking back</div>' +
+      '<p class="story-p">' + p.reflection + '</p>' +
+      (p.proto
+        ? '<div class="pp-proto">' +
+            '<div class="pp-proto-label">View prototype</div>' +
+            '<a class="pp-proto-link" href="' + p.proto + '" target="_blank" rel="noopener">' +
+              '<span class="pp-proto-url">↗ &nbsp;Figma prototype</span>' +
+              '<span class="pp-proto-note">PetPals wireframe prototype</span>' +
+            '</a>' +
+          '</div>'
+        : '') +
+    '</div>';
+
+  return videoHtml + decisionsHtml + chalHtml + reflHtml;
+}
+
+/* ── MIDI GLOVE BODY ─────────────────────────────────────────── */
+function midigloveBodyHtml(p) {
+  function ps(html) {
+    var m = html.match(/^<strong>(.*?)<\/strong>\s*(.*)/s);
+    return m ? { head: m[1], body: m[2] } : { head: '', body: html };
+  }
+  var decs  = (p.decisions  || []).map(ps);
+  var chals = (p.challenges || []).map(ps);
+  var how   = p.chalHow || [];
+
+  var videoHtml = p.video
+    ? '<div class="mg-video-wrap">' +
+        '<video controls playsinline preload="metadata">' +
+          '<source src="' + p.video + '" type="video/mp4">' +
+        '</video>' +
+      '</div>'
+    : '';
+
+  var decisionsHtml =
+    '<div class="calls-section">' +
+      '<div class="calls-lbl">Calls I made, and why</div>' +
+
+      // Block 1 — gesture model: slide from left
+      '<div class="call-block call-block--mg-gesture">' +
+        '<div class="cb-mg-photo">' +
+          (p.imgs[0]
+            ? '<img src="' + p.imgs[0] + '" style="width:100%;display:block;" alt="Glove in use">'
+            : '<div class="img-placeholder" style="width:100%;aspect-ratio:4/3;"><div class="img-placeholder-num">Placeholder 1</div><div class="img-placeholder-desc">The glove in use</div></div>') +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">The gesture model came first. The electronics&nbsp;followed.</h3>' +
+          '<p class="call-body">' + decs[0].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // Block 2 — noise filtering: scale in
+      '<div class="call-block call-block--mg-noise">' +
+        '<div class="cb-mg-photo">' +
+          (p.imgs[1]
+            ? '<img src="' + p.imgs[1] + '" style="width:100%;display:block;" alt="Sensor detail">'
+            : '<div class="img-placeholder" style="width:100%;aspect-ratio:4/3;"><div class="img-placeholder-num">Placeholder 2</div><div class="img-placeholder-desc">Sensor / conductive tape detail</div></div>') +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">Three rules that separate a note from&nbsp;noise.</h3>' +
+          '<p class="call-body">' + decs[1].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      // Block 3 — V1 → V2: side-by-side, rise up
+      '<div class="call-block call-block--mg-v2">' +
+        '<div class="cb-mg-pair">' +
+          '<div class="cb-mg-photo">' +
+            (p.imgs[2]
+              ? '<img src="' + p.imgs[2] + '" style="width:100%;display:block;" alt="V1 glove">'
+              : '<div class="img-placeholder" style="width:100%;aspect-ratio:4/3;"><div class="img-placeholder-num">Placeholder 3</div><div class="img-placeholder-desc">V1 glove</div></div>') +
+          '</div>' +
+          '<span class="cb-mg-sep">→</span>' +
+          '<div class="cb-mg-photo">' +
+            (p.imgs[3]
+              ? '<img src="' + p.imgs[3] + '" style="width:100%;display:block;" alt="V2 glove">'
+              : '<div class="img-placeholder" style="width:100%;aspect-ratio:4/3;"><div class="img-placeholder-num">Placeholder 4</div><div class="img-placeholder-desc">V2 glove</div></div>') +
+          '</div>' +
+        '</div>' +
+        '<div class="call-text-wrap">' +
+          '<h3 class="call-headline">V1 proved the concept. V2 made it worth&nbsp;playing.</h3>' +
+          '<p class="call-body">' + decs[2].body + '</p>' +
+        '</div>' +
+      '</div>' +
+
+    '</div>';
+
+  var chalItemsHtml = chals.map(function(item, i) {
+    return '<div class="doggo-chal-item">' +
+      '<div class="doggo-chal-head">' + item.head + '</div>' +
+      '<p class="doggo-chal-friction">' + item.body + '</p>' +
+      (how[i]
+        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+          '<p class="doggo-chal-how">' + how[i] + '</p>'
+        : '') +
+    '</div>';
+  }).join('');
+
+  var chalHtml =
+    '<div class="doggo-challenges">' +
+      '<div class="doggo-chal-inner">' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        chalItemsHtml +
+      '</div>' +
+    '</div>';
+
+  var reflHtml =
+    '<div class="doggo-reflection">' +
+      '<div class="story-lbl">Looking back</div>' +
+      '<p class="story-p">' + p.reflection + '</p>' +
+    '</div>';
+
+  return videoHtml + decisionsHtml + chalHtml + reflHtml;
+}
+
+function openProject(id) {
+  const p = PROJECTS.find(x => x.id === id);
+  if (!p) return;
+
+  const idx = PROJECTS.indexOf(p);
+  const prev = PROJECTS[idx - 1];
+  const next = PROJECTS[idx + 1];
+
+  const videoHtml = p.video
+    ? `<video class="proj-video" controls playsinline preload="metadata">
+        <source src="${p.video}" type="video/mp4">
+       </video>`
+    : '';
+
+  const protoHtml = p.proto
+    ? `<a class="proto-hero-link" href="${p.proto}" target="_blank" rel="noopener">↗ &nbsp;View prototype</a>`
+    : '';
+
+  // Parse "<strong>Heading.</strong> Body text" into {head, body}
+  function parseStrong(html) {
+    const m = html.match(/^<strong>(.*?)<\/strong>\s*(.*)/s);
+    return m ? { head: m[1], body: m[2] } : { head: '', body: html };
+  }
+
+  // ── Visual anchor — Doggo ecosystem diagram (full-width, outside proj-body) ──
+  const anchorHtml = p.id === 'doggo' ? `
+    <div class="proj-anchor">
+      <div class="story-lbl">The ecosystem</div>
+      <svg class="proj-diagram" viewBox="0 0 1100 490" xmlns="http://www.w3.org/2000/svg"
+           role="img" aria-label="Doggo: three interfaces connected through one shared backend">
+        <defs>
+          <marker id="dg-a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#D4A534" opacity="0.8"/>
+          </marker>
+          <marker id="dg-m" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0,8 3,0 6" fill="#D8CEC3"/>
+          </marker>
+        </defs>
+
+        <rect width="1100" height="490" fill="#F8F4EE" rx="4"/>
+
+        <!-- Hub glow — center (550, 183) -->
+        <circle cx="550" cy="183" r="108" fill="#D4A534" opacity="0.04"/>
+        <circle cx="550" cy="183" r="80"  fill="#D4A534" opacity="0.08"/>
+        <circle cx="550" cy="183" r="56"  fill="#D4A534" opacity="0.14"/>
+        <circle cx="550" cy="183" r="40"  fill="#D4A534"/>
+        <text x="550" y="179" text-anchor="middle" font-family="Playfair Display, serif" font-weight="900" font-size="13" fill="#1A1714" letter-spacing="0.08em">DOGGO</text>
+        <text x="550" y="193" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="#1A1714" opacity="0.55" letter-spacing="0.2em">BACKEND</text>
+
+        <!-- Loyalty annotation (above rings) -->
+        <text x="550" y="60" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="11" fill="#D4A534" opacity="0.75">&#9733;  loyalty card is the thread</text>
+
+        <!-- ── Customer App — x=20, y=30, w=258, h=305 ── -->
+        <rect x="20" y="30" width="258" height="305" rx="4" fill="white" stroke="#D8CEC3" stroke-width="1"/>
+        <rect x="20" y="30" width="258" height="4"   rx="2" fill="#D4A534" opacity="0.45"/>
+        <!-- Phone icon centered at x=149 -->
+        <rect x="122" y="100" width="54" height="88" rx="7" fill="none" stroke="#D4A534" stroke-width="2"/>
+        <rect x="129" y="107" width="40" height="72" rx="3" fill="#D4A534" opacity="0.07"/>
+        <circle cx="149" cy="192" r="4" fill="#D4A534" opacity="0.45"/>
+        <rect x="132" y="111" width="34" height="4"  rx="1.5" fill="#D4A534" opacity="0.25"/>
+        <rect x="132" y="119" width="34" height="21" rx="2.5" fill="#D4A534" opacity="0.12"/>
+        <rect x="132" y="143" width="15" height="15" rx="1.5" fill="#D4A534" opacity="0.20"/>
+        <rect x="149" y="143" width="17" height="7"  rx="1"   fill="#D4A534" opacity="0.15"/>
+        <rect x="149" y="152" width="17" height="6"  rx="1"   fill="#D4A534" opacity="0.10"/>
+        <text x="149" y="214" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="#7A6E63" letter-spacing="0.2em">CUSTOMER</text>
+        <text x="149" y="228" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="#7A6E63" letter-spacing="0.2em">APP</text>
+        <text x="149" y="250" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="12" fill="#4A4440" opacity="0.9">delivery &amp; pickup</text>
+        <text x="149" y="266" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="12" fill="#4A4440" opacity="0.9">reservations &amp; events</text>
+        <text x="149" y="282" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="12" fill="#4A4440" opacity="0.9">loyalty points · in-store QR</text>
+        <rect x="36"  y="299" width="226" height="18" rx="2" fill="#D4A534" opacity="0.1"/>
+        <text x="149" y="312" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="#D4A534" letter-spacing="0.12em">THE CUSTOMER &#xB7; PWA</text>
+
+        <!-- ── Owner Dashboard — x=822, y=30, w=258, h=305 ── -->
+        <rect x="822" y="30" width="258" height="305" rx="4" fill="white" stroke="#D8CEC3" stroke-width="1"/>
+        <rect x="822" y="30" width="258" height="4"   rx="2" fill="#D4A534" opacity="0.45"/>
+        <!-- Tablet icon centered at x=951 -->
+        <rect x="907" y="96"  width="88" height="90" rx="7" fill="none" stroke="#D4A534" stroke-width="2"/>
+        <rect x="914" y="103" width="74" height="70" rx="3" fill="#D4A534" opacity="0.07"/>
+        <circle cx="951" cy="190" r="4" fill="#D4A534" opacity="0.45"/>
+        <rect x="917" y="107" width="68" height="6"  rx="2"   fill="#D4A534" opacity="0.20"/>
+        <rect x="917" y="117" width="30" height="28" rx="3"   fill="#D4A534" opacity="0.15"/>
+        <rect x="950" y="117" width="35" height="13" rx="1.5" fill="#D4A534" opacity="0.12"/>
+        <rect x="950" y="132" width="35" height="13" rx="1.5" fill="#D4A534" opacity="0.10"/>
+        <rect x="917" y="149" width="68" height="5"  rx="1.5" fill="#D4A534" opacity="0.12"/>
+        <rect x="917" y="157" width="48" height="5"  rx="1.5" fill="#D4A534" opacity="0.08"/>
+        <text x="951" y="214" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="#7A6E63" letter-spacing="0.2em">RESTAURANT</text>
+        <text x="951" y="228" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="#7A6E63" letter-spacing="0.15em">PANEL</text>
+        <text x="951" y="250" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="12" fill="#4A4440" opacity="0.9">order queue · QR scanning</text>
+        <text x="951" y="266" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="12" fill="#4A4440" opacity="0.9">in-store loyalty</text>
+        <text x="951" y="282" text-anchor="middle" font-family="Playfair Display, serif" font-style="italic" font-size="12" fill="#4A4440" opacity="0.9">reservations</text>
+        <rect x="838" y="299" width="226" height="18" rx="2" fill="#D4A534" opacity="0.1"/>
+        <text x="951" y="312" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="#D4A534" letter-spacing="0.12em">THE STAFF &#xB7; TABLET</text>
+
+        <!-- ── Admin Panel — x=310, y=345, w=480, h=120 ── -->
+        <rect x="310" y="345" width="480" height="120" rx="4" fill="white" stroke="#D8CEC3" stroke-width="1"/>
+        <rect x="310" y="345" width="480" height="4"   rx="2" fill="#D4A534" opacity="0.3"/>
+        <!-- Monitor icon -->
+        <rect x="322" y="360" width="64" height="44" rx="4" fill="none" stroke="#D4A534" stroke-width="1.5"/>
+        <rect x="328" y="365" width="52" height="32" rx="2" fill="#D4A534" opacity="0.07"/>
+        <rect x="331" y="369" width="46" height="5"  rx="1.5" fill="#D4A534" opacity="0.20"/>
+        <rect x="331" y="377" width="20" height="12" rx="1.5" fill="#D4A534" opacity="0.12"/>
+        <rect x="354" y="377" width="22" height="5"  rx="1"   fill="#D4A534" opacity="0.10"/>
+        <rect x="354" y="384" width="22" height="5"  rx="1"   fill="#D4A534" opacity="0.08"/>
+        <line x1="354" y1="404" x2="354" y2="412" stroke="#D4A534" stroke-width="2" opacity="0.35"/>
+        <line x1="342" y1="412" x2="366" y2="412" stroke="#D4A534" stroke-width="2" opacity="0.35"/>
+        <text x="402" y="370" font-family="DM Mono, monospace" font-size="10" fill="#7A6E63" letter-spacing="0.2em">OWNER PANEL</text>
+        <text x="402" y="387" font-family="Playfair Display, serif" font-style="italic" font-size="12" fill="#4A4440" opacity="0.9">menu &#xB7; promos &#xB7; prices &#xB7; rewards</text>
+        <text x="402" y="403" font-family="Playfair Display, serif" font-style="italic" font-size="12" fill="#4A4440" opacity="0.9">order log &#xB7; accounts &#xB7; reservations</text>
+        <rect x="527" y="424" width="244" height="18" rx="2" fill="#D4A534" opacity="0.1"/>
+        <text x="649" y="437" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="#D4A534" letter-spacing="0.12em">THE OWNER &#xB7; DESKTOP</text>
+
+        <!-- ── Connection lines ── -->
+        <!-- Customer → Hub (amber, y=179) -->
+        <line x1="279" y1="179" x2="509" y2="179" stroke="#D4A534" stroke-width="2" stroke-dasharray="6,4" opacity="0.6" marker-end="url(#dg-a)"/>
+        <!-- Hub → Customer (muted, y=187) -->
+        <line x1="509" y1="187" x2="279" y2="187" stroke="#D8CEC3" stroke-width="1.5" stroke-dasharray="4,5" marker-end="url(#dg-m)"/>
+        <!-- Hub → Owner (amber, y=179) -->
+        <line x1="591" y1="179" x2="821" y2="179" stroke="#D4A534" stroke-width="2" stroke-dasharray="6,4" opacity="0.6" marker-end="url(#dg-a)"/>
+        <!-- Owner → Hub (muted, y=187) -->
+        <line x1="821" y1="187" x2="591" y2="187" stroke="#D8CEC3" stroke-width="1.5" stroke-dasharray="4,5" marker-end="url(#dg-m)"/>
+        <!-- Hub → Admin (amber, x=548) -->
+        <line x1="548" y1="224" x2="548" y2="344" stroke="#D4A534" stroke-width="2" stroke-dasharray="6,4" opacity="0.6" marker-end="url(#dg-a)"/>
+        <!-- Admin → Hub (muted, x=556) -->
+        <line x1="556" y1="344" x2="556" y2="224" stroke="#D8CEC3" stroke-width="1.5" stroke-dasharray="4,5" marker-end="url(#dg-m)"/>
+
+        <!-- ── Connection labels ── -->
+        <text x="394" y="170" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="#D4A534" opacity="0.9" letter-spacing="0.07em">order &#xB7; reserve</text>
+        <text x="394" y="202" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="#7A6E63" letter-spacing="0.07em">stamp &#xB7; receipt</text>
+        <text x="706" y="170" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="#D4A534" opacity="0.9" letter-spacing="0.07em">new orders</text>
+        <text x="706" y="202" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="#7A6E63" letter-spacing="0.07em">menu &#xB7; inventory</text>
+        <text x="567" y="284" font-family="DM Mono, monospace" font-size="9.5" fill="#D4A534" opacity="0.9" letter-spacing="0.07em">analytics</text>
+        <text x="537" y="284" text-anchor="end" font-family="DM Mono, monospace" font-size="9.5" fill="#7A6E63" letter-spacing="0.07em">config</text>
+
+        <!-- Caption -->
+        <text x="550" y="481" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#7A6E63" letter-spacing="0.16em" opacity="0.8">THREE INTERFACES &#xB7; ONE BACKEND &#xB7; ONE BRAND</text>
+      </svg>
+    </div>
+  ` : '';
+
+  const decsItems = p.decisions.map(d => parseStrong(d));
+  const chalItems  = (p.challenges || []).map(c => parseStrong(c));
+
+  const statsHtml = (p.stats || []).map(s => `
+    <div class="stat-cell">
+      <div class="stat-n">${s.n}</div>
+      <div class="stat-label">${s.label}</div>
+    </div>
+  `).join('');
+
+  const workPillsHtml = (p.work || []).map(w => `<span class="work-pill">${w}</span>`).join('');
+
+  const prevHtml = prev
+    ? `<button class="proj-nav-btn" onclick="openProject('${prev.id}')">← ${prev.title}</button>`
+    : `<span></span>`;
+  const nextHtml = next
+    ? `<button class="proj-nav-btn right" onclick="openProject('${next.id}')">${next.title} →</button>`
+    : `<span></span>`;
+
+  // Set project color as CSS variable
+  const $content = document.getElementById('project-content');
+  $content.style.setProperty('--proj-color', p.color);
+  const $progress = document.getElementById('proj-progress');
+  $progress.style.setProperty('--proj-color', p.color);
+
+  $content.innerHTML = `
+
+    <div class="proj-hero">
+      <img class="proj-hero-img" src="${p.image}" alt="${p.title}">
+      <div class="proj-hero-inner reveal shown">
+        <div class="proj-chapter">
+          <span class="proj-chapter-dot"></span>
+          ${p.num} — ${p.badge}
+        </div>
+        <h1 class="proj-title">${p.title}</h1>
+        <p class="proj-tagline">${p.tagline}</p>
+        ${protoHtml}
+      </div>
+    </div>
+
+    <div class="proj-meta">
+      <div class="meta-cell">
+        <div class="meta-lbl">Role</div>
+        <div class="meta-val">${p.role}</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-lbl">Stack</div>
+        <div class="meta-val">${p.stack}</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-lbl">Year</div>
+        <div class="meta-val">${p.year}</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-lbl">What I did</div>
+        <div class="meta-val work-pills">${workPillsHtml}</div>
+      </div>
+    </div>
+
+    ${statsHtml ? `<div class="proj-stats">${statsHtml}</div>` : ''}
+
+    ${p.context ? `
+    <div class="proj-context-block reveal shown">
+      <p class="proj-insight-line">${p.insight}</p>
+      <p class="proj-context-text">${p.context}</p>
+    </div>` : ''}
+
+    ${anchorHtml}
+
+    ${p.tableau ? doggoTableauHtml(p) : (p.cinematic ? cinematicScrollStory(p) : scrollStoryHtml(p))}
+
+    ${p.id === 'doggo' ? doggoBodyHtml(p) : p.id === 'bwc' ? bwcBodyHtml(p) : p.id === 'careguard' ? careguardBodyHtml(p) : p.id === '360fitting' ? fittingBodyHtml(p) : p.id === 'petpals' ? petpalsBodyHtml(p) : p.id === 'midiglove' ? midigloveBodyHtml(p) : `
+      ${(p.tableau || p.cinematic) ? (videoHtml ? `<div class="proj-body proj-video-wrap">${videoHtml}</div>` : '') : `
+      <div class="proj-body">
+        <p class="proj-intro-text reveal shown">${p.desc}</p>
+        ${videoHtml}
+        <div class="story-block reveal">
+          <div class="story-lbl">The Problem</div>
+          <p class="story-p">${p.problem}</p>
+        </div>
+        <div class="story-block reveal">
+          <div class="story-lbl">The Solution</div>
+          <p class="story-p">${p.solution}</p>
+        </div>
+      </div>`}
+
+      ${counterScrollStory(p.id, 'decisions', 'Calls I made, and why', decsItems)}
+
+      <div class="proj-body proj-body--mid">
+        <blockquote class="pull-quote reveal">"${p.tagline}"</blockquote>
+      </div>
+
+      ${chalItems.length ? counterScrollStory(p.id, 'challenges', 'The hard parts', chalItems) : ''}
+
+      <div class="proj-body proj-body--outro">
+        <div class="story-block reveal">
+          <div class="story-lbl">Looking back</div>
+          <p class="story-p">${p.reflection}</p>
+        </div>
+      </div>
+    `}
+
+    <div class="proj-nav">
+      ${prevHtml}
+      ${nextHtml}
+    </div>
+  `;
+
+  document.getElementById('home-view').classList.add('gone');
+  document.getElementById('project-view').classList.add('open');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  $nav.classList.remove('scrolled');
+
+  // Progress bar
+  $progress.classList.add('active');
+  $progress.style.width = '0%';
+
+  // Cursor + reveals on new content
+  document.querySelectorAll('#project-view a, #project-view button').forEach(addHover);
+  observeReveals();
+
+  // Scroll storytelling — init every .scroll-story on this page
+  document.querySelectorAll('#project-view .scroll-story').forEach(initScrollStory);
+  // Tableau (Doggo scattered canvas)
+  document.querySelectorAll('#project-view .doggo-tableau').forEach(initDoggoTableau);
+  // Video scrub + floating annotations (legacy — kept for safety)
+  document.querySelectorAll('#project-view .doggo-video-story').forEach(initDoggoVideoStory);
+  // Calls I made — narrative sequence
+  document.querySelectorAll('#project-view .calls-section').forEach(initCallsSection);
+
+  // URL + document title
+  if (!_popStateNav) {
+    history.pushState({ project: id }, '', '#' + id);
+  }
+  document.title = p.title + ' — Regina Salem';
+}
+
+/* ── SCROLL STORY INIT ──────────────────────────────────────── */
+function initScrollStory(storyEl) {
+  const steps   = storyEl.querySelectorAll('.scroll-step');
+  const screens = storyEl.querySelectorAll('.scroll-screen');
+  const counter = storyEl.querySelector('.scroll-count-big');
+  if (!steps.length) return;
+  let curIdx = 0;
+
+  if (steps[0])   steps[0].classList.add('active');
+  if (screens[0]) screens[0].classList.add('active');
+
+  function goTo(idx) {
+    if (idx === curIdx) return;
+    steps[curIdx].classList.remove('active');
+    steps[idx].classList.add('active');
+    if (screens.length) {
+      screens[curIdx].classList.remove('active');
+      screens[idx].classList.add('active');
+    }
+    curIdx = idx;
+    if (counter) {
+      counter.style.opacity = '0';
+      setTimeout(() => {
+        counter.textContent = String(idx + 1).padStart(2, '0');
+        counter.style.opacity = '1';
+      }, 140);
+    }
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    const intersecting = entries.filter(e => e.isIntersecting);
+    if (!intersecting.length) return;
+    // When multiple steps hit the zone at once (bi-directional scroll boundary),
+    // pick the one whose center is closest to the viewport center.
+    const vpMid = window.innerHeight / 2;
+    let best = intersecting[0], bestDist = Infinity;
+    intersecting.forEach(e => {
+      const r = e.boundingClientRect;
+      const dist = Math.abs((r.top + r.height / 2) - vpMid);
+      if (dist < bestDist) { bestDist = dist; best = e; }
+    });
+    goTo(parseInt(best.target.dataset.slide));
+  }, {
+    rootMargin: '-25% 0px -25% 0px',
+    threshold: 0,
+  });
+
+  steps.forEach(step => obs.observe(step));
+}
+
+function closeProject() {
+  document.getElementById('project-view').classList.remove('open');
+  document.getElementById('home-view').classList.remove('gone');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  $nav.classList.remove('scrolled');
+  const $progress = document.getElementById('proj-progress');
+  $progress.classList.remove('active');
+  $progress.style.width = '0%';
+  document.title = 'Regina Salem — Product & Interaction Designer';
+  if (!_popStateNav) {
+    history.pushState({}, '', window.location.pathname);
+  }
+}
+
+/* ── READING PROGRESS ────────────────────────────────────────── */
+window.addEventListener('scroll', () => {
+  if (!document.getElementById('project-view').classList.contains('open')) return;
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docH > 0 ? Math.min(100, (window.scrollY / docH) * 100) : 0;
+  document.getElementById('proj-progress').style.width = pct + '%';
+}, { passive: true });
+
+document.getElementById('backBtn').addEventListener('click', closeProject);
+document.getElementById('navLogo').addEventListener('click', () => {
+  closeProject();
+});
+document.getElementById('navWork').addEventListener('click', (e) => {
+  if (!document.getElementById('project-view').classList.contains('open')) return;
+  e.preventDefault();
+  closeProject();
+  setTimeout(() => document.getElementById('work').scrollIntoView({ behavior: 'smooth' }), 50);
+});
+document.getElementById('navAbout').addEventListener('click', (e) => {
+  if (!document.getElementById('project-view').classList.contains('open')) return;
+  e.preventDefault();
+  closeProject();
+  setTimeout(() => document.getElementById('about').scrollIntoView({ behavior: 'smooth' }), 50);
+});
+
+/* ── SCROLL REVEALS ──────────────────────────────────────────── */
+function observeReveals() {
+  // Under reduced motion, instantly show everything
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.reveal, .project-item').forEach(el => el.classList.add('shown'));
+    return;
+  }
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('shown'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  // data-observed flag prevents re-registering the same element on subsequent calls
+  document.querySelectorAll('.reveal:not(.shown):not([data-observed]), .project-item:not(.shown):not([data-observed])').forEach(el => {
+    el.dataset.observed = '1';
+    obs.observe(el);
+  });
+}
+
+/* ── PROJECT COUNTER ─────────────────────────────────────────── */
+function initCounter() {
+  const counter  = document.getElementById('project-counter');
+  const numEl    = document.getElementById('counter-num');
+  if (!counter) return;
+
+  // Show/hide based on #work section visibility
+  const workObs = new IntersectionObserver(entries => {
+    counter.classList.toggle('visible', entries[0].isIntersecting);
+  }, { threshold: 0.05 });
+  const workSection = document.getElementById('work');
+  if (workSection) workObs.observe(workSection);
+
+  // Update number as each project enters view
+  const itemObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const items = [...document.querySelectorAll('#projectGrid .project-item')];
+        const idx   = items.indexOf(e.target);
+        if (idx >= 0) {
+          const next = String(idx + 1).padStart(2, '0');
+          if (numEl.textContent !== next) {
+            numEl.style.opacity = '0';
+            setTimeout(() => { numEl.textContent = next; numEl.style.opacity = '1'; }, 180);
+          }
+        }
+      }
+    });
+  }, { rootMargin: '-25% 0px -25% 0px', threshold: 0 });
+
+  document.querySelectorAll('#projectGrid .project-item').forEach(el => itemObs.observe(el));
+}
+
+/* ── NAV SCROLL ──────────────────────────────────────────────── */
+const $nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  $nav.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+/* ── URL ROUTING ─────────────────────────────────────────────── */
+let _popStateNav = false;
+
+window.addEventListener('popstate', e => {
+  _popStateNav = true;
+  if (e.state?.project) {
+    openProject(e.state.project);
+  } else {
+    closeProject();
+  }
+  _popStateNav = false;
+});
+
+/* ── KEYBOARD ────────────────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('project-view').classList.contains('open')) {
+    closeProject();
+  }
+});
+
+/* ── INIT ────────────────────────────────────────────────────── */
+buildGrid();
+observeReveals();
+initCounter();
+initWordCycle();
+
+// Hero "Building" link opens Doggo
+const $heroBuilding = document.querySelector('a.hero-building');
+if ($heroBuilding) {
+  $heroBuilding.addEventListener('click', e => {
+    e.preventDefault();
+    openProject('doggo');
+  });
+}
+
+// Open project from hash on page load (direct links + browser back)
+(function checkHash() {
+  const id = window.location.hash.replace('#', '');
+  if (id && PROJECTS.find(p => p.id === id)) {
+    openProject(id);
+    history.replaceState({ project: id }, '', '#' + id);
+  }
+})();
+
+</script>
+</body>
+</html>
