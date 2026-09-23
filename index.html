@@ -4593,6 +4593,11 @@ function applyLang() {
 
   // Rebuild grid so card content (desc, insight, status, tags) updates
   buildGrid();
+  // Re-observe new project items so they become visible (opacity starts at 0)
+  document.querySelectorAll('#projectGrid .project-item').forEach(function(el) {
+    el.classList.add('shown');
+  });
+  observeReveals();
 
   // If a project is open, re-render it
   var pv = document.getElementById('project-view');
