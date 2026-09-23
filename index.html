@@ -162,6 +162,21 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--dark); }
+    .lang-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.18em 0.55em;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      line-height: 1.5;
+    }
+    .lang-btn:hover { color: var(--dark); border-color: var(--dark); }
 
     /* ─── HOME VIEW ───────────────────────────────────────────── */
     #home-view { display: block; }
@@ -2296,8 +2311,9 @@
   <div class="nav-links">
     <a href="#work" id="navWork">Work</a>
     <a href="#about" id="navAbout">About</a>
-    <a href="./Regina_Salem_Resume.pdf" target="_blank">Résumé ↗</a>
-    <a href="mailto:reginasalem01@gmail.com">Contact</a>
+    <a href="./Regina_Salem_Resume.pdf" target="_blank" id="navResume">Résumé ↗</a>
+    <a href="mailto:reginasalem01@gmail.com" id="navContact">Contact</a>
+    <button class="lang-btn" id="langToggle" aria-label="Toggle language">ES</button>
   </div>
 </nav>
 
@@ -2392,6 +2408,7 @@
 <!-- ═══════════════════════════════════════════════════════════ -->
 <div id="project-view">
   <button class="back-btn" id="backBtn">Back to Work</button>
+  <!-- back btn text updated by applyLang() -->
   <div id="project-content"></div>
 </div>
 
@@ -2400,6 +2417,75 @@
 <!-- SCRIPT                                                     -->
 <!-- ═══════════════════════════════════════════════════════════ -->
 <script>
+
+/* ── LANGUAGE SYSTEM ─────────────────────────────────────────── */
+let LANG = (function() { try { return localStorage.getItem('rs-lang') || 'en'; } catch(e) { return 'en'; } })();
+
+const UI_ES = {
+  navWork: 'Trabajo', navAbout: 'Sobre mí', navResume: 'CV ↗', navContact: 'Contacto',
+  langBtn: 'EN',
+  heroEyebrow: 'Portafolio — 2026',
+  heroRole: 'Diseñadora de Producto e Interacción',
+  heroWords: ['segura.', 'comprendida.', 'guiada.', 'en control.'],
+  heroAvailable: '<span class="dot-green"></span>Abierta a oportunidades',
+  heroScroll: '<span class="hero-scroll-line"></span>Desliza para explorar',
+  heroBuilding: 'Construyendo: <span class="hero-building-name">Doggo →</span>',
+  workLabel: 'Trabajo seleccionado',
+  aboutH: 'Diseño.<br>Construyo.<br><em>Y lo lanzo de&nbsp;verdad.</em>',
+  aboutP1: 'Soy diseñadora de producto que lleva los proyectos hasta el final. El trabajo aquí abarca apps móviles, UX empresarial, experiencias de AR y hardware — porque me picó la curiosidad, y la curiosidad tiende a multiplicarse.',
+  aboutP2: 'Mi trabajo no se detiene en el mockup. Lancé una plataforma full-stack para restaurantes, construí un guante MIDI Bluetooth desde cero, y llevé seis proyectos de la investigación al prototipo funcional — usando IA para ir rápido y código para ser honesta sobre lo que realmente se puede construir.',
+  aboutP3: 'Ahora mismo estoy terminando Doggo — cliente real, deadline real. Abierta a lo que sigue.',
+  skillLabel1: 'Diseño', skillLabel2: 'Desarrollo', skillLabel3: 'Herramientas',
+  backBtn: '← Volver al trabajo',
+  viewCase: 'Ver caso de estudio',
+  viewCaseArrow: 'Ver caso de estudio →',
+  protoLink: '↗  Ver prototipo',
+  roleLbl: 'Rol', stackLbl: 'Stack', yearLbl: 'Año', whatLbl: 'Lo que hice',
+  callsLbl: 'Decisiones que tomé, y por qué',
+  hardLbl: 'Lo difícil',
+  whatDidLbl: 'Lo que hice',
+  lookBackLbl: 'Mirando atrás',
+  problemLbl: 'El problema',
+  solutionLbl: 'La solución',
+  theEcosystem: 'El ecosistema',
+};
+const UI_EN = {
+  navWork: 'Work', navAbout: 'About', navResume: 'Résumé ↗', navContact: 'Contact',
+  langBtn: 'ES',
+  heroEyebrow: 'Portfolio — 2026',
+  heroRole: 'Product & Interaction Designer',
+  heroWords: ['confident.', 'understood.', 'guided.', 'in control.'],
+  heroAvailable: '<span class="dot-green"></span>Open to opportunities',
+  heroScroll: '<span class="hero-scroll-line"></span>Scroll to explore',
+  heroBuilding: 'Building: <span class="hero-building-name">Doggo →</span>',
+  workLabel: 'Selected Work',
+  aboutH: 'I design.<br>I build.<br><em>And I actually ship it.</em>',
+  aboutP1: "I'm a product designer who takes projects all the way through. The work here spans mobile apps, enterprise UX, AR experiences, and hardware — because I got curious, and curiosity tends to compound.",
+  aboutP2: "My work doesn't stop at the mockup. I've shipped a full-stack restaurant platform, built a Bluetooth MIDI glove from scratch, and taken six projects from research to working prototype — using AI to move fast and code to stay honest about what's actually buildable.",
+  aboutP3: "Right now I'm finishing Doggo — real client, real deadline. Open to what's next.",
+  skillLabel1: 'Design', skillLabel2: 'Development', skillLabel3: 'Tools',
+  backBtn: '← Back to Work',
+  viewCase: 'View case study',
+  viewCaseArrow: 'View case study →',
+  protoLink: '↗  View prototype',
+  roleLbl: 'Role', stackLbl: 'Stack', yearLbl: 'Year', whatLbl: 'What I did',
+  callsLbl: 'Calls I made, and why',
+  hardLbl: 'The hard parts',
+  whatDidLbl: 'What I did',
+  lookBackLbl: 'Looking back',
+  problemLbl: 'The Problem',
+  solutionLbl: 'The Solution',
+  theEcosystem: 'The ecosystem',
+};
+
+function ui(key) { return (LANG === 'es' ? UI_ES : UI_EN)[key] || key; }
+
+function langProject(p) {
+  if (LANG === 'en') return p;
+  var ov = window._PROJECTS_ES && window._PROJECTS_ES[p.id];
+  if (!ov) return p;
+  return Object.assign({}, p, ov);
+}
 
 /* ── PROJECT DATA ───────────────────────────────────────────── */
 const PROJECTS = [
@@ -2758,6 +2844,193 @@ const PROJECTS = [
   },
 ];
 
+/* ── SPANISH PROJECT TRANSLATIONS ───────────────────────────── */
+window._PROJECTS_ES = {
+  doggo: {
+    tagline: 'Tres experiencias. Una marca.<br>Un restaurante de hot dogs en lo digital.',
+    desc: 'Ayudando a un restaurante local de hot dogs a digitalizar delivery, recogida, reservas y fidelización — de principio a fin.',
+    tags: 'Cliente real · PWA · Full Stack · Live',
+    status: 'Cliente real · En producción',
+    insight: 'Tres interfaces. Un restaurante.<br>La tarjeta de fidelización es el producto.',
+    problem: 'Mi cliente — un restaurante local de hot dogs — no tenía presencia digital más allá de Instagram. Sin forma de recompensar a clientes frecuentes. Sin pedidos a domicilio ni para recoger, sin sistema de reservas, sin visibilidad de ventas o inventario. Todo era manual, y la experiencia del cliente lo reflejaba.',
+    solution: 'Doggo es una plataforma con tres interfaces completamente distintas diseñadas para tres tipos de personas diferentes: una app móvil para que los clientes hagan pedidos a domicilio, para recoger o para comer en el local — reserven mesa, y acumulen Doggo Cash, un crédito de fidelización en dinero real ($5 gastados = 1 sello, 5 sellos = $2.50 acreditados automáticamente), un panel Kanban para que el personal del restaurante gestione la cola de pedidos en vivo, y un panel de propietario para ver toda la operación. La misma marca, tres mundos separados.',
+    decisions: [
+      '<strong>Diseñar la fidelización antes del pedido.</strong> En Ecuador, la tarjeta de puntos ya funcionaba. La clave era hacer una que no se pudiera perder — y darle valor monetario real. Cada $5 gastados equivalen a un sello. Con cinco sellos se generan $2.50 de Doggo Cash, acreditados automáticamente a la cuenta, sin ninguna acción requerida. La regla es lo suficientemente simple para explicarla en una frase y lo suficientemente satisfactoria para perseguirla. El pedido está ahí — pero la tarjeta es el producto.',
+      '<strong>Diseñar para la familiaridad.</strong> El personal de un restaurante trabaja rápido, de forma reactiva, generalmente con una sola mano. El sistema no podía requerir capacitación. Construí alrededor de patrones que ya conocían — estados codificados por color, una tarjeta, un botón. La familiaridad no es una tendencia de UX. Aquí es una&nbsp;restricción.',
+      '<strong>Tres preguntas. Treinta segundos.</strong> Un dueño de restaurante a las 8am no quiere analizar datos. Quiere saber si ayer funcionó. Construí alrededor de tres preguntas — ¿El día fue bien? ¿Qué se vendió? ¿Quién volvió? — y eliminé todo lo que no respondiera alguna de&nbsp;ellas.',
+      '<strong>Eliminar la decisión de descargar.</strong> La gente ya sabía cómo escanear. Ese comportamiento ya existía — yo solo lo redirigí. En lugar de mandar a los usuarios a una App Store, el QR abre Doggo de inmediato. Instalar en dos toques. La fricción era opcional. La hice&nbsp;desaparecer.',
+      '<strong>Hacer que volver se sienta inevitable.</strong> Un cliente nuevo es una ganancia puntual. Un cliente recurrente es todo el modelo de negocio. La tarjeta Doggo Cash vive en la pantalla de inicio — ves tu progreso antes de siquiera pensar en pedir. El saldo no expira. Se acumula en silencio. Al momento de pagar, aparece como descuento que se puede aplicar con un toque. Sin fricción, sin búsqueda, sin códigos de canje. La recompensa simplemente&nbsp;está.',
+    ],
+    challenges: [
+      '<strong>Mi cliente sabía cómo se sentía el restaurante — no qué debía hacer la app.</strong> No podía describir funcionalidades, pero sí podía describir momentos: un cliente habitual que entra y es reconocido, un pedido que llega a la mesa correcta. Sin una especificación de producto, tuve que construir el brief&nbsp;yo sola.',
+      '<strong>Diseñar tres interfaces al mismo tiempo sin perder el foco.</strong> Cada portal sirve a un usuario completamente diferente en un dispositivo completamente diferente. El riesgo era construir una versión mediocre de las tres en lugar de una versión afilada de alguna.',
+      '<strong>Hacer que una PWA se sienta como una app real.</strong> Los clientes están acostumbrados a la App Store. Un código QR que instala sin descarga es territorio desconocido — y en el servicio de comida, las primeras impresiones son todo.',
+      '<strong>Las operaciones reales tienen límites reales — y cada límite necesita una decisión de diseño.</strong> Una vez que el sistema entró en producción, las restricciones se multiplicaron: pedidos solo disponibles entre 11:00–19:00, entregas restringidas a zonas específicas, tarifas que varían por distancia. Cada regla tuvo que comunicarse claramente sin romper el flujo — un banner que informa sin alarmar, un checkout que muestra la tarifa antes de comprometerse, un estado deshabilitado que explica en lugar de solo&nbsp;bloquear.',
+    ],
+    chalHow: [
+      'Organicé sesiones de trabajo mapeando cada momento de la visita de un cliente — entrar, escanear, pedir, esperar, comer, irse. Esa secuencia se convirtió en la arquitectura. La especificación se escribió sola desde el recorrido.',
+      'Decidí desde el principio qué nunca debía ver cada persona. Esa restricción negativa — la lista de "no es tu trabajo" — fue más útil que cualquier solicitud de funcionalidades. Mantuvo cada interfaz enfocada en el trabajo real de esa persona sin compromiso.',
+      'Diseñé el flujo de instalación como una secuencia de onboarding, no como un aviso del sistema. La animación, el copy, la primera pantalla que ves — cada detalle fue diseñado para hacer que lo desconocido se sintiera inevitable.',
+      'Traté cada restricción como un problema de comunicación. El horario de pedidos aparece como un banner sutil con las horas exactas — visible, no intrusivo. Las zonas de entrega se verifican al ingresar la dirección con un claro "aún no hacemos entregas aquí" en lugar de un fallo silencioso. La tarifa aparece antes de que el cliente se comprometa. Realidad operativa, diseñada&nbsp;honestamente.',
+    ],
+    context: 'Doggo es un restaurante local de hot dogs. Sin presencia digital propia — sin forma de recompensar a clientes frecuentes, sin sistema de delivery o reservas, sin visibilidad de ventas. Todo era manual. Así comienzan muchos negocios. Pero estaban listos para crecer.',
+    reflection: 'Diseñar para un cliente real significó que cada decisión tenía un rostro detrás. Cuando rediseñé el flujo de la tarjeta de fidelización, pensaba en el cliente habitual que viene todos los martes. Cuando estructuré el panel del propietario, pensaba en alguien que necesita actualizar un precio del menú a las 8am antes de que empiece el movimiento. Las restricciones reales de una persona real hicieron el diseño más afilado que cualquier brief.',
+    reflectionExtra: 'Fue una curva de aprendizaje. Primera PWA que construí — lo fui descubriendo sobre la marcha. Primer cliente que pidió algo tan complejo con tres usuarios completamente distintos. El sistema ya está en producción. Clientes reales, pedidos reales, Doggo Cash real acumulándose.',
+    screenTitle: 'Un pedido, tres momentos',
+    tableauHeading: 'Un pedido.<br>Tres interfaces se actualizan.',
+    tableau: [
+      { moment: 'El cliente · 11:43 AM', caption: 'Un sello es una victoria, no una actualización de base de datos.', src: './pics/doggo_customer.png', label: 'App del Cliente', key: 'customer' },
+      { moment: 'La cocina · El mismo momento', caption: 'El panel de pedidos se actualiza antes que el ticket.', src: './pics/doggo_restaurant.png', label: 'Panel del Restaurante', key: 'restaurant' },
+      { moment: 'El propietario · Al final del día', caption: 'Ingresos, fidelización, picos — una vista.', src: './pics/doggo_owner.png', label: 'Panel del Propietario', key: 'owner' },
+    ],
+  },
+  bwc: {
+    tagline: 'Gestión de evidencias para fuerzas del orden. Seguridad ante todo.',
+    desc: 'Diseñando claridad para entornos de alta presión donde cada segundo cuenta.',
+    tags: 'UX Empresarial · Diseño de Sistemas · Académico',
+    status: 'Académico · Prototipo en Figma',
+    insight: 'Un oficial en el campo no debería tener que pensar en su app de evidencias.',
+    problem: 'Los oficiales de policía necesitan acceder y revisar evidencias de video sensibles en el campo. Pero los sistemas existentes requieren una computadora de escritorio en la estación. El reto: diseñar una interfaz móvil lo suficientemente rápida para uso real y lo suficientemente segura para evidencia legal.',
+    solution: 'Un sistema de cámara corporal física junto a una app móvil segura de gestión de evidencias. Dos factores de autenticación. Filtros de medios avanzados. Todo lo que un oficial necesita en el campo, accesible con una sola mano.',
+    decisions: [
+      '<strong>El PIN tiene que ser tan rápido como FaceID — no una alternativa inferior.</strong> FaceID falla: poca luz, mascarilla, guantes. Yo me encargué del flujo del PIN — el teclado numérico, los estados de error, el bloqueo del dispositivo tras demasiados intentos. El principio de diseño era que el oficial no debía sentir que eligió la peor opción. Dos llaves, la misma puerta. Y cuando las pruebas mostraron que requerir reautenticación cada vez que se abría un archivo de medios llevaba a los oficiales a saltarse la revisión del material por completo, la autenticación se trasladó al acceso al dispositivo. Una vez dentro, la sesión permanece&nbsp;abierta.',
+      '<strong>Los oficiales no buscan por nombre de archivo. Buscan por lo que recuerdan.</strong> Nadie busca "archivo_20260223_130344.mp4." Dicen "la llamada alrededor de las 11" o "el turno del martes." Diseñé la sección de medios en torno a tres pestañas — video, foto, audio — para filtrado inmediato por tipo. Luego dentro de cada archivo: hora grabada, coordenadas GPS, ID de la placa del oficial, etiquetas del incidente. Los metadatos no eran para documentación. Era para dar a los oficiales el vocabulario que ya usan para encontrar material&nbsp;más rápido.',
+      '<strong>El dispositivo almacena 24 horas. El oficial no debería tener que llevar la cuenta.</strong> La barra de almacenamiento se vuelve roja al 90% — visible en la parte inferior de cada pantalla de medios. Cuando llega el momento de liberar espacio, el flujo aplica una regla: solo puedes borrar material ya subido a la nube. El oficial no gestiona la verificación de seguridad. El sistema lo&nbsp;hace.',
+    ],
+    challenges: [
+      '<strong>La autenticación seguía interrumpiendo el trabajo que debía proteger.</strong> Los diseños iniciales requerían reautenticación cada vez que un oficial abría un archivo de medios. En las pruebas, la fricción fue suficiente para que los oficiales se saltaran la revisión del material por completo — lo contrario de lo que el sistema&nbsp;buscaba.',
+      '<strong>Los oficiales no podían describir cómo organizaban el material mentalmente hasta que no podían encontrar lo que necesitaban.</strong> Nadie podía nombrar su modelo mental de antemano. "La llamada alrededor de las 11." "El incidente del martes." El vocabulario era tiempo y lugar — no nombres de archivo ni&nbsp;tipos.',
+    ],
+    chalHow: [
+      'La autenticación ahora ocurre una vez al acceder al dispositivo. Dentro de la sesión, las evidencias son accesibles sin requerir nueva autenticación. La seguridad no desaparece — simplemente se mueve a donde&nbsp;importa.',
+      'Construí la taxonomía de filtros alrededor del vocabulario de campo: tres pestañas para filtrado por tipo, metadatos que muestran hora grabada, ubicación GPS e ID del oficial. Los campos que coinciden con cómo los oficiales ya describen lo que&nbsp;ocurrió.',
+    ],
+    context: 'Equipo de cuatro — cada diseñador fue dueño de una sección del dispositivo. Yo me encargué del flujo de autenticación PIN, la sección completa de medios (filtrado de video, foto y audio con vistas individuales de archivo y metadatos), y la gestión del almacenamiento. La cámara captura la evidencia. La app complementaria determina si un oficial puede realmente&nbsp;usarla.',
+    reflection: 'Diseñar para alguien que podría estar usando esto en la oscuridad, con una sola mano, mientras está realmente en servicio — eso cambia todo. Dejas de agregar cosas. Empiezas a recortar cosas. Las apuestas altas me enseñaron que la claridad no es una elección de estilo. Es el trabajo entero.',
+    screenTitle: 'La app complementaria',
+    role: 'Equipo — Filtros de Medios + Auth FaceID/PIN',
+    screens: [
+      { src: './pics/bwc_home.png', label: 'Inicio', caption: 'Seis modos de captura, a un toque. Zona del pulgar primero — cada acción crítica alcanzable sin cambiar el agarre.' },
+      { src: './pics/bwc_media.png', label: 'Medios — Todos', caption: 'Todo el material, fotos y audio en una lista unificada. Tipo de archivo, estado de sincronización y etiquetas visibles de un vistazo.' },
+      { src: './pics/bwc_audio.png', label: 'Medios — Audio', caption: 'Filtra por tipo para encontrar el archivo correcto en segundos. La barra al 90% se vuelve roja — el oficial lo ve antes de que sea un problema en campo.' },
+      { src: './pics/bwc_video.png', label: 'Detalle de video', caption: 'Etiqueta el material a una categoría de incidente en el momento de captura. Un registro vinculado — sin papeleo separado que presentar en la estación.' },
+      { src: './pics/bwc_incidents.png', label: 'Incidentes', caption: 'Cada incidente, cronológicamente. Conteo de medios y estado de sincronización en cada tarjeta — nada requiere entrar solo para verificar el estado.' },
+      { src: './pics/bwc_photo.png', label: 'Captura de foto', caption: 'Captura con un toque y vista previa en vivo. Sin cambio de modo. Sin pantalla de confirmación. Toca y está guardado.' },
+      { src: './pics/bwc_emergency.png', label: 'Alerta de emergencia', caption: 'Una doble pulsación activa la grabación de emergencia. El estado naranja de pantalla completa es inconfundible — en vivo y bloqueado hasta que se descarte manualmente.' },
+      { src: './pics/bwc_captured.png', label: 'Captura confirmada', caption: 'Retroalimentación instantánea después de cada acción. El toast verde actualiza el almacenamiento en tiempo real — sin dudar si se guardó.' },
+    ],
+  },
+  careguard: {
+    tagline: 'Cumplimiento OSHA para quienes más lo necesitan.',
+    desc: 'Los trabajadores de salud son los más expuestos a lesiones — y los más cargados con el papeleo que las sigue. Arreglamos el papeleo.',
+    tags: 'Investigación HCD · Salud · UX · Académico',
+    status: 'Académico · Prototipo en Figma',
+    insight: 'Una entrada. Tres formularios OSHA. Cero re-ingreso.',
+    context: 'Diseñadora UX líder — única responsable de la investigación en un proyecto de Diseño Centrado en el Ser Humano. Tres rondas de entrevistas, dos pivotes de prototipo, y un sistema de cumplimiento que genera el Formulario OSHA 300, 301 y Compensación de Trabajadores desde un único flujo de entrada. Los trabajadores de salud son la fuerza laboral con mayor riesgo. Ya tienen suficiente papeleo.',
+    problem: 'El reporte de lesiones laborales está roto. Formulario OSHA 300. Formulario 301. Compensación de trabajadores. Cada formulario requiere datos distintos, distintos destinatarios, distintos plazos. Los trabajadores de salud llenan formularios en papel al final de turnos de 12 horas, y las cosas se escapan. Las personas con mayor riesgo de lesión tienen el menor apoyo cuando se lastiman.',
+    solution: 'Un sistema digital de reporte de incidentes que guía a los supervisores por el cumplimiento paso a paso — generando automáticamente los formularios OSHA 300, 301 y Compensación de Trabajadores desde un único flujo de entrada, enviándolos a las personas correctas, y mostrando reportes pendientes en un dashboard de estado en vivo.',
+    decisions: [
+      '<strong>Ingresar una vez, generar tres.</strong> El usuario ingresa información una vez. El sistema completa los tres formularios requeridos simultáneamente. Sin re-ingreso. Sin huecos. Sin "¿llené ese formulario?"',
+      '<strong>Los supervisores no deberían tener que conocer de memoria los criterios OSHA.</strong> El formulario de incidente que presentan los empleados captura todo lo que el sistema necesita — tipo de lesión, gravedad, días de ausencia, tratamiento médico requerido. El sistema clasifica la registrabilidad automáticamente. El dashboard muestra el conteo. El supervisor ve: tres registrables este mes. Sin búsqueda manual. Sin adivinar.',
+      '<strong>La investigación HCD cambió toda la arquitectura de información.</strong> La intuición que más importó — "nunca sé si mi reporte llegó" — surgió en nuestra tercera ronda de entrevistas, después de que pensábamos que sabíamos qué construir. Permanecer en descubrimiento más tiempo nos salvó de construir el producto equivocado.',
+    ],
+    challenges: [
+      '<strong>Tuvimos que desechar un prototipo del que estábamos orgullosos.</strong> Tras la tercera ronda de entrevistas, quedó claro que habíamos construido lo equivocado — un llenado de formularios optimizado, para un problema que los usuarios no tenían. Reconstruir alrededor del dashboard de estado se sentía como retroceder. Hasta la versión final esa decisión se sintió correcta.',
+      '<strong>Tres formularios diferentes, un flujo de entrada único.</strong> Los formularios OSHA 300, 301 y Compensación de Trabajadores requieren datos distintos en formatos distintos para destinatarios distintos. Crear un flujo que capture todo — sin sentirse como tres formularios separados — requirió mapear cada campo en los tres documentos y encontrar dónde se superponían.',
+    ],
+    chalHow: [
+      'Reconstruimos la arquitectura de información alrededor del dashboard de estado. El llenado de formularios se convirtió en un sub-flujo, no en el protagonista. Dejamos de defender la primera solución y reconstruimos alrededor de lo que los usuarios realmente necesitaban saber.',
+      'Mapeé cada campo requerido en los tres documentos OSHA, identifiqué las superposiciones, y construí una taxonomía de preguntas unificada. El sistema pregunta lo que un supervisor ya sabe — hora, lugar, qué pasó — y enruta esas respuestas a donde cada formulario las necesita.',
+    ],
+    reflection: 'El Diseño Centrado en el Ser Humano es fácil de decir y difícil de hacer. La intuición más importante llegó de la tercera entrevista, después de que creíamos haber terminado con la investigación. La disposición a permanecer en modo descubrimiento — incluso cuando se sentía lento — fue lo que cambió todo.',
+    role: 'Diseñadora UX líder — Investigación, AI, Prototipado',
+  },
+  '360fitting': {
+    tagline: 'Pruébate antes de comprar. Virtualmente.',
+    desc: 'Un probador de AR que cierra la brecha entre las compras en línea y la realidad física.',
+    tags: 'AR · Móvil · UX · Académico',
+    status: 'Académico · Prototipo en Figma',
+    insight: 'El AR es la parte fácil. La confianza es el problema de diseño.',
+    context: 'Equipo de dos — co-diseñado de principio a fin. El treinta por ciento de los pedidos de ropa en línea se devuelven porque la talla no es correcta. Las guías de tallas no tienen en cuenta la forma corporal, el comportamiento de la tela o la inconsistencia entre marcas. El AR nunca fue la parte difícil. Lograr que la gente confiara en él, sí.',
+    problem: 'Los compradores en línea devuelven hasta el 30% de la ropa porque la talla no es correcta. Las guías de tallas no tienen en cuenta la forma corporal, el comportamiento de la tela ni la inconsistencia entre marcas. La solución existente es una versión peor del problema.',
+    solution: 'Una app móvil de AR donde los usuarios crean un avatar personalizado con sus medidas corporales y luego se prueban virtualmente ropa de marcas asociadas — Zara, Urban Outfitters, Forever 21 — viendo cómo la tela se mueve y la talla reacciona en tiempo real antes de comprar.',
+    decisions: [
+      '<strong>No S, M o L. Tus medidas reales.</strong> La prueba virtual solo genera confianza si los usuarios creen que conoce su cuerpo. Eso empieza antes de que aparezca cualquier prenda — con un perfil: altura, peso, busto, cintura, caderas, torso, largo de pierna. Cada artículo que prueban se ajusta a esos números, no a la suposición de una marca sobre lo que significa "mediano".',
+      '<strong>Un carrito. Tres tiendas diferentes.</strong> La mayoría de los compradores en línea dividen su sesión entre pestañas. Construimos un carrito que abarca todas ellas — elige una chaqueta de Zara, pantalones de Urban Outfitters, zapatos de Forever 21, pruébate todo en el mismo avatar, y paga una sola vez.',
+      '<strong>La disponibilidad de marcas tiene que ir primero.</strong> La ansiedad de cobertura — "¿y si mi tienda no está aquí?" — fue la principal preocupación en las pruebas de usabilidad. Los logos de las marcas son lo primero que ven los usuarios en el onboarding, antes de que vayan a buscar su marca favorita.',
+    ],
+    challenges: [
+      '<strong>Los usuarios no dudaban del AR — se dudaban de sí mismos.</strong> Las pruebas revelaron que la duda no era "¿funcionará esta tecnología?" sino "¿y si medí mal?" o "¿y si esta marca talla diferente?" El reto de diseño pasó de explicar la tecnología a tranquilizar a los usuarios de que sus datos eran correctos.',
+      '<strong>Inconsistencia de tallas entre marcas.</strong> Una talla M en Zara no es una M en Urban Outfitters. No podíamos fingir que eso no era cierto — los usuarios ya lo sabían. Así que diseñamos alrededor de eso: las preguntas frecuentes y los indicadores visuales de talla existen específicamente para reconocer la brecha y dar confianza de todas formas.',
+    ],
+    chalHow: [
+      'Nos alejamos de explicar cómo funciona el AR y nos enfocamos en tranquilizar a los usuarios de que sus medidas eran correctas. Añadimos pantallas de confirmación de medidas e hicimos las preguntas frecuentes de talla accesibles desde cada vista de prueba.',
+      'Incorporamos calibración de talla por marca en el sistema del avatar. La tabla de tallas de cada partner se mapea a la geometría del avatar. Las preguntas frecuentes lo explican explícitamente — no para ocultar la inconsistencia, sino para que los usuarios entiendan por qué una M aquí puede no ser una M allá.',
+    ],
+    reflection: 'La lección más importante: la innovación técnica (el probador AR) importaba menos que la emoción del usuario (la confianza). Invertimos más esfuerzo de diseño en señales de confianza que en la experiencia de AR en sí. La tecnología solo funciona si la gente cree en ella.',
+    role: 'Co-diseñadora — UX completa',
+  },
+  petpals: {
+    tagline: 'Tinder para mascotas. Diseñado de principio a fin.',
+    desc: 'Una app de deslizamiento que convierte "mi perro necesita amigos" en un plan de encuentro real.',
+    tags: 'UX · Wireframing · Prototipado · Académico',
+    status: 'Académico · Prototipo en Figma',
+    insight: 'La confianza no es una función. Es una secuencia.',
+    context: 'Equipo de cuatro — de wireframing a prototipo, de principio a fin. Dos rondas de pruebas de usabilidad, tres personas, una intuición que solo las pruebas confirmaron: la ansiedad de seguridad aparece antes del primer deslizamiento, no después del primer match fallido. La confianza tiene que ser visible desde la primera pantalla.',
+    problem: 'Los dueños de mascotas no tienen una forma estructurada de encontrar compañeros de juego seguros y compatibles para sus mascotas. Los grupos de Facebook y los parques para perros funcionan — pero no tienen filtros, carecen de señales de seguridad, y no hay forma de coordinar un encuentro sin intercambiar números de teléfono.',
+    solution: 'Una app de emparejamiento por deslizamiento. Ves una tarjeta de mascota, tocas la patita verde o roja, haces match cuando el otro lado también toca verde, te mensajeas, y lo conviertes en un encuentro real usando la pestaña de eventos integrada.',
+    decisions: [
+      '<strong>La tarjeta tiene que hacer todo el trabajo.</strong> Nombre, raza, dueño, ubicación, calificación por estrellas, temperamento, estado de vacunación — todo visible antes de tocar una patita. Si la tarjeta no te da suficiente para decidir, no decidirás.',
+      '<strong>Las dos patitas en verde. Luego se abre la conversación.</strong> Los mensajes solo se desbloquean con un match mutuo. Sin mensajes fríos de desconocidos. Sin rechazos incómodos. Si las dos mascotas reciben una patita verde, entonces hablan.',
+      '<strong>Confianza en la tarjeta, no en una pantalla de ajustes.</strong> El estado de vacunación, de esterilización y los sliders de temperamento son visibles en la vista principal del perfil — antes de cualquier deslizamiento. Las señales de seguridad no pueden vivir a dos toques de profundidad.',
+      '<strong>El match es el inicio. El encuentro es el punto.</strong> Las mascotas necesitan jugar en persona, no solo hacer match en línea. La pestaña de eventos muestra encuentros locales cercanos — días de juego para perros, eventos para conejos — y te permite compartirlos directamente con un match.',
+    ],
+    challenges: [
+      '<strong>Los usuarios hacían match con mascotas y de inmediato preguntaban "¿puedo deshacer eso?"</strong> No había forma de deshacer. Una sesión de prueba de usabilidad dejó claro que no era un hueco menor — era un problema de confianza. Si el match se siente permanente y accidental, la gente deja de participar. Se añadieron gestos de deslizamiento y un estado de deshacer antes de que el prototipo final se lanzara.',
+      '<strong>Las funciones de seguridad hacían la app lenta. Las de engagement la hacían insegura.</strong> Los padres necesitaban verificación de identidad y calificaciones para sentirse cómodos. Los estudiantes querían deslizamiento rápido y chat instantáneo. Cada vez que optimizábamos para uno, el otro sufría. Encontrar el equilibrio requirió dos iteraciones completas de diseño y muchas conversaciones difíciles sobre prioridades.',
+    ],
+    chalHow: [
+      'Añadimos gesto de deslizamiento y estado de deshacer antes de que el prototipo final se lanzara. En la siguiente sesión de prueba, nadie dudó.',
+      'Mantuvimos la verificación de identidad y las calificaciones Paws Up en la vista principal del perfil — visibles desde el primer deslizamiento, no enterradas en ajustes. La secuencia importa: muestra confianza antes de pedirla.',
+    ],
+    reflection: 'Primera vez que hice una evaluación completa de usabilidad e iteré de verdad a partir de lo que encontré. Ver a alguien topar con un problema, arreglarlo, y luego ver a la siguiente persona pasarlo sin dificultad — eso me hizo clic algo. Arréglalo. Pruébalo. Míralo desaparecer. Para eso es esto.',
+    screenTitle: 'La app de principio a fin',
+    screens: [
+      { src: './pics/pp_card.png', label: 'Tarjeta de mascota', caption: 'Nombre, raza, dueño, ubicación, temperamento y estado de vacunación — todo antes del primer toque.' },
+      { src: './pics/pp_match.png', label: 'Match', caption: 'Match mutuo confirmado. Dos patitas verdes — ahora se abre el chat. Sin mensajes fríos, sin rechazos.' },
+      { src: './pics/pp_chat.png', label: 'Chat', caption: 'El chat se desbloquea con el match. Coordina directamente desde la conversación.' },
+      { src: './pics/pp_trust.png', label: 'Señales de confianza', caption: 'Señales de confianza en la tarjeta principal: vacunas, temperamento, perfil del dueño. La seguridad es visible antes de deslizar.' },
+      { src: './pics/pp_events.png', label: 'Eventos', caption: 'Encuentros locales. Comparte directamente a un match — de la pantalla al parque.' },
+    ],
+  },
+  midiglove: {
+    tagline: 'Tu mano ES el instrumento.',
+    desc: 'Un controlador MIDI portátil construido con un guante, un microcontrolador y cinta conductora. Sin cables. Sin escritorio. Solo una mano.',
+    tags: 'Computación Física · Hardware · Solo',
+    status: 'Proyecto personal · CircuitPython',
+    insight: 'El guante desaparece. Solo queda la música.',
+    context: 'Toco el piano. Cuando estoy lejos de uno, sigo escuchando música en mi cabeza — melodías que trabajar, acordes que probar, ritmos que aparecen en el momento equivocado. Quería hacer algo al respecto. El MIDI Glove empezó como una pregunta: ¿y si el instrumento viajara contigo? Proyecto solo, del concepto al código. Un guante, cinta conductora y un Adafruit Feather nRF52840 en la muñeca. Toca un dedo con el pulgar para tocar una nota. Gira la muñeca para doblar el tono. Sacude la mano para golpear una caja. Todo enviado inalámbricamente por BLE MIDI a GarageBand. Sin piano. Sin cables. Solo una mano.',
+    problem: 'Llevo suficiente tiempo tocando el piano como para saber que el impulso de hacer música no espera a que estés cerca de un instrumento. Aparece en el metro, en una sala de espera, a mitad de un pensamiento. Todo músico conoce esa sensación — escuchas algo en tu cabeza y no tienes forma de sacarlo. Quería construir lo que cierra esa brecha.',
+    solution: 'Un controlador MIDI portátil: un guante con cinta conductora en las yemas, un Adafruit Feather nRF52840 y un IMU LSM6DS33 en la muñeca. Tres tipos de gesto — toque, rotación, sacudida — se mapean a tres salidas musicales: notas, bend de tono y percusión. Todo transmitido inalámbricamente por BLE MIDI. Construido en CircuitPython, iterado desde una prueba de concepto con un guante de cocina hasta un instrumento inalámbrico completamente expresivo.',
+    decisions: [
+      '<strong>El modelo de gestos vino antes que la electrónica.</strong> Empecé preguntando: ¿qué hace una mano naturalmente? El contacto dedo-pulgar — el mismo movimiento de verificar una textura — activa notas mediante pin digital y resistencia pull-up (8 pines mapeados a C4→C5). La rotación de muñeca — el gesto de pomo de puerta — controla el bend de tono a través del eje Z del giroscopio. Un sacudido brusco de la mano dispara un golpe de batería mediante un pico del acelerómetro en el canal MIDI 10. Cada gesto ya existía. Solo le di un sonido.',
+      '<strong>El problema más difícil no era capturar el movimiento — era ignorar todo lo demás.</strong> Las versiones tempranas disparaban notas falsas constantemente. Solo mover la mano con normalidad activaba un acorde. Construí tres reglas en capas: un umbral de giroscopio de 80°/s para que el bend de tono solo se active en rotación deliberada (con una zona muerta de 50 para filtrar micro-temblores); un mínimo de sacudida de 15 m/s² y un cooldown de batería de 0.3s para que solo los sacudidos intencionales golpeen la caja; y detección de cambio de estado en los toques que se dispara exactamente una vez por contacto — nunca mientras se mantiene. Cada regla por sí sola apenas ayudó. Juntas eliminaron las notas fantasma por completo.',
+      '<strong>La V1 probó el concepto. La V2 lo convirtió en un instrumento.</strong> La versión uno era un guante de cocina con cinta conductora en cuatro yemas. Toca el dedo con el pulgar, toca una nota. Eso era todo — y funcionó. Pero era solo un teclado tosco pegado a una mano. La versión dos añadió el Adafruit Feather nRF52840, el IMU LSM6DS33 para sensado de movimiento, BLE MIDI para salida inalámbrica, bend de tono desde la rotación de muñeca, y disparo de batería desde el acelerómetro. La idea no cambió. Lo que cambió fue que finalmente se sentía como algo que valía la pena tocar.',
+    ],
+    challenges: [
+      '<strong>El guante no podía distinguir entre tocar y existir.</strong> Una mano nunca está perfectamente quieta — y las versiones tempranas trataban cada movimiento como entrada. Las notas falsas se disparaban constantemente. El arreglo no era hardware; era construir un modelo de decisión más inteligente en software. Superimpose tres reglas: duración del contacto, umbral de sensibilidad del giroscopio, y detección de solo transición de estado. El breakthrough fue darme cuenta de que cada regla por sí sola reducía el ruido pero no lo eliminaba — era la combinación la que funcionó.',
+      '<strong>La latencia BLE hacía que el guante se sintiera como un instrumento roto.</strong> Toco el piano. Sé cómo se siente la respuesta inmediata tecla-a-sonido. La primera versión inalámbrica tenía suficiente retraso para desincronizar el timing por completo — el sonido llegaba después del gesto, no con él. Lo resolví cambiando de un bucle de polling a entrada dirigida por interrupciones y agrupando los envíos MIDI solo cuando el estado realmente cambiaba. Bajar la latencia hasta el punto en que gesto y sonido se sentían simultáneos fue lo que convirtió un prototipo en algo que realmente quería tocar.',
+    ],
+    chalHow: [
+      'Construí tres reglas de filtrado en capas en CircuitPython: umbral de sensibilidad de giroscopio de 80°/s, mínimo de sacudida de 15 m/s² con cooldown de batería de 0.3s, y detección de cambio de estado que se dispara una vez al contacto — nunca mientras se mantiene. Ninguna regla por sí sola lo resolvió. La combinación sí.',
+      'Cambié de un bucle de polling a entrada dirigida por interrupciones. Los paquetes MIDI se envían solo cuando el estado realmente cambia — no en cada tick del bucle. La latencia bajó al punto en que gesto y sonido se sentían simultáneos. Ahí fue cuando dejó de ser un prototipo.',
+    ],
+    reflection: 'Construí esto porque toco el piano y quería que la música fuera portátil. Lo que no esperaba era cuánto construir un instrumento físico me enseñaría sobre diseño. Cada restricción de hardware tenía una consecuencia musical — el cooldown de batería de 0.3s da forma al feel rítmico; la zona muerta del tono es la diferencia entre bends expresivos y temblores aleatorios. La restricción y la decisión de diseño son la misma cosa. No me di cuenta de eso hasta que construí algo que realmente se podía escuchar.',
+    screenTitle: 'El guante, de cerca',
+    role: 'Solo — Concepto, Hardware, Código',
+  },
+};
+
 /* ── GRAIN ──────────────────────────────────────────────────── */
 (function initGrain() {
   const c = document.getElementById('grain');
@@ -2863,7 +3136,8 @@ function buildGrid() {
   const container = document.getElementById('projectGrid');
   container.className = 'project-list';
 
-  function cardHtml(p) {
+  function cardHtml(raw) {
+    const p = langProject(raw);
     return `
       <div class="project-item project-item--${p.tier}">
         <a class="project-card" href="#${p.id}" data-id="${p.id}"
@@ -2874,7 +3148,7 @@ function buildGrid() {
           <div class="card-corner tr">↗</div>
           <div class="card-hover">
             <p class="card-hover-insight">${p.insight}</p>
-            <span class="card-hover-cta">View case study</span>
+            <span class="card-hover-cta">${ui('viewCase')}</span>
           </div>
         </a>
         <div class="card-below">
@@ -2883,7 +3157,7 @@ function buildGrid() {
             <div class="card-title-below">${p.title}</div>
             <p class="card-desc">${p.desc}</p>
           </div>
-          <a class="card-cta" href="#${p.id}" data-id="${p.id}">View case study →</a>
+          <a class="card-cta" href="#${p.id}" data-id="${p.id}">${ui('viewCaseArrow')}</a>
         </div>
       </div>`;
   }
@@ -3166,7 +3440,7 @@ function doggoBodyHtml(p) {
   // The calls I made — five editorial poster moments
   var decisionsHtml =
     '<div class="calls-section">' +
-      '<div class="calls-lbl">Calls I made, and why</div>' +
+      '<div class="calls-lbl">' + ui('callsLbl') + '</div>' +
 
       // 1 — LOYALTY: centered phone, slow zoom on reveal
       '<div class="call-block call-block--loyalty">' +
@@ -3238,7 +3512,7 @@ function doggoBodyHtml(p) {
       '<div class="doggo-chal-head">' + item.head + '</div>' +
       '<p class="doggo-chal-friction">' + item.body + '</p>' +
       (how[i]
-        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+        ? '<div class="doggo-chal-how-lbl">' + ui('whatDidLbl') + '</div>' +
           '<p class="doggo-chal-how">' + how[i] + '</p>'
         : '') +
     '</div>';
@@ -3247,7 +3521,7 @@ function doggoBodyHtml(p) {
   var chalHtml =
     '<div class="doggo-challenges">' +
       '<div class="doggo-chal-inner">' +
-        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">' + ui('hardLbl') + '</div>' +
         chalItemsHtml +
       '</div>' +
     '</div>';
@@ -3317,7 +3591,7 @@ function bwcBodyHtml(p) {
   // Calls I made — three editorial poster moments, all Regina's work
   var decisionsHtml =
     '<div class="calls-section">' +
-      '<div class="calls-lbl">Calls I made, and why</div>' +
+      '<div class="calls-lbl">' + ui('callsLbl') + '</div>' +
 
       // 1 — PIN AUTH: centered portrait phone, scales in on reveal
       '<div class="call-block call-block--bwc-auth">' +
@@ -3368,7 +3642,7 @@ function bwcBodyHtml(p) {
       '<div class="doggo-chal-head">' + item.head + '</div>' +
       '<p class="doggo-chal-friction">' + item.body + '</p>' +
       (how[i]
-        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+        ? '<div class="doggo-chal-how-lbl">' + ui('whatDidLbl') + '</div>' +
           '<p class="doggo-chal-how">' + how[i] + '</p>'
         : '') +
     '</div>';
@@ -3377,7 +3651,7 @@ function bwcBodyHtml(p) {
   var chalHtml =
     '<div class="doggo-challenges">' +
       '<div class="doggo-chal-inner">' +
-        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">' + ui('hardLbl') + '</div>' +
         chalItemsHtml +
       '</div>' +
     '</div>';
@@ -3425,7 +3699,7 @@ function careguardBodyHtml(p) {
   // Three editorial blocks — all placeholders until screenshots arrive
   var decisionsHtml =
     '<div class="calls-section">' +
-      '<div class="calls-lbl">Calls I made, and why</div>' +
+      '<div class="calls-lbl">' + ui('callsLbl') + '</div>' +
 
       // Block 1 — form unification: fade up
       '<div class="call-block call-block--cg-unify">' +
@@ -3467,7 +3741,7 @@ function careguardBodyHtml(p) {
       '<div class="doggo-chal-head">' + item.head + '</div>' +
       '<p class="doggo-chal-friction">' + item.body + '</p>' +
       (how[i]
-        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+        ? '<div class="doggo-chal-how-lbl">' + ui('whatDidLbl') + '</div>' +
           '<p class="doggo-chal-how">' + how[i] + '</p>'
         : '') +
     '</div>';
@@ -3476,7 +3750,7 @@ function careguardBodyHtml(p) {
   var chalHtml =
     '<div class="doggo-challenges">' +
       '<div class="doggo-chal-inner">' +
-        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">' + ui('hardLbl') + '</div>' +
         chalItemsHtml +
       '</div>' +
     '</div>';
@@ -3511,7 +3785,7 @@ function fittingBodyHtml(p) {
 
   var decisionsHtml =
     '<div class="calls-section">' +
-      '<div class="calls-lbl">Calls I made, and why</div>' +
+      '<div class="calls-lbl">' + ui('callsLbl') + '</div>' +
 
       // Block 1 — measurements profile, trust foundation: tilt + slide from left
       '<div class="call-block call-block--fit-trust">' +
@@ -3570,7 +3844,7 @@ function fittingBodyHtml(p) {
       '<div class="doggo-chal-head">' + item.head + '</div>' +
       '<p class="doggo-chal-friction">' + item.body + '</p>' +
       (how[i]
-        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+        ? '<div class="doggo-chal-how-lbl">' + ui('whatDidLbl') + '</div>' +
           '<p class="doggo-chal-how">' + how[i] + '</p>'
         : '') +
     '</div>';
@@ -3579,7 +3853,7 @@ function fittingBodyHtml(p) {
   var chalHtml =
     '<div class="doggo-challenges">' +
       '<div class="doggo-chal-inner">' +
-        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">' + ui('hardLbl') + '</div>' +
         chalItemsHtml +
       '</div>' +
     '</div>';
@@ -3624,7 +3898,7 @@ function petpalsBodyHtml(p) {
 
   var decisionsHtml =
     '<div class="calls-section">' +
-      '<div class="calls-lbl">Calls I made, and why</div>' +
+      '<div class="calls-lbl">' + ui('callsLbl') + '</div>' +
 
       // Block 1 — the swipe card: tilt + slide from right
       '<div class="call-block call-block--pp-personas">' +
@@ -3693,7 +3967,7 @@ function petpalsBodyHtml(p) {
       '<div class="doggo-chal-head">' + item.head + '</div>' +
       '<p class="doggo-chal-friction">' + item.body + '</p>' +
       (how[i]
-        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+        ? '<div class="doggo-chal-how-lbl">' + ui('whatDidLbl') + '</div>' +
           '<p class="doggo-chal-how">' + how[i] + '</p>'
         : '') +
     '</div>';
@@ -3702,7 +3976,7 @@ function petpalsBodyHtml(p) {
   var chalHtml =
     '<div class="doggo-challenges">' +
       '<div class="doggo-chal-inner">' +
-        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">' + ui('hardLbl') + '</div>' +
         chalItemsHtml +
       '</div>' +
     '</div>';
@@ -3745,7 +4019,7 @@ function midigloveBodyHtml(p) {
 
   var decisionsHtml =
     '<div class="calls-section">' +
-      '<div class="calls-lbl">Calls I made, and why</div>' +
+      '<div class="calls-lbl">' + ui('callsLbl') + '</div>' +
 
       // Block 1 — gesture model: slide from left
       '<div class="call-block call-block--mg-gesture">' +
@@ -3801,7 +4075,7 @@ function midigloveBodyHtml(p) {
       '<div class="doggo-chal-head">' + item.head + '</div>' +
       '<p class="doggo-chal-friction">' + item.body + '</p>' +
       (how[i]
-        ? '<div class="doggo-chal-how-lbl">What I did</div>' +
+        ? '<div class="doggo-chal-how-lbl">' + ui('whatDidLbl') + '</div>' +
           '<p class="doggo-chal-how">' + how[i] + '</p>'
         : '') +
     '</div>';
@@ -3810,7 +4084,7 @@ function midigloveBodyHtml(p) {
   var chalHtml =
     '<div class="doggo-challenges">' +
       '<div class="doggo-chal-inner">' +
-        '<div class="story-lbl" style="margin-bottom:2rem;">The hard parts</div>' +
+        '<div class="story-lbl" style="margin-bottom:2rem;">' + ui('hardLbl') + '</div>' +
         chalItemsHtml +
       '</div>' +
     '</div>';
@@ -3825,10 +4099,11 @@ function midigloveBodyHtml(p) {
 }
 
 function openProject(id) {
-  const p = PROJECTS.find(x => x.id === id);
-  if (!p) return;
+  const _p = PROJECTS.find(x => x.id === id);
+  if (!_p) return;
+  const p = langProject(_p);
 
-  const idx = PROJECTS.indexOf(p);
+  const idx = PROJECTS.indexOf(_p);
   const prev = PROJECTS[idx - 1];
   const next = PROJECTS[idx + 1];
 
@@ -3839,7 +4114,7 @@ function openProject(id) {
     : '';
 
   const protoHtml = p.proto
-    ? `<a class="proto-hero-link" href="${p.proto}" target="_blank" rel="noopener">↗ &nbsp;View prototype</a>`
+    ? `<a class="proto-hero-link" href="${p.proto}" target="_blank" rel="noopener">${ui('protoLink')}</a>`
     : '';
 
   // Parse "<strong>Heading.</strong> Body text" into {head, body}
@@ -3851,7 +4126,7 @@ function openProject(id) {
   // ── Visual anchor — Doggo ecosystem diagram (full-width, outside proj-body) ──
   const anchorHtml = p.id === 'doggo' ? `
     <div class="proj-anchor">
-      <div class="story-lbl">The ecosystem</div>
+      <div class="story-lbl">${ui('theEcosystem')}</div>
       <svg class="proj-diagram" viewBox="0 0 1100 490" xmlns="http://www.w3.org/2000/svg"
            role="img" aria-label="Doggo: three interfaces connected through one shared backend">
         <defs>
@@ -4005,19 +4280,19 @@ function openProject(id) {
 
     <div class="proj-meta">
       <div class="meta-cell">
-        <div class="meta-lbl">Role</div>
+        <div class="meta-lbl">${ui('roleLbl')}</div>
         <div class="meta-val">${p.role}</div>
       </div>
       <div class="meta-cell">
-        <div class="meta-lbl">Stack</div>
+        <div class="meta-lbl">${ui('stackLbl')}</div>
         <div class="meta-val">${p.stack}</div>
       </div>
       <div class="meta-cell">
-        <div class="meta-lbl">Year</div>
+        <div class="meta-lbl">${ui('yearLbl')}</div>
         <div class="meta-val">${p.year}</div>
       </div>
       <div class="meta-cell">
-        <div class="meta-lbl">What I did</div>
+        <div class="meta-lbl">${ui('whatLbl')}</div>
         <div class="meta-val work-pills">${workPillsHtml}</div>
       </div>
     </div>
@@ -4040,26 +4315,26 @@ function openProject(id) {
         <p class="proj-intro-text reveal shown">${p.desc}</p>
         ${videoHtml}
         <div class="story-block reveal">
-          <div class="story-lbl">The Problem</div>
+          <div class="story-lbl">${ui('problemLbl')}</div>
           <p class="story-p">${p.problem}</p>
         </div>
         <div class="story-block reveal">
-          <div class="story-lbl">The Solution</div>
+          <div class="story-lbl">${ui('solutionLbl')}</div>
           <p class="story-p">${p.solution}</p>
         </div>
       </div>`}
 
-      ${counterScrollStory(p.id, 'decisions', 'Calls I made, and why', decsItems)}
+      ${counterScrollStory(p.id, 'decisions', ui('callsLbl'), decsItems)}
 
       <div class="proj-body proj-body--mid">
         <blockquote class="pull-quote reveal">"${p.tagline}"</blockquote>
       </div>
 
-      ${chalItems.length ? counterScrollStory(p.id, 'challenges', 'The hard parts', chalItems) : ''}
+      ${chalItems.length ? counterScrollStory(p.id, 'challenges', ui('hardLbl'), chalItems) : ''}
 
       <div class="proj-body proj-body--outro">
         <div class="story-block reveal">
-          <div class="story-lbl">Looking back</div>
+          <div class="story-lbl">${ui('lookBackLbl')}</div>
           <p class="story-p">${p.reflection}</p>
         </div>
       </div>
@@ -4267,11 +4542,89 @@ document.addEventListener('keydown', e => {
   }
 });
 
+/* ── LANGUAGE APPLY ─────────────────────────────────────────── */
+function applyLang() {
+  // Nav links
+  var nw = document.getElementById('navWork');
+  var na = document.getElementById('navAbout');
+  var nr = document.getElementById('navResume');
+  var nc = document.getElementById('navContact');
+  var lb = document.getElementById('langToggle');
+  if (nw) nw.textContent = ui('navWork');
+  if (na) na.textContent = ui('navAbout');
+  if (nr) nr.textContent = ui('navResume');
+  if (nc) nc.textContent = ui('navContact');
+  if (lb) lb.textContent = ui('langBtn');
+
+  // Back button
+  var bb = document.getElementById('backBtn');
+  if (bb) bb.textContent = (LANG === 'es' ? 'Volver al trabajo' : 'Back to Work');
+
+  // Hero
+  var he = document.querySelector('.hero-eyebrow');
+  if (he) he.textContent = ui('heroEyebrow');
+  var hr = document.querySelector('.hero-role-label');
+  if (hr) hr.textContent = ui('heroRole');
+  var words = document.querySelectorAll('.word-cycle .word');
+  var wt = ui('heroWords');
+  words.forEach(function(w, i) { if (wt[i]) w.textContent = wt[i]; });
+  var hav = document.querySelector('.hero-available');
+  if (hav) hav.innerHTML = ui('heroAvailable');
+  var hb = document.querySelector('a.hero-building');
+  if (hb) hb.innerHTML = ui('heroBuilding');
+  var hs = document.querySelector('.hero-scroll');
+  if (hs) hs.innerHTML = ui('heroScroll');
+
+  // Work section label
+  var wl = document.querySelector('#work .section-label');
+  if (wl) wl.textContent = ui('workLabel');
+
+  // About
+  var ah = document.querySelector('.about-heading');
+  if (ah) ah.innerHTML = ui('aboutH');
+  var aps = document.querySelectorAll('.about-text');
+  if (aps[0]) aps[0].textContent = ui('aboutP1');
+  if (aps[1]) aps[1].textContent = ui('aboutP2');
+  if (aps[2]) aps[2].textContent = ui('aboutP3');
+  var sls = document.querySelectorAll('.skill-label');
+  if (sls[0]) sls[0].textContent = ui('skillLabel1');
+  if (sls[1]) sls[1].textContent = ui('skillLabel2');
+  if (sls[2]) sls[2].textContent = ui('skillLabel3');
+
+  // Rebuild grid so card content (desc, insight, status, tags) updates
+  buildGrid();
+
+  // If a project is open, re-render it
+  var pv = document.getElementById('project-view');
+  if (pv && pv.classList.contains('open')) {
+    var currentId = (history.state && history.state.project) || window.location.hash.replace('#', '');
+    if (currentId) {
+      var _p = PROJECTS.find(function(x) { return x.id === currentId; });
+      if (_p) openProject(currentId);
+    }
+  }
+
+  // Persist
+  try { localStorage.setItem('rs-lang', LANG); } catch(e) {}
+}
+
 /* ── INIT ────────────────────────────────────────────────────── */
 buildGrid();
 observeReveals();
 initCounter();
 initWordCycle();
+
+// Language toggle
+var $langToggle = document.getElementById('langToggle');
+if ($langToggle) {
+  $langToggle.addEventListener('click', function() {
+    LANG = LANG === 'en' ? 'es' : 'en';
+    applyLang();
+  });
+}
+
+// Apply saved language on load
+if (LANG === 'es') applyLang();
 
 // Hero "Building" link opens Doggo
 const $heroBuilding = document.querySelector('a.hero-building');
