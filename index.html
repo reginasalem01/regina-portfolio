@@ -162,21 +162,30 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--dark); }
-    .lang-btn {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 0.18em 0.55em;
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      background: var(--border);
+      border-radius: 20px;
+      padding: 2px;
       cursor: pointer;
-      transition: color 0.2s, border-color 0.2s;
-      line-height: 1.5;
+      user-select: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
-    .lang-btn:hover { color: var(--dark); border-color: var(--dark); }
+    .lang-toggle span {
+      padding: 0.22em 0.7em;
+      border-radius: 14px;
+      color: var(--muted);
+      transition: color 0.22s, background 0.22s;
+      line-height: 1;
+    }
+    .lang-toggle span.lt-active {
+      background: var(--dark);
+      color: var(--cream);
+    }
 
     /* ─── HOME VIEW ───────────────────────────────────────────── */
     #home-view { display: block; }
@@ -2313,7 +2322,10 @@
     <a href="#about" id="navAbout">About</a>
     <a href="./Regina_Salem_Resume.pdf" target="_blank" id="navResume">Résumé ↗</a>
     <a href="mailto:reginasalem01@gmail.com" id="navContact">Contact</a>
-    <button class="lang-btn" id="langToggle" aria-label="Toggle language">ES</button>
+    <div class="lang-toggle" id="langToggle" role="button" tabindex="0" aria-label="Toggle language">
+      <span data-lang="en" class="lt-active">EN</span>
+      <span data-lang="es">ES</span>
+    </div>
   </div>
 </nav>
 
@@ -4551,12 +4563,15 @@ function applyLang() {
   var na = document.getElementById('navAbout');
   var nr = document.getElementById('navResume');
   var nc = document.getElementById('navContact');
-  var lb = document.getElementById('langToggle');
   if (nw) nw.textContent = ui('navWork');
   if (na) na.textContent = ui('navAbout');
   if (nr) nr.textContent = ui('navResume');
   if (nc) nc.textContent = ui('navContact');
-  if (lb) lb.textContent = ui('langBtn');
+  // Update toggle pill active state
+  var ltSpans = document.querySelectorAll('#langToggle span');
+  ltSpans.forEach(function(s) {
+    s.classList.toggle('lt-active', s.dataset.lang === LANG);
+  });
 
   // Back button
   var bb = document.getElementById('backBtn');
@@ -4634,9 +4649,18 @@ initWordCycle();
 // Language toggle
 var $langToggle = document.getElementById('langToggle');
 if ($langToggle) {
-  $langToggle.addEventListener('click', function() {
-    LANG = LANG === 'en' ? 'es' : 'en';
+  $langToggle.addEventListener('click', function(e) {
+    // If user clicked a specific span, switch to that language; otherwise toggle
+    var clicked = e.target.closest('span[data-lang]');
+    LANG = clicked ? clicked.dataset.lang : (LANG === 'en' ? 'es' : 'en');
     applyLang();
+  });
+  $langToggle.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      LANG = LANG === 'en' ? 'es' : 'en';
+      applyLang();
+    }
   });
 }
 
