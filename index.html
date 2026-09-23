@@ -322,6 +322,104 @@
       display: inline-block;
     }
 
+    /* ─── HERO PROFILE CARD ──────────────────────────────────── */
+    .hero-card {
+      position: absolute;
+      right: 3.5rem;
+      top: 50%;
+      transform: translateY(-52%);
+      width: 196px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      z-index: 2;
+      box-shadow: 0 2px 24px rgba(26,23,20,0.05);
+      opacity: 0;
+      animation: hcReveal 0.5s ease 0.9s forwards;
+    }
+    @keyframes hcReveal { to { opacity: 1; } }
+    .hc-top {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .hc-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--dark);
+      color: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .hc-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .hc-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dark);
+      line-height: 1.4;
+    }
+    .hc-loc {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.56rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+    .hc-rule { height: 1px; background: var(--border); }
+    .hc-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    .hc-skill {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.53rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.18em 0.55em;
+    }
+    .hc-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .hc-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.56rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: color 0.15s;
+      text-decoration: none;
+    }
+    .hc-link:hover { color: var(--dark); }
+    .hc-link-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .hc-link:hover .hc-link-dot { background: var(--dark); }
+    @media (max-width: 900px) { .hero-card { display: none; } }
+
     /* ─── BRIDGE ─────────────────────────────────────────────── */
     .bridge {
       padding: 2.5rem 3rem 2.5rem;
@@ -2340,6 +2438,34 @@
     <h1 class="hero-name">
       Regina<br><em>Salem</em>
     </h1>
+
+    <!-- Profile card — floats in the right open space of the hero -->
+    <div class="hero-card" aria-label="Profile summary">
+      <div class="hc-top">
+        <div class="hc-avatar">
+          <!-- Drop ./pics/profile.jpg here for a real photo -->
+          RS
+        </div>
+        <div>
+          <div class="hc-name">Regina Salem</div>
+          <div class="hc-loc">Miami, FL</div>
+        </div>
+      </div>
+      <div class="hc-rule"></div>
+      <div class="hc-skills">
+        <span class="hc-skill">Figma</span>
+        <span class="hc-skill">Next.js + Supabase</span>
+        <span class="hc-skill">Prototyping</span>
+        <span class="hc-skill">Shopify</span>
+      </div>
+      <div class="hc-rule"></div>
+      <div class="hc-links">
+        <span class="hc-link" data-id="doggo"><span class="hc-link-dot"></span>Doggo</span>
+        <span class="hc-link" data-id="bwc"><span class="hc-link-dot"></span>Body-Worn Camera</span>
+        <span class="hc-link" data-id="careguard"><span class="hc-link-dot"></span>CareGuard</span>
+      </div>
+    </div>
+
     <div class="hero-bottom">
       <div class="hero-role">
         <div class="hero-role-label">Product &amp; Interaction Designer</div>
@@ -4666,6 +4792,12 @@ if ($langToggle) {
 
 // Apply saved language on load
 if (LANG === 'es') applyLang();
+
+// Hero card project links
+document.querySelectorAll('.hc-link[data-id]').forEach(function(el) {
+  addHover(el);
+  el.addEventListener('click', function() { openProject(el.dataset.id); });
+});
 
 // Hero "Building" link opens Doggo
 const $heroBuilding = document.querySelector('a.hero-building');
