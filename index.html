@@ -2429,6 +2429,7 @@ const UI_ES = {
   heroWords: ['segura.', 'comprendida.', 'guiada.', 'en control.'],
   heroAvailable: '<span class="dot-green"></span>Abierta a oportunidades',
   heroScroll: '<span class="hero-scroll-line"></span>Desliza para explorar',
+  heroStatementPrefix: 'Diseño sistemas que hacen sentir a las personas ',
   heroBuilding: 'Construyendo: <span class="hero-building-name">Doggo →</span>',
   workLabel: 'Trabajo seleccionado',
   aboutH: 'Diseño.<br>Construyo.<br><em>Y lo lanzo de&nbsp;verdad.</em>',
@@ -2457,6 +2458,7 @@ const UI_EN = {
   heroWords: ['confident.', 'understood.', 'guided.', 'in control.'],
   heroAvailable: '<span class="dot-green"></span>Open to opportunities',
   heroScroll: '<span class="hero-scroll-line"></span>Scroll to explore',
+  heroStatementPrefix: 'I design systems that make people feel ',
   heroBuilding: 'Building: <span class="hero-building-name">Doggo →</span>',
   workLabel: 'Selected Work',
   aboutH: 'I design.<br>I build.<br><em>And I actually ship it.</em>',
@@ -4568,6 +4570,16 @@ function applyLang() {
   var words = document.querySelectorAll('.word-cycle .word');
   var wt = ui('heroWords');
   words.forEach(function(w, i) { if (wt[i]) w.textContent = wt[i]; });
+  // Update "I design systems that make people feel " text node
+  var hst = document.querySelector('.hero-statement');
+  if (hst) {
+    for (var _i = 0; _i < hst.childNodes.length; _i++) {
+      if (hst.childNodes[_i].nodeType === 3) {
+        hst.childNodes[_i].textContent = ui('heroStatementPrefix');
+        break;
+      }
+    }
+  }
   var hav = document.querySelector('.hero-available');
   if (hav) hav.innerHTML = ui('heroAvailable');
   var hb = document.querySelector('a.hero-building');
