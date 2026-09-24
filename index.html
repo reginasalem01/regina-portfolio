@@ -432,7 +432,28 @@
       letter-spacing: 0.1em;
     }
     .hc-status .hero-scroll { color: var(--border); }
-    @media (max-width: 900px) { .hero-card { display: none; } }
+    @media (max-width: 900px) {
+      .hero-card {
+        position: absolute;
+        right: 1.25rem;
+        top: 1.5rem;
+        width: auto;
+        border-radius: 50px;
+        box-shadow: 0 2px 16px rgba(26,23,20,0.08);
+        transform: none !important;
+        transition: none !important;
+      }
+      .hc-expandable { display: none; }
+      .hc-top {
+        flex-direction: row;
+        align-items: center;
+        padding: 0.5rem 0.85rem 0.5rem 0.5rem;
+        gap: 0.5rem;
+      }
+      .hc-avatar { width: 34px; height: 34px; }
+      .hc-loc { font-size: 0.5rem; letter-spacing: 0.09em; }
+      .hc-loc svg { width: 8px; height: 9px; }
+    }
 
     /* ─── BRIDGE ─────────────────────────────────────────────── */
     .bridge {
@@ -4832,6 +4853,12 @@ document.querySelectorAll('.hc-link[data-id]').forEach(function(el) {
     heroCard.style.transform = 'translateY(0)';
     // Unlock page scroll only after animation completes
     setTimeout(function() { scrollLocked = false; }, 950);
+  }
+
+  // On mobile the card is a static pill — no animation or scroll lock
+  if (window.innerWidth <= 900) {
+    scrollLocked = false;
+    return;
   }
 
   if (window.scrollY > 10) {
