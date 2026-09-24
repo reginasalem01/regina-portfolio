@@ -324,33 +324,51 @@
 
     /* ─── HERO PROFILE CARD ──────────────────────────────────── */
     .hero-card {
-      position: absolute;
-      right: 4rem;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 184px;
+      position: fixed;
+      right: 2rem;
+      bottom: 2rem;
+      width: 220px;
       background: var(--cream);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 1.1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.8rem;
-      z-index: 2;
-      box-shadow: 0 2px 24px rgba(26,23,20,0.07);
+      z-index: 100;
+      box-shadow: 0 4px 32px rgba(26,23,20,0.1);
+      overflow: hidden;
       opacity: 0;
       animation: hcReveal 0.5s ease 0.9s forwards;
     }
     @keyframes hcReveal { to { opacity: 1; } }
+
+    /* Expandable section — hidden until first scroll */
+    .hc-expandable {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 0 1.1rem;
+    }
+    .hc-expandable > *:first-child { margin-top: 1.1rem; }
+    .hc-expandable > *:last-child { margin-bottom: 0; }
+    .hero-card.revealed .hc-expandable {
+      max-height: 360px;
+    }
+
+    /* Always-visible bottom section */
+    .hc-bottom {
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
     .hc-avatar {
-      width: 58px; height: 58px;
+      width: 62px; height: 62px;
       border-radius: 50%;
       background: var(--dark);
-      color: var(--cream);
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.08em;
       overflow: hidden;
       flex-shrink: 0;
     }
@@ -366,7 +384,7 @@
       color: var(--muted);
     }
     .hc-loc svg { flex-shrink: 0; opacity: 0.6; }
-    .hc-rule { height: 1px; background: var(--border); }
+    .hc-rule { height: 1px; background: var(--border); flex-shrink: 0; }
     .hc-skills {
       display: flex;
       flex-wrap: wrap;
@@ -408,6 +426,19 @@
       transition: background 0.15s;
     }
     .hc-link:hover .hc-link-dot { background: var(--dark); }
+    .hc-status {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-bottom: 0.1rem;
+    }
+    .hc-status .hero-available,
+    .hc-status .hero-building,
+    .hc-status .hero-scroll {
+      font-size: 0.52rem;
+      letter-spacing: 0.1em;
+    }
+    .hc-status .hero-scroll { color: var(--border); }
     @media (max-width: 900px) { .hero-card { display: none; } }
 
     /* ─── BRIDGE ─────────────────────────────────────────────── */
@@ -2429,29 +2460,41 @@
       Regina<br><em>Salem</em>
     </h1>
 
-    <!-- Profile card — floats in the right open space of the hero -->
-    <div class="hero-card" aria-label="Profile summary">
-      <div class="hc-avatar">
-        <img src="./pics/profile.jpg" alt="Regina Salem" />
+    <!-- Profile card — fixed bottom-right, expands upward on first scroll -->
+    <div class="hero-card" id="heroCard" aria-label="Profile summary">
+      <!-- Revealed on first scroll (slides in from top as card grows upward) -->
+      <div class="hc-expandable">
+        <div class="hc-skills">
+          <span class="hc-skill">Figma</span>
+          <span class="hc-skill">Next.js + Supabase</span>
+          <span class="hc-skill">Prototyping</span>
+          <span class="hc-skill">Shopify</span>
+        </div>
+        <div class="hc-rule"></div>
+        <div class="hc-links">
+          <span class="hc-link" data-id="doggo"><span class="hc-link-dot"></span>Doggo</span>
+          <span class="hc-link" data-id="bwc"><span class="hc-link-dot"></span>Body-Worn Camera</span>
+          <span class="hc-link" data-id="careguard"><span class="hc-link-dot"></span>CareGuard</span>
+        </div>
+        <div class="hc-rule"></div>
+        <div class="hc-status">
+          <div class="hero-available"><span class="dot-green"></span>Open to opportunities</div>
+          <div class="hero-building">Building: <span class="hero-building-name">Flexa</span></div>
+          <div class="hero-scroll"><span class="hero-scroll-line"></span>Scroll to explore</div>
+        </div>
+        <div class="hc-rule"></div>
       </div>
-      <div class="hc-loc">
-        <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 0C2.79 0 1 1.79 1 4c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4zm0 5.5C4.17 5.5 3.5 4.83 3.5 4S4.17 2.5 5 2.5 6.5 3.17 6.5 4 5.83 5.5 5 5.5z" fill="currentColor"/>
-        </svg>
-        Miami, FL
-      </div>
-      <div class="hc-rule"></div>
-      <div class="hc-skills">
-        <span class="hc-skill">Figma</span>
-        <span class="hc-skill">Next.js + Supabase</span>
-        <span class="hc-skill">Prototyping</span>
-        <span class="hc-skill">Shopify</span>
-      </div>
-      <div class="hc-rule"></div>
-      <div class="hc-links">
-        <span class="hc-link" data-id="doggo"><span class="hc-link-dot"></span>Doggo</span>
-        <span class="hc-link" data-id="bwc"><span class="hc-link-dot"></span>Body-Worn Camera</span>
-        <span class="hc-link" data-id="careguard"><span class="hc-link-dot"></span>CareGuard</span>
+      <!-- Always visible: photo + location -->
+      <div class="hc-bottom">
+        <div class="hc-avatar">
+          <img src="./pics/profile.jpg" alt="Regina Salem" />
+        </div>
+        <div class="hc-loc">
+          <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 0C2.79 0 1 1.79 1 4c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4zm0 5.5C4.17 5.5 3.5 4.83 3.5 4S4.17 2.5 5 2.5 6.5 3.17 6.5 4 5.83 5.5 5 5.5z" fill="currentColor"/>
+          </svg>
+          Miami, FL
+        </div>
       </div>
     </div>
 
@@ -2459,19 +2502,6 @@
       <div class="hero-role">
         <div class="hero-role-label">Product &amp; Interaction Designer</div>
         <p class="hero-statement">I design systems that make people feel <span class="word-cycle" aria-live="polite" aria-atomic="true"><span class="word active">confident.</span><span class="word">understood.</span><span class="word">guided.</span><span class="word">in&nbsp;control.</span></span></p>
-      </div>
-      <div class="hero-meta">
-        <div class="hero-available">
-          <span class="dot-green"></span>
-          Open to opportunities
-        </div>
-        <a class="hero-building" href="#doggo">
-          Building: <span class="hero-building-name">Doggo →</span>
-        </a>
-        <div class="hero-scroll">
-          <span class="hero-scroll-line"></span>
-          Scroll to explore
-        </div>
       </div>
     </div>
   </section>
@@ -2557,7 +2587,7 @@ const UI_ES = {
   heroAvailable: '<span class="dot-green"></span>Abierta a oportunidades',
   heroScroll: '<span class="hero-scroll-line"></span>Desliza para explorar',
   heroStatementPrefix: 'Diseño sistemas que hacen sentir a las personas ',
-  heroBuilding: 'Construyendo: <span class="hero-building-name">Doggo →</span>',
+  heroBuilding: 'Construyendo: <span class="hero-building-name">Flexa</span>',
   workLabel: 'Trabajo seleccionado',
   aboutH: 'Diseño.<br>Construyo.<br><em>Y lo lanzo de&nbsp;verdad.</em>',
   aboutP1: 'Soy diseñadora de producto que lleva los proyectos hasta el final. El trabajo aquí abarca apps móviles, UX empresarial, experiencias de AR y hardware — porque me picó la curiosidad, y la curiosidad tiende a multiplicarse.',
@@ -2586,7 +2616,7 @@ const UI_EN = {
   heroAvailable: '<span class="dot-green"></span>Open to opportunities',
   heroScroll: '<span class="hero-scroll-line"></span>Scroll to explore',
   heroStatementPrefix: 'I design systems that make people feel ',
-  heroBuilding: 'Building: <span class="hero-building-name">Doggo →</span>',
+  heroBuilding: 'Building: <span class="hero-building-name">Flexa</span>',
   workLabel: 'Selected Work',
   aboutH: 'I design.<br>I build.<br><em>And I actually ship it.</em>',
   aboutP1: "I'm a product designer who takes projects all the way through. The work here spans mobile apps, enterprise UX, AR experiences, and hardware — because I got curious, and curiosity tends to compound.",
@@ -4712,7 +4742,7 @@ function applyLang() {
   }
   var hav = document.querySelector('.hero-available');
   if (hav) hav.innerHTML = ui('heroAvailable');
-  var hb = document.querySelector('a.hero-building');
+  var hb = document.querySelector('.hero-building');
   if (hb) hb.innerHTML = ui('heroBuilding');
   var hs = document.querySelector('.hero-scroll');
   if (hs) hs.innerHTML = ui('heroScroll');
@@ -4788,14 +4818,44 @@ document.querySelectorAll('.hc-link[data-id]').forEach(function(el) {
   el.addEventListener('click', function() { openProject(el.dataset.id); });
 });
 
-// Hero "Building" link opens Doggo
-const $heroBuilding = document.querySelector('a.hero-building');
-if ($heroBuilding) {
-  $heroBuilding.addEventListener('click', e => {
-    e.preventDefault();
-    openProject('doggo');
-  });
-}
+// ── Hero card scroll reveal ────────────────────────────────
+(function() {
+  var heroCard = document.getElementById('heroCard');
+  if (!heroCard) return;
+
+  var revealed = false;
+
+  function revealCard() {
+    if (revealed) return;
+    revealed = true;
+    heroCard.classList.add('revealed');
+  }
+
+  // If user loads page already scrolled down, reveal immediately
+  if (window.scrollY > 10) { revealCard(); return; }
+
+  // Intercept first downward scroll/swipe — expand card, hold page
+  window.addEventListener('wheel', function onWheel(e) {
+    if (revealed) { window.removeEventListener('wheel', onWheel); return; }
+    if (e.deltaY > 0) {
+      e.preventDefault();
+      revealCard();
+    }
+  }, { passive: false });
+
+  var _touchY = 0;
+  window.addEventListener('touchstart', function(e) {
+    _touchY = e.touches[0].clientY;
+  }, { passive: true });
+  window.addEventListener('touchmove', function onTouch(e) {
+    if (revealed) { window.removeEventListener('touchmove', onTouch); return; }
+    if (_touchY - e.touches[0].clientY > 8) {
+      e.preventDefault();
+      revealCard();
+    }
+  }, { passive: false });
+})();
+
 
 // Open project from hash on page load (direct links + browser back)
 (function checkHash() {
