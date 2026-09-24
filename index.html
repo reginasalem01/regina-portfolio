@@ -325,48 +325,43 @@
     /* ─── HERO PROFILE CARD ──────────────────────────────────── */
     .hero-card {
       position: fixed;
-      right: 2rem;
-      bottom: 2rem;
-      width: 220px;
+      right: 0;
+      bottom: 0;
+      width: 400px;
+      max-width: 90vw;
       background: var(--cream);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-right: none;
+      border-bottom: none;
+      border-radius: 14px 0 0 0;
       display: flex;
       flex-direction: column;
       z-index: 100;
-      box-shadow: 0 4px 32px rgba(26,23,20,0.1);
-      overflow: hidden;
+      box-shadow: -4px -4px 40px rgba(26,23,20,0.07);
       opacity: 0;
       animation: hcReveal 0.5s ease 0.9s forwards;
     }
     @keyframes hcReveal { to { opacity: 1; } }
 
-    /* Expandable section — hidden until first scroll */
+    /* Top section — slides up into view on first scroll */
     .hc-expandable {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.85s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
-      padding: 0 1.1rem;
-    }
-    .hc-expandable > *:first-child { margin-top: 1.1rem; }
-    .hc-expandable > *:last-child { margin-bottom: 0; }
-    .hero-card.revealed .hc-expandable {
-      max-height: 360px;
+      gap: 0.85rem;
+      padding: 1.5rem 1.5rem 1rem;
     }
 
-    /* Always-visible bottom section */
+    /* Always-visible bottom: photo + location */
     .hc-bottom {
-      padding: 1.1rem;
+      padding: 1.2rem 1.5rem 1.4rem;
       display: flex;
       flex-direction: column;
-      gap: 0.55rem;
+      gap: 0.6rem;
+      border-top: 1px solid var(--border);
     }
 
     .hc-avatar {
-      width: 62px; height: 62px;
+      width: 72px; height: 72px;
       border-radius: 50%;
       background: var(--dark);
       overflow: hidden;
@@ -376,9 +371,9 @@
     .hc-loc {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.35rem;
       font-family: 'DM Mono', monospace;
-      font-size: 0.56rem;
+      font-size: 0.58rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
@@ -388,38 +383,38 @@
     .hc-skills {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.28rem;
+      gap: 0.32rem;
     }
     .hc-skill {
       font-family: 'DM Mono', monospace;
-      font-size: 0.5rem;
-      letter-spacing: 0.08em;
+      font-size: 0.52rem;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
       color: var(--muted);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 0.18em 0.5em;
+      padding: 0.2em 0.6em;
     }
     .hc-links {
       display: flex;
       flex-direction: column;
-      gap: 0.32rem;
+      gap: 0.38rem;
     }
     .hc-link {
       font-family: 'DM Mono', monospace;
-      font-size: 0.53rem;
-      letter-spacing: 0.08em;
+      font-size: 0.55rem;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
       color: var(--muted);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.45rem;
       transition: color 0.15s;
     }
     .hc-link:hover { color: var(--dark); }
     .hc-link-dot {
-      width: 4px; height: 4px;
+      width: 5px; height: 5px;
       border-radius: 50%;
       background: var(--border);
       flex-shrink: 0;
@@ -429,13 +424,12 @@
     .hc-status {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
-      padding-bottom: 0.1rem;
+      gap: 0.42rem;
     }
     .hc-status .hero-available,
     .hc-status .hero-building,
     .hc-status .hero-scroll {
-      font-size: 0.52rem;
+      font-size: 0.54rem;
       letter-spacing: 0.1em;
     }
     .hc-status .hero-scroll { color: var(--border); }
@@ -2482,7 +2476,6 @@
           <div class="hero-building">Building: <span class="hero-building-name">Flexa</span></div>
           <div class="hero-scroll"><span class="hero-scroll-line"></span>Scroll to explore</div>
         </div>
-        <div class="hc-rule"></div>
       </div>
       <!-- Always visible: photo + location -->
       <div class="hc-bottom">
@@ -4818,23 +4811,35 @@ document.querySelectorAll('.hc-link[data-id]').forEach(function(el) {
   el.addEventListener('click', function() { openProject(el.dataset.id); });
 });
 
-// ── Hero card scroll reveal ────────────────────────────────
+// ── Hero card slide-up reveal ──────────────────────────────
 (function() {
   var heroCard = document.getElementById('heroCard');
   if (!heroCard) return;
-
   var revealed = false;
+
+  function initCard() {
+    var hcBottom = heroCard.querySelector('.hc-bottom');
+    if (!hcBottom) return;
+    // Push card down so only hc-bottom peeks above the viewport bottom
+    var visH = hcBottom.offsetHeight;
+    heroCard.style.transform = 'translateY(calc(100% - ' + visH + 'px))';
+  }
 
   function revealCard() {
     if (revealed) return;
     revealed = true;
-    heroCard.classList.add('revealed');
+    heroCard.style.transition = 'transform 0.9s cubic-bezier(0.4, 0, 0.2, 1)';
+    heroCard.style.transform = 'translateY(0)';
   }
 
-  // If user loads page already scrolled down, reveal immediately
-  if (window.scrollY > 10) { revealCard(); return; }
+  // If loading mid-page, show full card immediately
+  if (window.scrollY > 10) {
+    revealCard();
+  } else {
+    initCard();
+  }
 
-  // Intercept first downward scroll/swipe — expand card, hold page
+  // Intercept first downward scroll — slide card up, hold page
   window.addEventListener('wheel', function onWheel(e) {
     if (revealed) { window.removeEventListener('wheel', onWheel); return; }
     if (e.deltaY > 0) {
