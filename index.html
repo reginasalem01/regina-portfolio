@@ -4815,14 +4815,13 @@ document.querySelectorAll('.hc-link[data-id]').forEach(function(el) {
   var heroCard = document.getElementById('heroCard');
   if (!heroCard) return;
   var revealed = false;
+  var scrollLocked = true; // page stays locked until animation finishes
 
   function initCard() {
     var expandable = heroCard.querySelector('.hc-expandable');
     if (!expandable) return;
-    // Push card down so expandable section is hidden below the hero bottom
-    // (hero has overflow:hidden so it gets clipped)
     var expandH = expandable.offsetHeight;
-    var bottomGap = 32; // 2rem in px
+    var bottomGap = 32; // 2rem
     heroCard.style.transform = 'translateY(' + (expandH + bottomGap) + 'px)';
   }
 
@@ -4831,19 +4830,22 @@ document.querySelectorAll('.hc-link[data-id]').forEach(function(el) {
     revealed = true;
     heroCard.style.transition = 'transform 0.9s cubic-bezier(0.4, 0, 0.2, 1)';
     heroCard.style.transform = 'translateY(0)';
+    // Unlock page scroll only after animation completes
+    setTimeout(function() { scrollLocked = false; }, 950);
   }
 
   if (window.scrollY > 10) {
+    scrollLocked = false;
     revealCard();
   } else {
     initCard();
   }
 
-  window.addEventListener('wheel', function onWheel(e) {
-    if (revealed) { window.removeEventListener('wheel', onWheel); return; }
-    if (e.deltaY > 0) {
+  // Block ALL scroll while locked; trigger reveal on first downward scroll
+  window.addEventListener('wheel', function(e) {
+    if (scrollLocked) {
       e.preventDefault();
-      revealCard();
+      if (!revealed && e.deltaY > 0) revealCard();
     }
   }, { passive: false });
 
@@ -4851,11 +4853,10 @@ document.querySelectorAll('.hc-link[data-id]').forEach(function(el) {
   window.addEventListener('touchstart', function(e) {
     _touchY = e.touches[0].clientY;
   }, { passive: true });
-  window.addEventListener('touchmove', function onTouch(e) {
-    if (revealed) { window.removeEventListener('touchmove', onTouch); return; }
-    if (_touchY - e.touches[0].clientY > 8) {
+  window.addEventListener('touchmove', function(e) {
+    if (scrollLocked) {
       e.preventDefault();
-      revealCard();
+      if (!revealed && (_touchY - e.touches[0].clientY > 8)) revealCard();
     }
   }, { passive: false });
 })();
