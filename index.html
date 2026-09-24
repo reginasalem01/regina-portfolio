@@ -162,6 +162,60 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--dark); }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    /* Hamburger — hidden on desktop */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4.5px;
+      width: 28px; height: 28px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 18px; height: 1.5px;
+      background: var(--dark);
+      border-radius: 2px;
+      transition: transform 0.22s ease, opacity 0.22s ease;
+    }
+    /* Hamburger → X when open */
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    /* Mobile overlay menu */
+    .mobile-nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      top: 57px;
+      background: var(--cream);
+      z-index: 999;
+      flex-direction: column;
+      padding: 2.5rem 1.5rem;
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+    .mobile-nav-overlay.open { display: flex; }
+    .mobile-nav-overlay a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.15s;
+    }
+    .mobile-nav-overlay a:hover { color: var(--dark); }
     .lang-toggle {
       display: flex;
       align-items: center;
@@ -2254,8 +2308,8 @@
 
       /* ── NAV ──────────────────────────────────────────────── */
       #nav { padding: 1rem 1.25rem; }
-      .nav-links { gap: 1.25rem; }
-      .nav-links a { font-size: 0.6rem; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
 
       /* ── HERO ─────────────────────────────────────────────── */
       #hero { padding: 0 1.25rem 3rem; }
@@ -2452,17 +2506,30 @@
 <!-- ─── NAV ───────────────────────────────────────────────── -->
 <nav id="nav">
   <div class="nav-logo" id="navLogo">RS</div>
-  <div class="nav-links">
+  <div class="nav-links" id="navLinks">
     <a href="#work" id="navWork">Work</a>
     <a href="#about" id="navAbout">About</a>
     <a href="./Regina_Salem_Resume.pdf" target="_blank" id="navResume">Résumé ↗</a>
     <a href="mailto:reginasalem01@gmail.com" id="navContact">Contact</a>
+  </div>
+  <div class="nav-actions">
     <div class="lang-toggle" id="langToggle" role="button" tabindex="0" aria-label="Toggle language">
       <span data-lang="en" class="lt-active">EN</span>
       <span data-lang="es">ES</span>
     </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- Mobile nav overlay -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay">
+  <a href="#work" id="mobileNavWork">Work</a>
+  <a href="#about" id="mobileNavAbout">About</a>
+  <a href="./Regina_Salem_Resume.pdf" target="_blank" id="mobileNavResume">Résumé ↗</a>
+  <a href="mailto:reginasalem01@gmail.com" id="mobileNavContact">Contact</a>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
 <!-- HOME VIEW                                                  -->
@@ -4727,6 +4794,15 @@ function applyLang() {
   if (na) na.textContent = ui('navAbout');
   if (nr) nr.textContent = ui('navResume');
   if (nc) nc.textContent = ui('navContact');
+  // Mobile overlay links
+  var mnw = document.getElementById('mobileNavWork');
+  var mna = document.getElementById('mobileNavAbout');
+  var mnr = document.getElementById('mobileNavResume');
+  var mnc = document.getElementById('mobileNavContact');
+  if (mnw) mnw.textContent = ui('navWork');
+  if (mna) mna.textContent = ui('navAbout');
+  if (mnr) mnr.textContent = ui('navResume');
+  if (mnc) mnc.textContent = ui('navContact');
   // Update toggle pill active state
   var ltSpans = document.querySelectorAll('#langToggle span');
   ltSpans.forEach(function(s) {
@@ -4805,6 +4881,36 @@ buildGrid();
 observeReveals();
 initCounter();
 initWordCycle();
+
+// Hamburger menu
+(function() {
+  var hamburger = document.getElementById('navHamburger');
+  var overlay = document.getElementById('mobileNavOverlay');
+  if (!hamburger || !overlay) return;
+
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  hamburger.addEventListener('click', function() {
+    var isOpen = hamburger.classList.contains('open');
+    if (isOpen) {
+      closeMenu();
+    } else {
+      hamburger.classList.add('open');
+      hamburger.setAttribute('aria-expanded', 'true');
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  });
+
+  overlay.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() { closeMenu(); });
+  });
+})();
 
 // Language toggle
 var $langToggle = document.getElementById('langToggle');
