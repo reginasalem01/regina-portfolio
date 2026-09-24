@@ -199,6 +199,7 @@
       flex-direction: column;
       justify-content: flex-end;
       position: relative;
+      overflow: hidden;
     }
     .hero-eyebrow {
       font-family: 'DM Mono', monospace;
@@ -324,39 +325,37 @@
 
     /* ─── HERO PROFILE CARD ──────────────────────────────────── */
     .hero-card {
-      position: fixed;
-      right: 0;
-      bottom: 0;
-      width: 400px;
-      max-width: 90vw;
+      position: absolute;
+      right: 2rem;
+      bottom: 2rem;
+      width: 420px;
+      max-width: calc(100vw - 4rem);
       background: var(--cream);
       border: 1px solid var(--border);
-      border-right: none;
-      border-bottom: none;
-      border-radius: 14px 0 0 0;
+      border-radius: 14px;
       display: flex;
       flex-direction: column;
-      z-index: 100;
-      box-shadow: -4px -4px 40px rgba(26,23,20,0.07);
+      z-index: 10;
+      box-shadow: 0 8px 40px rgba(26,23,20,0.1);
       opacity: 0;
       animation: hcReveal 0.5s ease 0.9s forwards;
     }
     @keyframes hcReveal { to { opacity: 1; } }
 
-    /* Top section — slides up into view on first scroll */
+    /* Always-visible top: photo + location */
+    .hc-top {
+      padding: 1.4rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    /* Revealed on first scroll — sits below hc-top, slides up into view */
     .hc-expandable {
       display: flex;
       flex-direction: column;
       gap: 0.85rem;
-      padding: 1.5rem 1.5rem 1rem;
-    }
-
-    /* Always-visible bottom: photo + location */
-    .hc-bottom {
-      padding: 1.2rem 1.5rem 1.4rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
+      padding: 1.2rem 1.5rem 1.5rem;
       border-top: 1px solid var(--border);
     }
 
@@ -2454,9 +2453,21 @@
       Regina<br><em>Salem</em>
     </h1>
 
-    <!-- Profile card — fixed bottom-right, expands upward on first scroll -->
+    <!-- Profile card — slides up on first scroll to reveal full card -->
     <div class="hero-card" id="heroCard" aria-label="Profile summary">
-      <!-- Revealed on first scroll (slides in from top as card grows upward) -->
+      <!-- Always visible: photo + location (top of card) -->
+      <div class="hc-top">
+        <div class="hc-avatar">
+          <img src="./pics/profile.jpg" alt="Regina Salem" />
+        </div>
+        <div class="hc-loc">
+          <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 0C2.79 0 1 1.79 1 4c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4zm0 5.5C4.17 5.5 3.5 4.83 3.5 4S4.17 2.5 5 2.5 6.5 3.17 6.5 4 5.83 5.5 5 5.5z" fill="currentColor"/>
+          </svg>
+          Miami, FL
+        </div>
+      </div>
+      <!-- Revealed on first scroll (slides up from below) -->
       <div class="hc-expandable">
         <div class="hc-skills">
           <span class="hc-skill">Figma</span>
@@ -2475,18 +2486,6 @@
           <div class="hero-available"><span class="dot-green"></span>Open to opportunities</div>
           <div class="hero-building">Building: <span class="hero-building-name">Flexa</span></div>
           <div class="hero-scroll"><span class="hero-scroll-line"></span>Scroll to explore</div>
-        </div>
-      </div>
-      <!-- Always visible: photo + location -->
-      <div class="hc-bottom">
-        <div class="hc-avatar">
-          <img src="./pics/profile.jpg" alt="Regina Salem" />
-        </div>
-        <div class="hc-loc">
-          <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 0C2.79 0 1 1.79 1 4c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4zm0 5.5C4.17 5.5 3.5 4.83 3.5 4S4.17 2.5 5 2.5 6.5 3.17 6.5 4 5.83 5.5 5 5.5z" fill="currentColor"/>
-          </svg>
-          Miami, FL
         </div>
       </div>
     </div>
@@ -4818,11 +4817,13 @@ document.querySelectorAll('.hc-link[data-id]').forEach(function(el) {
   var revealed = false;
 
   function initCard() {
-    var hcBottom = heroCard.querySelector('.hc-bottom');
-    if (!hcBottom) return;
-    // Push card down so only hc-bottom peeks above the viewport bottom
-    var visH = hcBottom.offsetHeight;
-    heroCard.style.transform = 'translateY(calc(100% - ' + visH + 'px))';
+    var expandable = heroCard.querySelector('.hc-expandable');
+    if (!expandable) return;
+    // Push card down so expandable section is hidden below the hero bottom
+    // (hero has overflow:hidden so it gets clipped)
+    var expandH = expandable.offsetHeight;
+    var bottomGap = 32; // 2rem in px
+    heroCard.style.transform = 'translateY(' + (expandH + bottomGap) + 'px)';
   }
 
   function revealCard() {
@@ -4832,14 +4833,12 @@ document.querySelectorAll('.hc-link[data-id]').forEach(function(el) {
     heroCard.style.transform = 'translateY(0)';
   }
 
-  // If loading mid-page, show full card immediately
   if (window.scrollY > 10) {
     revealCard();
   } else {
     initCard();
   }
 
-  // Intercept first downward scroll — slide card up, hold page
   window.addEventListener('wheel', function onWheel(e) {
     if (revealed) { window.removeEventListener('wheel', onWheel); return; }
     if (e.deltaY > 0) {
