@@ -2672,9 +2672,9 @@ const UI_ES = {
   heroBuilding: 'Construyendo: <span class="hero-building-name">Flexa</span>',
   workLabel: 'Trabajo seleccionado',
   aboutH: 'Diseño.<br>Construyo.<br><em>Y lo lanzo de&nbsp;verdad.</em>',
-  aboutP1: 'Soy diseñadora de producto que lleva los proyectos hasta el final. El trabajo aquí abarca apps móviles, UX empresarial, experiencias de AR y hardware — porque me picó la curiosidad, y la curiosidad tiende a multiplicarse.',
-  aboutP2: 'Mi trabajo no se detiene en el mockup. Lancé una plataforma full-stack para restaurantes, construí un guante MIDI Bluetooth desde cero, y llevé seis proyectos de la investigación al prototipo funcional — usando IA para ir rápido y código para ser honesta sobre lo que realmente se puede construir.',
-  aboutP3: 'Ahora mismo estoy terminando Doggo — cliente real, deadline real. Abierta a lo que sigue.',
+  aboutP1: 'Soy diseñadora de producto que termina lo que empieza. El trabajo abarca apps móviles, UX empresarial, AR y hardware. Seguí sumando.',
+  aboutP2: 'Mi trabajo no para en el mockup. Lancé una plataforma para restaurantes, construí un guante MIDI desde cero, y llevé seis proyectos de la investigación al producto funcional. Uso IA para ir más rápido y código para mantenerme honesta.',
+  aboutP3: 'Doggo está en vivo. Ahora construyo Flexa. Abierta a lo que sigue.',
   skillLabel1: 'Diseño', skillLabel2: 'Desarrollo', skillLabel3: 'Herramientas',
   backBtn: '← Volver al trabajo',
   viewCase: 'Ver caso de estudio',
@@ -2701,9 +2701,9 @@ const UI_EN = {
   heroBuilding: 'Building: <span class="hero-building-name">Flexa</span>',
   workLabel: 'Selected Work',
   aboutH: 'I design.<br>I build.<br><em>And I actually ship it.</em>',
-  aboutP1: "I'm a product designer who takes projects all the way through. The work here spans mobile apps, enterprise UX, AR experiences, and hardware — because I got curious, and curiosity tends to compound.",
-  aboutP2: "My work doesn't stop at the mockup. I've shipped a full-stack restaurant platform, built a Bluetooth MIDI glove from scratch, and taken six projects from research to working prototype — using AI to move fast and code to stay honest about what's actually buildable.",
-  aboutP3: "Right now I'm finishing Doggo — real client, real deadline. Open to what's next.",
+  aboutP1: "I'm a product designer who actually finishes things. The work spans mobile apps, enterprise UX, AR, and hardware. It kept growing.",
+  aboutP2: "My work doesn't stop at the mockup. Shipped a restaurant platform, built a MIDI glove from scratch, took six projects from research to working product. I use AI to go faster and code to keep myself honest.",
+  aboutP3: "Doggo is live. Building Flexa now. Open to what's next.",
   skillLabel1: 'Design', skillLabel2: 'Development', skillLabel3: 'Tools',
   backBtn: '← Back to Work',
   viewCase: 'View case study',
@@ -2772,7 +2772,7 @@ const PROJECTS = [
     chalHow: [
       'I ran working sessions mapping every moment of a customer visit — walk in, scan, order, wait, eat, leave. That sequence became the architecture. The spec wrote itself from the journey.',
       'I decided early what each person should never have to see. That negative constraint — the "not your job" list — was more useful than any feature request. It kept each interface scoped to one person\'s actual job without compromise.',
-      'I designed the install flow like an onboarding sequence, not a system prompt. The animation, the copy, the first screen you see — every detail was engineered to make the unfamiliar feel inevitable.',
+      'I designed the install flow like an onboarding sequence, not a system prompt. The animation, the copy, the first screen — everything was there to make it feel like it always worked this way.',
       'I treated every constraint as a communication problem. The order window shows as a subtle banner with exact hours — visible, not intrusive. Delivery zones are checked at address entry with a clear "we don\'t deliver here yet" rather than a silent failure. The fee appears before the customer commits. Operational reality, designed&nbsp;honestly.',
     ],
     decImages: [
@@ -2781,8 +2781,8 @@ const PROJECTS = [
       './pics/doggo_restaurant.png',
       './pics/doggo_owner.png',
     ],
-    context: 'Doggo is a local hot dog restaurant. No digital presence of their own — no way to reward returning customers, no delivery or reservation system, no visibility into sales. Everything was manual. That\'s how a lot of startups begin. But they were ready to grow.',
-    reflection: 'Designing for a real client meant every decision had a face behind it. When I redesigned the loyalty card flow, I was thinking about the regular customer who comes in every Tuesday. When I structured the owner panel, I was thinking about someone who needs to update a menu price at 8am before the rush starts. Real constraints from a real person made the design sharper than any brief could.',
+    context: 'Doggo is a local hot dog restaurant in Guayaquil. No digital presence, no loyalty system, no delivery, no way to see what was selling. Everything was manual. They wanted to change that.',
+    reflection: 'Designing for a real client meant every decision had a face behind it. When I redesigned the loyalty card flow, I was thinking about the regular who comes in every Tuesday. When I structured the owner panel, I was thinking about someone updating a menu price at 8am before the rush. Real constraints from a real person made it sharper.',
     reflectionExtra: 'This was a learning curve. First PWA I ever built — figured it out as I went. First client who asked for something this layered across three completely different users. The system is live now. Real customers, real orders, real Doggo Cash being earned.',
     screenTitle: 'One order, three moments',
     tableauHeading: 'One order.<br>Three interfaces update.',
@@ -2850,7 +2850,7 @@ const PROJECTS = [
       'I built the filter taxonomy around field vocabulary: three tabs for type filtering, metadata that surfaces time recorded, GPS location, and officer ID. The fields that match how officers already describe what&nbsp;happened.',
     ],
     context: 'Team of four — each designer owned a section of the device. I owned the PIN authentication flow, the full media section (video, photo, and audio filtering with individual file views and metadata), and storage management. The camera captures evidence. The companion app determines whether an officer can actually use&nbsp;it.',
-    reflection: 'Designing for someone who might be using this in the dark, with one hand, while actually on the job — that changes everything. You stop adding things. You start cutting things. High stakes taught me that clarity isn\'t a style choice. It\'s the whole job.',
+    reflection: 'Designing for someone who might be using this in the dark, with one hand, while actually on the job — that changes what you prioritize. You stop adding things. You just cut. High stakes make it very obvious when you\'ve added something that shouldn\'t be there.',
     screenTitle: 'The companion app',
     screens: [
       {
@@ -2935,7 +2935,7 @@ const PROJECTS = [
       'Rebuilt the IA around the status dashboard. Form-fill became a sub-flow, not the hero. We stopped defending the first solution and rebuilt around what users actually needed to know.',
       'I mapped every required field across all three OSHA documents, identified the overlaps, and built a unified question taxonomy. The system asks what a supervisor already knows — time, location, what happened — and routes those answers to where each form needs them.',
     ],
-    reflection: 'Human-Centered Design is easy to say and hard to do. The most important insight came from the third interview, after we thought we were done with research. The willingness to stay in discovery mode — even when it felt slow — is what changed everything.',
+    reflection: 'HCD is easy to say and hard to actually do. The most important insight came from the third interview, after we thought we were done with research. Staying in discovery when you want to build fast is uncomfortable. It\'s also what kept us from building the wrong thing.',
   },
   {
     id: '360fitting',
@@ -2967,7 +2967,7 @@ const PROJECTS = [
     tier: 'supporting',
     status: 'Academic · Figma prototype',
     insight: 'The AR is the easy part. Trust is the design problem.',
-    context: 'Two-person team — co-designed end-to-end. Thirty percent of online clothing orders are returned because the fit is wrong. Size guides don\'t account for body shape, fabric drape, or brand inconsistency. The AR was never the hard part. Getting people to trust it was.',
+    context: 'Two-person team — co-designed end-to-end. Thirty percent of online clothing orders are returned because the fit is wrong. Size guides don\'t account for body shape, fabric drape, or brand inconsistency. The AR was never the main challenge. Getting users to trust their own measurements was.',
     problem: 'Online shoppers return up to 30% of clothing because the fit is wrong. Size guides don\'t account for body shape, fabric behavior, or brand inconsistency. The existing solution is a worse version of the problem.',
     solution: 'A mobile AR app where users build a personalized avatar with their body measurements, then virtually try on clothes from partner brands — Zara, Urban Outfitters, Forever 21 — watching fabric move and fit react in real time before purchasing.',
     decisions: [
@@ -2983,7 +2983,7 @@ const PROJECTS = [
       'Moved away from explaining how the AR works and toward reassuring users their measurements were right. Added measurement confirmation screens and made the fit FAQ accessible from every try-on view.',
       'Built brand-specific fit calibration into the avatar system. Each partner\'s size chart maps to the avatar\'s geometry. The FAQ explains this explicitly — not to hide the inconsistency, but so users understand why a Medium here might not be a Medium there.',
     ],
-    reflection: 'The most important lesson: the technical innovation (AR fitting) mattered less than the user emotion (trust). We spent more design effort on trust signals than on the AR experience itself. The technology only works if people believe it.',
+    reflection: 'The AR was the least important part. We spent more time on trust signals than on the AR itself — measurement confirmations, fit FAQs, brand calibration. If users don\'t believe the measurements, the whole thing falls apart.',
   },
   {
     id: 'petpals',
@@ -3016,7 +3016,7 @@ const PROJECTS = [
     tier: 'supporting',
     status: 'Academic · Figma prototype',
     insight: 'Trust isn\'t a feature. It\'s a sequence.',
-    context: 'Team of four — wireframing to prototype, end-to-end. Two rounds of usability testing, three personas, one insight that only testing confirmed: safety anxiety shows up before the first swipe, not after the first bad match. Trust has to be visible from screen one.',
+    context: 'Team of four — wireframing to prototype, end-to-end. Two rounds of usability testing, three personas. The thing testing confirmed: safety anxiety shows up before the first swipe, not after a bad match. The trust signals had to be right there from the start.',
     problem: 'Pet owners have no structured way to find safe, compatible playmates for their pets. Facebook groups and dog parks work — but they\'re unfiltered, lack safety signals, and have no way to coordinate a meetup without a phone number exchange.',
     solution: 'A swipe-based matching app. See a pet card, tap the green or red paw, get matched when the other side taps green too, message, and turn it into a real meetup using the built-in events tab.',
     decisions: [
@@ -3066,7 +3066,7 @@ const PROJECTS = [
     status: 'Personal build · CircuitPython',
     insight: 'The glove disappears. Only the music is left.',
     context: 'I play piano. When I\'m away from one, I still hear music in my head — melodies to work out, chords to test, rhythms that show up at the wrong time. I wanted to do something about that. The MIDI Glove started as a question: what if the instrument traveled with you? Solo build, concept to code. A glove, conductive tape, and an Adafruit Feather nRF52840 worn on the wrist. Touch a finger to your thumb to play a note. Rotate your wrist to bend pitch. Flick your hand to hit a snare. All sent wirelessly via BLE MIDI to GarageBand. No piano. No cables. Just a hand.',
-    problem: 'I\'ve been playing piano long enough to know that the impulse to make music doesn\'t wait for you to be near an instrument. It shows up on a commute, in a waiting room, mid-thought. Every musician knows the feeling — you hear something in your head and have no way to get it out. I wanted to build the thing that closes that gap.',
+    problem: 'I\'ve been playing piano long enough to know that the impulse to make music doesn\'t wait for you to be near an instrument. It shows up on a commute, in a waiting room, mid-thought. You hear something in your head and there\'s no good way to get it out fast. I wanted to fix that.',
     solution: 'A wearable MIDI controller: a glove with conductive tape on the fingertips, an Adafruit Feather nRF52840 and LSM6DS33 IMU on the wrist. Three gesture types — touch, rotate, flick — map to three musical outputs: notes, pitch bend, and percussion. All transmitted wirelessly via BLE MIDI. Built in CircuitPython, iterated from a proof-of-concept kitchen glove to a fully expressive wireless instrument.',
     decisions: [
       '<strong>The gesture model came before the electronics.</strong> I started by asking: what does a hand naturally do? Finger-to-thumb contact — the same motion as checking a texture — triggers notes via digital pin and pull-up resistor (8 pins mapped to C4→C5). Wrist rotation — the doorknob gesture — controls pitch bend through the gyroscope Z-axis. A sharp hand flick fires a drum hit via accelerometer spike on MIDI ch 10. Each gesture already existed. I just gave it a sound.',
@@ -3081,7 +3081,7 @@ const PROJECTS = [
       'Built three layered filtering rules in CircuitPython: 80°/s gyro sensitivity threshold, 15 m/s² shake minimum with 0.3s drum cooldown, and state-change detection that fires once on contact — never while held. No single rule solved it. The combination did.',
       'Switched from a polling loop to interrupt-driven input. MIDI packets send only when state actually changes — not on every loop tick. Latency dropped to the point where gesture and sound felt simultaneous. That\'s when it stopped being a prototype.',
     ],
-    reflection: 'I built this because I play piano and I wanted music to be portable. What I didn\'t expect was how much building a physical instrument would teach me about design. Every hardware constraint had a musical consequence — the 0.3s drum cooldown shapes the rhythmic feel; the pitch deadzone is the difference between expressive bends and random wobble. The constraint and the design decision are the same thing. I didn\'t realize that until I built something you could actually hear.',
+    reflection: 'I built this because I play piano and I wanted music to be portable. What I didn\'t expect was how much building a physical instrument would teach me about design. Every hardware constraint had a sound — the 0.3s drum cooldown shapes the rhythm; the pitch deadzone is the difference between expressive and random. Building something you can hear makes the wrong call very obvious.',
   },
 ];
 
@@ -3111,11 +3111,11 @@ window._PROJECTS_ES = {
     chalHow: [
       'Organicé sesiones de trabajo mapeando cada momento de la visita de un cliente — entrar, escanear, pedir, esperar, comer, irse. Esa secuencia se convirtió en la arquitectura. La especificación se escribió sola desde el recorrido.',
       'Decidí desde el principio qué nunca debía ver cada persona. Esa restricción negativa — la lista de "no es tu trabajo" — fue más útil que cualquier solicitud de funcionalidades. Mantuvo cada interfaz enfocada en el trabajo real de esa persona sin compromiso.',
-      'Diseñé el flujo de instalación como una secuencia de onboarding, no como un aviso del sistema. La animación, el copy, la primera pantalla que ves — cada detalle fue diseñado para hacer que lo desconocido se sintiera inevitable.',
+      'Diseñé el flujo de instalación como una secuencia de onboarding, no como un aviso del sistema. La animación, el copy, la primera pantalla — todo estaba ahí para que se sintiera como si siempre hubiera funcionado así.',
       'Traté cada restricción como un problema de comunicación. El horario de pedidos aparece como un banner sutil con las horas exactas — visible, no intrusivo. Las zonas de entrega se verifican al ingresar la dirección con un claro "aún no hacemos entregas aquí" en lugar de un fallo silencioso. La tarifa aparece antes de que el cliente se comprometa. Realidad operativa, diseñada&nbsp;honestamente.',
     ],
-    context: 'Doggo es un restaurante local de hot dogs. Sin presencia digital propia — sin forma de recompensar a clientes frecuentes, sin sistema de delivery o reservas, sin visibilidad de ventas. Todo era manual. Así comienzan muchos negocios. Pero estaban listos para crecer.',
-    reflection: 'Diseñar para un cliente real significó que cada decisión tenía un rostro detrás. Cuando rediseñé el flujo de la tarjeta de fidelización, pensaba en el cliente habitual que viene todos los martes. Cuando estructuré el panel del propietario, pensaba en alguien que necesita actualizar un precio del menú a las 8am antes de que empiece el movimiento. Las restricciones reales de una persona real hicieron el diseño más afilado que cualquier brief.',
+    context: 'Doggo es un restaurante local de hot dogs en Guayaquil. Sin presencia digital, sin sistema de fidelización, sin delivery, sin visibilidad de lo que vendían. Todo era manual. Querían cambiar eso.',
+    reflection: 'Diseñar para un cliente real significó que cada decisión tenía un rostro detrás. Cuando rediseñé el flujo de la tarjeta de fidelización, pensaba en el habitual que viene todos los martes. Cuando estructuré el panel del propietario, pensaba en alguien actualizando un precio a las 8am antes del movimiento. Las restricciones reales de una persona real lo hacen más afilado.',
     reflectionExtra: 'Fue una curva de aprendizaje. Primera PWA que construí — lo fui descubriendo sobre la marcha. Primer cliente que pidió algo tan complejo con tres usuarios completamente distintos. El sistema ya está en producción. Clientes reales, pedidos reales, Doggo Cash real acumulándose.',
     screenTitle: 'Un pedido, tres momentos',
     tableauHeading: 'Un pedido.<br>Tres interfaces se actualizan.',
@@ -3147,7 +3147,7 @@ window._PROJECTS_ES = {
       'Construí la taxonomía de filtros alrededor del vocabulario de campo: tres pestañas para filtrado por tipo, metadatos que muestran hora grabada, ubicación GPS e ID del oficial. Los campos que coinciden con cómo los oficiales ya describen lo que&nbsp;ocurrió.',
     ],
     context: 'Equipo de cuatro — cada diseñador fue dueño de una sección del dispositivo. Yo me encargué del flujo de autenticación PIN, la sección completa de medios (filtrado de video, foto y audio con vistas individuales de archivo y metadatos), y la gestión del almacenamiento. La cámara captura la evidencia. La app complementaria determina si un oficial puede realmente&nbsp;usarla.',
-    reflection: 'Diseñar para alguien que podría estar usando esto en la oscuridad, con una sola mano, mientras está realmente en servicio — eso cambia todo. Dejas de agregar cosas. Empiezas a recortar cosas. Las apuestas altas me enseñaron que la claridad no es una elección de estilo. Es el trabajo entero.',
+    reflection: 'Diseñar para alguien que podría estar usando esto en la oscuridad, con una sola mano, mientras está en servicio — eso cambia lo que priorizas. Dejas de agregar cosas. Simplemente recortas. Las apuestas altas hacen muy obvio cuando agregaste algo que no debería estar ahí.',
     screenTitle: 'La app complementaria',
     role: 'Equipo — Filtros de Medios + Auth FaceID/PIN',
     screens: [
@@ -3183,7 +3183,7 @@ window._PROJECTS_ES = {
       'Reconstruimos la arquitectura de información alrededor del dashboard de estado. El llenado de formularios se convirtió en un sub-flujo, no en el protagonista. Dejamos de defender la primera solución y reconstruimos alrededor de lo que los usuarios realmente necesitaban saber.',
       'Mapeé cada campo requerido en los tres documentos OSHA, identifiqué las superposiciones, y construí una taxonomía de preguntas unificada. El sistema pregunta lo que un supervisor ya sabe — hora, lugar, qué pasó — y enruta esas respuestas a donde cada formulario las necesita.',
     ],
-    reflection: 'El Diseño Centrado en el Ser Humano es fácil de decir y difícil de hacer. La intuición más importante llegó de la tercera entrevista, después de que creíamos haber terminado con la investigación. La disposición a permanecer en modo descubrimiento — incluso cuando se sentía lento — fue lo que cambió todo.',
+    reflection: 'El HCD es fácil de decir y difícil de hacer en serio. La intuición más importante llegó de la tercera entrevista, después de que creíamos haber terminado con la investigación. Quedarte en descubrimiento cuando quieres construir es incómodo. También fue lo que nos evitó construir lo equivocado.',
     role: 'Diseñadora UX líder — Investigación, AI, Prototipado',
   },
   '360fitting': {
@@ -3192,7 +3192,7 @@ window._PROJECTS_ES = {
     tags: 'AR · Móvil · UX · Académico',
     status: 'Académico · Prototipo en Figma',
     insight: 'El AR es la parte fácil. La confianza es el problema de diseño.',
-    context: 'Equipo de dos — co-diseñado de principio a fin. El treinta por ciento de los pedidos de ropa en línea se devuelven porque la talla no es correcta. Las guías de tallas no tienen en cuenta la forma corporal, el comportamiento de la tela o la inconsistencia entre marcas. El AR nunca fue la parte difícil. Lograr que la gente confiara en él, sí.',
+    context: 'Equipo de dos — co-diseñado de principio a fin. El treinta por ciento de los pedidos de ropa en línea se devuelven porque la talla no es correcta. Las guías de tallas no tienen en cuenta la forma corporal, el comportamiento de la tela o la inconsistencia entre marcas. El AR nunca fue el reto principal. Lograr que los usuarios confiaran en sus propias medidas, sí.',
     problem: 'Los compradores en línea devuelven hasta el 30% de la ropa porque la talla no es correcta. Las guías de tallas no tienen en cuenta la forma corporal, el comportamiento de la tela ni la inconsistencia entre marcas. La solución existente es una versión peor del problema.',
     solution: 'Una app móvil de AR donde los usuarios crean un avatar personalizado con sus medidas corporales y luego se prueban virtualmente ropa de marcas asociadas — Zara, Urban Outfitters, Forever 21 — viendo cómo la tela se mueve y la talla reacciona en tiempo real antes de comprar.',
     decisions: [
@@ -3208,7 +3208,7 @@ window._PROJECTS_ES = {
       'Nos alejamos de explicar cómo funciona el AR y nos enfocamos en tranquilizar a los usuarios de que sus medidas eran correctas. Añadimos pantallas de confirmación de medidas e hicimos las preguntas frecuentes de talla accesibles desde cada vista de prueba.',
       'Incorporamos calibración de talla por marca en el sistema del avatar. La tabla de tallas de cada partner se mapea a la geometría del avatar. Las preguntas frecuentes lo explican explícitamente — no para ocultar la inconsistencia, sino para que los usuarios entiendan por qué una M aquí puede no ser una M allá.',
     ],
-    reflection: 'La lección más importante: la innovación técnica (el probador AR) importaba menos que la emoción del usuario (la confianza). Invertimos más esfuerzo de diseño en señales de confianza que en la experiencia de AR en sí. La tecnología solo funciona si la gente cree en ella.',
+    reflection: 'El AR fue la parte menos importante. Invertimos más tiempo en señales de confianza que en el AR — confirmaciones de medidas, preguntas frecuentes de talla, calibración por marca. Si los usuarios no confían en las medidas, todo lo demás se cae.',
     role: 'Co-diseñadora — UX completa',
   },
   petpals: {
@@ -3217,7 +3217,7 @@ window._PROJECTS_ES = {
     tags: 'UX · Wireframing · Prototipado · Académico',
     status: 'Académico · Prototipo en Figma',
     insight: 'La confianza no es una función. Es una secuencia.',
-    context: 'Equipo de cuatro — de wireframing a prototipo, de principio a fin. Dos rondas de pruebas de usabilidad, tres personas, una intuición que solo las pruebas confirmaron: la ansiedad de seguridad aparece antes del primer deslizamiento, no después del primer match fallido. La confianza tiene que ser visible desde la primera pantalla.',
+    context: 'Equipo de cuatro — de wireframing a prototipo, de principio a fin. Dos rondas de pruebas de usabilidad, tres personas. Lo que las pruebas confirmaron: la ansiedad de seguridad aparece antes del primer deslizamiento, no después de un mal match. Las señales de confianza tenían que estar ahí desde el principio.',
     problem: 'Los dueños de mascotas no tienen una forma estructurada de encontrar compañeros de juego seguros y compatibles para sus mascotas. Los grupos de Facebook y los parques para perros funcionan — pero no tienen filtros, carecen de señales de seguridad, y no hay forma de coordinar un encuentro sin intercambiar números de teléfono.',
     solution: 'Una app de emparejamiento por deslizamiento. Ves una tarjeta de mascota, tocas la patita verde o roja, haces match cuando el otro lado también toca verde, te mensajeas, y lo conviertes en un encuentro real usando la pestaña de eventos integrada.',
     decisions: [
@@ -3251,7 +3251,7 @@ window._PROJECTS_ES = {
     status: 'Proyecto personal · CircuitPython',
     insight: 'El guante desaparece. Solo queda la música.',
     context: 'Toco el piano. Cuando estoy lejos de uno, sigo escuchando música en mi cabeza — melodías que trabajar, acordes que probar, ritmos que aparecen en el momento equivocado. Quería hacer algo al respecto. El MIDI Glove empezó como una pregunta: ¿y si el instrumento viajara contigo? Proyecto solo, del concepto al código. Un guante, cinta conductora y un Adafruit Feather nRF52840 en la muñeca. Toca un dedo con el pulgar para tocar una nota. Gira la muñeca para doblar el tono. Sacude la mano para golpear una caja. Todo enviado inalámbricamente por BLE MIDI a GarageBand. Sin piano. Sin cables. Solo una mano.',
-    problem: 'Llevo suficiente tiempo tocando el piano como para saber que el impulso de hacer música no espera a que estés cerca de un instrumento. Aparece en el metro, en una sala de espera, a mitad de un pensamiento. Todo músico conoce esa sensación — escuchas algo en tu cabeza y no tienes forma de sacarlo. Quería construir lo que cierra esa brecha.',
+    problem: 'Llevo suficiente tiempo tocando el piano como para saber que el impulso de hacer música no espera a que estés cerca de un instrumento. Aparece en el metro, en una sala de espera, a mitad de un pensamiento. Escuchas algo en tu cabeza y no hay forma rápida de sacarlo. Quería resolver eso.',
     solution: 'Un controlador MIDI portátil: un guante con cinta conductora en las yemas, un Adafruit Feather nRF52840 y un IMU LSM6DS33 en la muñeca. Tres tipos de gesto — toque, rotación, sacudida — se mapean a tres salidas musicales: notas, bend de tono y percusión. Todo transmitido inalámbricamente por BLE MIDI. Construido en CircuitPython, iterado desde una prueba de concepto con un guante de cocina hasta un instrumento inalámbrico completamente expresivo.',
     decisions: [
       '<strong>El modelo de gestos vino antes que la electrónica.</strong> Empecé preguntando: ¿qué hace una mano naturalmente? El contacto dedo-pulgar — el mismo movimiento de verificar una textura — activa notas mediante pin digital y resistencia pull-up (8 pines mapeados a C4→C5). La rotación de muñeca — el gesto de pomo de puerta — controla el bend de tono a través del eje Z del giroscopio. Un sacudido brusco de la mano dispara un golpe de batería mediante un pico del acelerómetro en el canal MIDI 10. Cada gesto ya existía. Solo le di un sonido.',
@@ -3266,7 +3266,7 @@ window._PROJECTS_ES = {
       'Construí tres reglas de filtrado en capas en CircuitPython: umbral de sensibilidad de giroscopio de 80°/s, mínimo de sacudida de 15 m/s² con cooldown de batería de 0.3s, y detección de cambio de estado que se dispara una vez al contacto — nunca mientras se mantiene. Ninguna regla por sí sola lo resolvió. La combinación sí.',
       'Cambié de un bucle de polling a entrada dirigida por interrupciones. Los paquetes MIDI se envían solo cuando el estado realmente cambia — no en cada tick del bucle. La latencia bajó al punto en que gesto y sonido se sentían simultáneos. Ahí fue cuando dejó de ser un prototipo.',
     ],
-    reflection: 'Construí esto porque toco el piano y quería que la música fuera portátil. Lo que no esperaba era cuánto construir un instrumento físico me enseñaría sobre diseño. Cada restricción de hardware tenía una consecuencia musical — el cooldown de batería de 0.3s da forma al feel rítmico; la zona muerta del tono es la diferencia entre bends expresivos y temblores aleatorios. La restricción y la decisión de diseño son la misma cosa. No me di cuenta de eso hasta que construí algo que realmente se podía escuchar.',
+    reflection: 'Construí esto porque toco el piano y quería que la música fuera portátil. Lo que no esperaba era cuánto construir un instrumento físico me enseñaría sobre diseño. Cada restricción de hardware tenía un sonido — el cooldown de 0.3s da forma al ritmo; la zona muerta del tono es la diferencia entre expresivo y aleatorio. Construir algo que se puede escuchar hace muy obvio cuando una decisión está mal.',
     screenTitle: 'El guante, de cerca',
     role: 'Solo — Concepto, Hardware, Código',
   },
